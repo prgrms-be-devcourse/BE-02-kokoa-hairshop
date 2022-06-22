@@ -9,16 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class HairshopRepositoryTest {
+
     @Autowired
     private HairshopRepository hairshopRepository;
 
@@ -56,7 +55,7 @@ class HairshopRepositoryTest {
         Optional<Hairshop> byId = hairshopRepository.findById(id);
 
         // then
-        assertThat(byId).contains(hairshop);
+        assertThat(byId.get().getName()).isEqualTo(hairshop.getName());
     }
 
     @Test
@@ -72,7 +71,8 @@ class HairshopRepositoryTest {
         Hairshop updated = hairshopRepository.save(hairshop);
 
         // then
-        assertThat(updated).isEqualTo(hairshop);
+        Optional<Hairshop> byId = hairshopRepository.findById(updated.getId());
+        assertThat(byId.get().getPhoneNumber()).isEqualTo(updated.getPhoneNumber());
     }
 
     @Test
@@ -86,18 +86,5 @@ class HairshopRepositoryTest {
 
         // then
         assertThat(hairshopRepository.findById(id)).isEmpty();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HairshopRepositoryTest that = (HairshopRepositoryTest) o;
-        return hairshopRepository.equals(that.hairshopRepository) && hairshop.equals(that.hairshop);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(hairshopRepository, hairshop);
     }
 }

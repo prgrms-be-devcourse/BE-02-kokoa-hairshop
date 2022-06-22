@@ -1,6 +1,10 @@
 package com.prgms.kokoahairshop.hairshop.entity;
 
-import lombok.*;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -13,40 +17,51 @@ public class Hairshop extends DateEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Size(max = 30)
+    @Column(name = "name", nullable = false, columnDefinition = "varchar(30)")
     private String name;
 
-    @Column(name = "phone_number", nullable = false)
+    @Size(min = 10, max = 11)
+    @Column(name = "phone_number", nullable = false, columnDefinition = "varchar(20)")
     private String phoneNumber;
 
-    @Column(name = "start_time", nullable = false)
+    @Size(min = 4, max = 4)
+    @Column(name = "start_time", nullable = false, columnDefinition = "char(4)")
     private String startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Size(min = 4, max = 4)
+    @Column(name = "end_time", nullable = false, columnDefinition = "char(4)")
     private String endTime;
 
-    @Column(name = "closed_day", nullable = true)
+    @Size(min = 1, max = 1)
+    @Column(name = "closed_day", nullable = true, columnDefinition = "char(1)")
     private String closedDay;
 
-    @Column(name = "reservation_range", nullable = false)
+    @Size(min = 1, max = 1)
+    @Column(name = "reservation_range", nullable = false, columnDefinition = "char(1)")
     private String reservationRange;
 
-    @Column(name = "reservation_start_time", nullable = false)
+    @Size(min = 4, max = 4)
+    @Column(name = "reservation_start_time", nullable = false, columnDefinition = "char(4)")
     private String reservationStartTime;
 
-    @Column(name = "reservation_end_time", nullable = false)
+    @Size(min = 4, max = 4)
+    @Column(name = "reservation_end_time", nullable = false, columnDefinition = "char(4)")
     private String reservationEndTime;
 
     @Column(name = "same_day_available", nullable = false)
     private Boolean sameDayAvailable;
 
-    @Column(name = "road_name_number", nullable = false)
+    @Size(max = 100)
+    @Column(name = "road_name_number", nullable = false, columnDefinition = "varchar(100)")
     private String roadNameNumber;
 
-    @Column(name = "profile_img", nullable = false)
+    @Size(max = 200)
+    @Column(name = "profile_img", nullable = false, columnDefinition = "varchar(200)")
     private String profileImg;
 
-    @Column(name = "introduction", nullable = false)
+    @Size(max = 300)
+    @Column(name = "introduction", nullable = false, columnDefinition = "varchar(300)")
     private String introduction;
 
     // TODO : user 테이블과 연관관계 형성해야함.
