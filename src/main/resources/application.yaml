@@ -1,3 +1,2 @@
 spring:
-  profiles:
-    include: database
+  config.activate.on-profile: dev

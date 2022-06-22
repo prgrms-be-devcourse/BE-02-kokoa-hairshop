@@ -6,9 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
 @Table(name = "hairshop")
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
 public class Hairshop extends DateEntity {
     @Id
@@ -54,4 +52,25 @@ public class Hairshop extends DateEntity {
     // TODO : user 테이블과 연관관계 형성해야함.
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Builder(toBuilder = true)
+    public Hairshop(Long id, String name, String phoneNumber, String startTime, String endTime,
+                    String closedDay, String reservationRange, String reservationStartTime,
+                    String reservationEndTime, Boolean sameDayAvailable, String roadNameNumber,
+                    String profileImg, String introduction, Long userId) {
+        this.id = id;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.closedDay = closedDay;
+        this.reservationRange = reservationRange;
+        this.reservationStartTime = reservationStartTime;
+        this.reservationEndTime = reservationEndTime;
+        this.sameDayAvailable = sameDayAvailable;
+        this.roadNameNumber = roadNameNumber;
+        this.profileImg = profileImg;
+        this.introduction = introduction;
+        this.userId = userId;
+    }
 }
