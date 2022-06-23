@@ -20,9 +20,9 @@ public class HairshopController {
     }
 
     @PutMapping
-    public ResponseEntity<HairshopDto> insert(@RequestBody HairshopDto hairshopDto) {
+    public ResponseEntity<Long> insert(@RequestBody HairshopDto hairshopDto) {
         HairshopDto insert = hairshopService.insert(hairshopDto);
-        return ResponseEntity.created(URI.create("/api/v1/hairshop/" + insert.getId())).body(insert);
+        return ResponseEntity.created(URI.create("/api/v1/hairshop/" + insert.getId())).body(insert.getId());
     }
 
     @GetMapping
@@ -37,9 +37,9 @@ public class HairshopController {
     }
 
     @PatchMapping
-    public ResponseEntity<HairshopDto> modify(@RequestBody HairshopDto hairshopDto) {
-        HairshopDto update = hairshopService.update(hairshopDto);
-        return ResponseEntity.ok(update);
+    public ResponseEntity<Object> modify(@RequestBody HairshopDto hairshopDto) {
+        hairshopService.update(hairshopDto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
