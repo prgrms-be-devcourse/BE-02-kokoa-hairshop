@@ -11,12 +11,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/hairshops")
 public class HairshopController {
     private final HairshopService hairshopService;
+
+    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
+    public ResponseEntity<Object> notFoundHandler() {
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> internalServerErrorHandler(Exception e) {
+        return ResponseEntity.internalServerError().body(e.getMessage());
+    }
 
     public HairshopController(HairshopService hairshopService) {
         this.hairshopService = hairshopService;
@@ -40,7 +51,7 @@ public class HairshopController {
     }
 
     @PatchMapping
-    public ResponseEntity<Object> modify(@RequestBody ModifyHairshopRequest modifyHairshopRequest) {
+    public ResponseEntity<Object> modify(@RequestBody ModifyHairshopRequest modifyHairshopRequest) throws NotFoundException {
         hairshopService.update(modifyHairshopRequest);
         return ResponseEntity.noContent().build();
     }

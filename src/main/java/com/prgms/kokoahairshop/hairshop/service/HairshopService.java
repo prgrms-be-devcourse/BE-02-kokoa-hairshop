@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,9 +47,10 @@ public class HairshopService {
     }
 
     @Transactional
-    public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest) {
+    public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest) throws NotFoundException {
         // Todo : referenceById 톭아보기
-        hairshopRepository.getReferenceById(modifyHairshopRequest.getId());
+        hairshopRepository.findById(modifyHairshopRequest.getId())
+                .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
         Hairshop hairshop = hairshopConverter.convertToHairshop(modifyHairshopRequest);
         Hairshop update = hairshopRepository.save(hairshop);
         return hairshopConverter.convertToHairshopResponse(update);

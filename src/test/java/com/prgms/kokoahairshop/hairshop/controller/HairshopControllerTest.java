@@ -2,7 +2,6 @@ package com.prgms.kokoahairshop.hairshop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
-import com.prgms.kokoahairshop.hairshop.dto.HairshopDto;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
@@ -172,7 +171,7 @@ class HairshopControllerTest {
     }
 
     @Test
-    @DisplayName("특정 헤어샵 조회 테스트")
+    @DisplayName("헤어샵 아이디로 헤어샵 조회 테스트")
     void GET_HAIRSHOP_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/api/v1/hairshops/{id}", hairshopResponse.getId())
                         .characterEncoding("UTF-8")
@@ -211,6 +210,16 @@ class HairshopControllerTest {
                                 fieldWithPath("updatedAt").type(JsonFieldType.STRING).description("updatedAt")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("해당 아이디의 헤어샵이 없을 경우 테스트")
+    void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
+        this.mockMvc.perform(get("/api/v1/hairshops/{id}", 999L)
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(document("getById-notFound-hairshop"));
     }
 
     @Test
@@ -256,6 +265,20 @@ class HairshopControllerTest {
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("userId")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("수정하려는 헤어샵이 없을 경우 테스트")
+    void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
+        ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
+                .id(999L)
+                .build();
+        this.mockMvc.perform(patch("/api/v1/hairshops")
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(modifyHairshopRequest)))
+                .andExpect(status().isNotFound())
+                .andDo(document("modify-notFound-hairshop"));
     }
 
     @Test
