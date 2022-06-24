@@ -1,8 +1,7 @@
 package com.prgms.kokoahairshop.hairshop.entity;
 
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -11,11 +10,11 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 public abstract class DateEntity {
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @UpdateTimestamp
+    @CreatedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -90,7 +90,7 @@ class HairshopControllerTest {
                 .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
                 .userId(2L)
                 .build();
-        this.mockMvc.perform(put("/api/v1/hairshops")
+        this.mockMvc.perform(post("/api/v1/hairshops")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createHairshopRequest)))

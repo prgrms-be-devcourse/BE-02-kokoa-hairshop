@@ -1,7 +1,6 @@
 package com.prgms.kokoahairshop.hairshop.controller;
 
 import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
-import com.prgms.kokoahairshop.hairshop.dto.HairshopDto;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
@@ -33,7 +32,7 @@ public class HairshopController {
         this.hairshopService = hairshopService;
     }
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<Long> insert(@RequestBody CreateHairshopRequest createHairshopRequest) {
         HairshopResponse insert = hairshopService.insert(createHairshopRequest);
         return ResponseEntity.created(URI.create("/api/v1/hairshops/" + insert.getId())).body(insert.getId());
