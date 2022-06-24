@@ -5,25 +5,45 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HairshopConverter {
-    public Hairshop createHairshopDtoToHairshop(HairshopDto hairshopDto) {
+    public Hairshop convertToHairshop(CreateHairshopRequest createHairshopRequest) {
         return Hairshop.builder()
-                .name(hairshopDto.getName())
-                .phoneNumber(hairshopDto.getPhoneNumber())
-                .startTime(hairshopDto.getStartTime())
-                .endTime(hairshopDto.getEndTime())
-                .closedDay(hairshopDto.getClosedDay())
-                .reservationRange(hairshopDto.getReservationRange())
-                .reservationStartTime(hairshopDto.getReservationStartTime())
-                .reservationEndTime(hairshopDto.getReservationEndTime())
-                .sameDayAvailable(hairshopDto.getSameDayAvailable())
-                .roadNameNumber(hairshopDto.getRoadNameNumber())
-                .profileImg(hairshopDto.getProfileImg())
-                .introduction(hairshopDto.getIntroduction())
+                .name(createHairshopRequest.getName())
+                .phoneNumber(createHairshopRequest.getPhoneNumber())
+                .startTime(createHairshopRequest.getStartTime())
+                .endTime(createHairshopRequest.getEndTime())
+                .closedDay(createHairshopRequest.getClosedDay())
+                .reservationRange(createHairshopRequest.getReservationRange())
+                .reservationStartTime(createHairshopRequest.getReservationStartTime())
+                .reservationEndTime(createHairshopRequest.getReservationEndTime())
+                .sameDayAvailable(createHairshopRequest.getSameDayAvailable())
+                .roadNameNumber(createHairshopRequest.getRoadNameNumber())
+                .profileImg(createHairshopRequest.getProfileImg())
+                .introduction(createHairshopRequest.getIntroduction())
+                .userId(createHairshopRequest.getUserId())
                 .build();
     }
 
-    public HairshopDto hairshopToReadHairshopDto(Hairshop hairshop) {
-        return HairshopDto.builder()
+    public Hairshop convertToHairshop(ModifyHairshopRequest modifyHairshopRequest) {
+        return Hairshop.builder()
+                .id(modifyHairshopRequest.getId())
+                .name(modifyHairshopRequest.getName())
+                .phoneNumber(modifyHairshopRequest.getPhoneNumber())
+                .startTime(modifyHairshopRequest.getStartTime())
+                .endTime(modifyHairshopRequest.getEndTime())
+                .closedDay(modifyHairshopRequest.getClosedDay())
+                .reservationRange(modifyHairshopRequest.getReservationRange())
+                .reservationStartTime(modifyHairshopRequest.getReservationStartTime())
+                .reservationEndTime(modifyHairshopRequest.getReservationEndTime())
+                .sameDayAvailable(modifyHairshopRequest.getSameDayAvailable())
+                .roadNameNumber(modifyHairshopRequest.getRoadNameNumber())
+                .profileImg(modifyHairshopRequest.getProfileImg())
+                .introduction(modifyHairshopRequest.getIntroduction())
+                .userId(modifyHairshopRequest.getUserId())
+                .build();
+    }
+
+    public HairshopResponse convertToHairshopResponse(Hairshop hairshop) {
+        return HairshopResponse.builder()
                 .id(hairshop.getId())
                 .name(hairshop.getName())
                 .phoneNumber(hairshop.getPhoneNumber())
@@ -37,7 +57,6 @@ public class HairshopConverter {
                 .roadNameNumber(hairshop.getRoadNameNumber())
                 .profileImg(hairshop.getProfileImg())
                 .introduction(hairshop.getIntroduction())
-                .userId(hairshop.getUserId())
                 .createdAt(hairshop.getCreatedAt())
                 .updatedAt(hairshop.getUpdatedAt())
                 .build();

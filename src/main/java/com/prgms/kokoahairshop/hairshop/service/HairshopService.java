@@ -1,7 +1,6 @@
 package com.prgms.kokoahairshop.hairshop.service;
 
-import com.prgms.kokoahairshop.hairshop.dto.HairshopConverter;
-import com.prgms.kokoahairshop.hairshop.dto.HairshopDto;
+import com.prgms.kokoahairshop.hairshop.dto.*;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import javassist.NotFoundException;
@@ -25,33 +24,34 @@ public class HairshopService {
     }
 
     @Transactional
-    public HairshopDto insert(HairshopDto hairshopDto) {
-        Hairshop hairshop = hairshopConverter.createHairshopDtoToHairshop(hairshopDto);
+    public HairshopResponse insert(CreateHairshopRequest createHairshopRequest) {
+        Hairshop hairshop = hairshopConverter.convertToHairshop(createHairshopRequest);
         Hairshop entity = hairshopRepository.save(hairshop);
-        return hairshopConverter.hairshopToReadHairshopDto(entity);
+        return hairshopConverter.convertToHairshopResponse(entity);
     }
 
     @Transactional
-    public Page<HairshopDto> findAll(Pageable pageable) {
-        List<HairshopDto> list = hairshopRepository.findAll()
-                .stream().map(hairshopConverter::hairshopToReadHairshopDto)
+    public Page<HairshopResponse> findAll(Pageable pageable) {
+        List<HairshopResponse> list = hairshopRepository.findAll()
+                .stream().map(hairshopConverter::convertToHairshopResponse)
                 .collect(Collectors.toList());
         return new PageImpl<>(list, pageable, list.size());
     }
 
     @Transactional
-    public HairshopDto findById(Long id) throws NotFoundException {
+    public HairshopResponse findById(Long id) throws NotFoundException {
         return hairshopRepository.findById(id)
-                .map(hairshopConverter::hairshopToReadHairshopDto)
+                .map(hairshopConverter::convertToHairshopResponse)
                 .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
     }
 
     @Transactional
-    public HairshopDto update(HairshopDto hairshopDto) {
+    public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest) {
         // Todo : referenceById 톭아보기
-        Hairshop hairshop = hairshopRepository.getReferenceById(hairshopDto.getId());
+        hairshopRepository.getReferenceById(modifyHairshopRequest.getId());
+        Hairshop hairshop = hairshopConverter.convertToHairshop(modifyHairshopRequest);
         Hairshop update = hairshopRepository.save(hairshop);
-        return hairshopConverter.hairshopToReadHairshopDto(update);
+        return hairshopConverter.convertToHairshopResponse(update);
     }
 
     @Transactional

@@ -1,6 +1,9 @@
 package com.prgms.kokoahairshop.hairshop.controller;
 
+import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopDto;
+import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
+import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
 import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -20,25 +23,25 @@ public class HairshopController {
     }
 
     @PutMapping
-    public ResponseEntity<Long> insert(@RequestBody HairshopDto hairshopDto) {
-        HairshopDto insert = hairshopService.insert(hairshopDto);
-        return ResponseEntity.created(URI.create("/api/v1/hairshop/" + insert.getId())).body(insert.getId());
+    public ResponseEntity<Long> insert(@RequestBody CreateHairshopRequest createHairshopRequest) {
+        HairshopResponse insert = hairshopService.insert(createHairshopRequest);
+        return ResponseEntity.created(URI.create("/api/v1/hairshops/" + insert.getId())).body(insert.getId());
     }
 
     @GetMapping
-    public ResponseEntity<Page<HairshopDto>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<HairshopResponse>> getAll(Pageable pageable) {
         return ResponseEntity.ok(hairshopService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HairshopDto> getById(@PathVariable Long id) throws NotFoundException {
-        HairshopDto byId = hairshopService.findById(id);
+    public ResponseEntity<HairshopResponse> getById(@PathVariable Long id) throws NotFoundException {
+        HairshopResponse byId = hairshopService.findById(id);
         return ResponseEntity.ok(byId);
     }
 
     @PatchMapping
-    public ResponseEntity<Object> modify(@RequestBody HairshopDto hairshopDto) {
-        hairshopService.update(hairshopDto);
+    public ResponseEntity<Object> modify(@RequestBody ModifyHairshopRequest modifyHairshopRequest) {
+        hairshopService.update(modifyHairshopRequest);
         return ResponseEntity.noContent().build();
     }
 

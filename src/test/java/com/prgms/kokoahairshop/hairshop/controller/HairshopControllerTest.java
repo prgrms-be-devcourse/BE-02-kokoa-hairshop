@@ -1,7 +1,10 @@
 package com.prgms.kokoahairshop.hairshop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopDto;
+import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
+import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
 import org.junit.jupiter.api.*;
@@ -24,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @AutoConfigureRestDocs
 @DisplayName("헤어샵 CRUD API 테스트")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -41,12 +44,27 @@ class HairshopControllerTest {
     @Autowired
     private HairshopRepository hairshopRepository;
 
-    HairshopDto hairshopResponse;
+    HairshopResponse hairshopResponse;
+    CreateHairshopRequest createHairshopRequest;
 
     @BeforeEach
     void setup() {
-        HairshopDto hairshopDto = HairshopDto.builder().build();
-        hairshopResponse = hairshopService.insert(hairshopDto);
+        createHairshopRequest = CreateHairshopRequest.builder()
+                .name("데브헤어")
+                .phoneNumber("010-1234-1234")
+                .startTime("11:00")
+                .endTime("20:00")
+                .closedDay("화")
+                .reservationRange("1")
+                .reservationStartTime("11:00")
+                .reservationEndTime("19:30")
+                .sameDayAvailable(true)
+                .roadNameNumber("대구 중구 동성로2가 141-9 2층3층")
+                .profileImg("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .introduction("시간 여유 충분히 가지고 여유롭게 와주시면 감사하겠습니다 :)")
+                .userId(1L)
+                .build();
+        hairshopResponse = hairshopService.insert(createHairshopRequest);
     }
 
     @AfterEach
@@ -58,16 +76,27 @@ class HairshopControllerTest {
     @DisplayName("헤어샵 등록 테스트")
     void HAIRSHOP_INSERT_TEST() throws Exception {
         // TODO : 유저 기능 작성 완료 후 리팩토링
-        HairshopDto hairshopDto = HairshopDto.builder()
-                .userId(1L)
+        CreateHairshopRequest createHairshopRequest = CreateHairshopRequest.builder()
+                .name("코스헤어")
+                .phoneNumber("010-1234-1234")
+                .startTime("11:00")
+                .endTime("20:00")
+                .closedDay("화")
+                .reservationRange("1")
+                .reservationStartTime("11:00")
+                .reservationEndTime("19:30")
+                .sameDayAvailable(true)
+                .roadNameNumber("대구 중구 동성로2가 143-9 2층")
+                .profileImg("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
+                .userId(2L)
                 .build();
-        this.mockMvc.perform(put("/api/v1/hairshop")
+        this.mockMvc.perform(put("/api/v1/hairshops")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(hairshopDto)))
+                        .content(objectMapper.writeValueAsString(createHairshopRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.valueOf("application/json;charset=UTF-8")))
-                .andExpect(jsonPath("$.id").value(hairshopDto.getId()))
+                .andExpect(content().contentType(MediaType.valueOf("application/json")))
                 .andDo(
                         document("register-hairshop",
                                 requestFields(
@@ -84,9 +113,6 @@ class HairshopControllerTest {
                                         fieldWithPath("profileImg").type(JsonFieldType.STRING).description("profileImg"),
                                         fieldWithPath("introduction").type(JsonFieldType.STRING).description("introduction"),
                                         fieldWithPath("userId").type(JsonFieldType.NUMBER).description("userId")
-                                ),
-                                responseFields(
-                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("id")
                                 )
                         ));
     }
@@ -94,13 +120,13 @@ class HairshopControllerTest {
     @Test
     @DisplayName("전체 헤어샵 조회 테스트")
     void GET_HAIRSHOP_LIST_TEST() throws Exception {
-        this.mockMvc.perform(get("/api/v1/hairshop")
+        this.mockMvc.perform(get("/api/v1/hairshops")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", String.valueOf(0))
                         .param("size", String.valueOf(10)))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.valueOf("application/json;charset=UTF-8")))
+                .andExpect(content().contentType(MediaType.valueOf("application/json")))
                 .andDo(document("getAll-hairshop",
                         responseFields(
                                 fieldWithPath("content[]").type(JsonFieldType.ARRAY).description("content[]"),
@@ -117,7 +143,6 @@ class HairshopControllerTest {
                                 fieldWithPath("content[].roadNameNumber").type(JsonFieldType.STRING).description("roadNameNumber"),
                                 fieldWithPath("content[].profileImg").type(JsonFieldType.STRING).description("profileImg"),
                                 fieldWithPath("content[].introduction").type(JsonFieldType.STRING).description("introduction"),
-                                fieldWithPath("content[].userId").type(JsonFieldType.NUMBER).description("userId"),
                                 fieldWithPath("content[].createdAt").type(JsonFieldType.STRING).description("content[].createdAt"),
                                 fieldWithPath("content[].updatedAt").type(JsonFieldType.STRING).description("content[].updatedAt"),
                                 fieldWithPath("pageable").type(JsonFieldType.OBJECT).description("pageable"),
@@ -149,11 +174,11 @@ class HairshopControllerTest {
     @Test
     @DisplayName("특정 헤어샵 조회 테스트")
     void GET_HAIRSHOP_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(get("/api/v1/hairshop/{id}", hairshopResponse.getId())
+        this.mockMvc.perform(get("/api/v1/hairshops/{id}", hairshopResponse.getId())
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.valueOf("application/json;charset=UTF-8")))
+                .andExpect(content().contentType(MediaType.valueOf("application/json")))
                 .andExpect(jsonPath("$.id").value(hairshopResponse.getId()))
                 .andExpect(jsonPath("$.name").value(hairshopResponse.getName()))
                 .andExpect(jsonPath("$.phoneNumber").value(hairshopResponse.getPhoneNumber()))
@@ -167,12 +192,7 @@ class HairshopControllerTest {
                 .andExpect(jsonPath("$.roadNameNumber").value(hairshopResponse.getRoadNameNumber()))
                 .andExpect(jsonPath("$.profileImg").value(hairshopResponse.getProfileImg()))
                 .andExpect(jsonPath("$.introduction").value(hairshopResponse.getIntroduction()))
-                .andExpect(jsonPath("$.createdAt").value(hairshopResponse.getCreatedAt()))
-                .andExpect(jsonPath("$.updatedAt").value(hairshopResponse.getUpdatedAt()))
                 .andDo(document("getById-hairshop",
-                        requestFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("id")
-                        ),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("id"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
@@ -197,16 +217,30 @@ class HairshopControllerTest {
     @DisplayName("헤어샵 정보를 수정 할 수 있다.")
     void MODIFY_HAIRSHOP_TEST() throws Exception {
         // TODO : 유저 기능 작성 완료 후 리팩토링
-        HairshopDto hairshopDto = HairshopDto.builder()
-                .userId(1L)
+        ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
+                .id(hairshopResponse.getId())
+                .name(hairshopResponse.getName())
+                .phoneNumber(hairshopResponse.getPhoneNumber())
+                .startTime(hairshopResponse.getStartTime())
+                .endTime(hairshopResponse.getEndTime())
+                .closedDay(hairshopResponse.getClosedDay())
+                .reservationRange(hairshopResponse.getReservationRange())
+                .reservationStartTime(hairshopResponse.getReservationStartTime())
+                .reservationEndTime(hairshopResponse.getEndTime())
+                .sameDayAvailable(hairshopResponse.getSameDayAvailable())
+                .roadNameNumber(hairshopResponse.getRoadNameNumber())
+                .profileImg(hairshopResponse.getProfileImg())
+                .introduction(hairshopResponse.getIntroduction())
+                .userId(createHairshopRequest.getUserId())
                 .build();
-        this.mockMvc.perform(patch("/api/v1/hairshop")
+        this.mockMvc.perform(patch("/api/v1/hairshops")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(hairshopDto)))
+                        .content(objectMapper.writeValueAsString(modifyHairshopRequest)))
                 .andExpect(status().isNoContent())
                 .andDo(document("modify-hairshop",
                         requestFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("id"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
                                 fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("phoneNumber"),
                                 fieldWithPath("startTime").type(JsonFieldType.STRING).description("startTime"),
@@ -227,7 +261,7 @@ class HairshopControllerTest {
     @Test
     @DisplayName("게시물을 삭제 할 수 있다.")
     void REMOVE_USER_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/v1/hairshop/{id}", hairshopResponse.getId()))
+        this.mockMvc.perform(delete("/api/v1/hairshops/{id}", hairshopResponse.getId()))
                 .andExpect(status().isNoContent())
                 .andDo(document("remove-hairshop"));
     }

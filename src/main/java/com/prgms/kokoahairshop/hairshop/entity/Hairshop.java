@@ -1,12 +1,12 @@
 package com.prgms.kokoahairshop.hairshop.entity;
 
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -21,16 +21,16 @@ public class Hairshop extends DateEntity {
     @Column(name = "name", nullable = false, columnDefinition = "varchar(30)")
     private String name;
 
-    @Size(min = 10, max = 11)
-    @Column(name = "phone_number", nullable = false, columnDefinition = "varchar(20)")
+    @Size(min = 12, max = 14)
+    @Column(name = "phone_number", nullable = false, columnDefinition = "varchar(14)")
     private String phoneNumber;
 
-    @Size(min = 4, max = 4)
-    @Column(name = "start_time", nullable = false, columnDefinition = "char(4)")
+    @Size(min = 4, max = 6)
+    @Column(name = "start_time", nullable = false, columnDefinition = "char(5)")
     private String startTime;
 
-    @Size(min = 4, max = 4)
-    @Column(name = "end_time", nullable = false, columnDefinition = "char(4)")
+    @Size(min = 4, max = 6)
+    @Column(name = "end_time", nullable = false, columnDefinition = "char(5)")
     private String endTime;
 
     @Size(min = 1, max = 1)
@@ -41,12 +41,12 @@ public class Hairshop extends DateEntity {
     @Column(name = "reservation_range", nullable = false, columnDefinition = "char(1)")
     private String reservationRange;
 
-    @Size(min = 4, max = 4)
-    @Column(name = "reservation_start_time", nullable = false, columnDefinition = "char(4)")
+    @Size(min = 4, max = 6)
+    @Column(name = "reservation_start_time", nullable = false, columnDefinition = "char(5)")
     private String reservationStartTime;
 
-    @Size(min = 4, max = 4)
-    @Column(name = "reservation_end_time", nullable = false, columnDefinition = "char(4)")
+    @Size(min = 4, max = 6)
+    @Column(name = "reservation_end_time", nullable = false, columnDefinition = "char(5)")
     private String reservationEndTime;
 
     @Column(name = "same_day_available", nullable = false)

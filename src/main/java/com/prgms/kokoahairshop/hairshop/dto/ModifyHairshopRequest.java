@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HairshopDto {
+public class ModifyHairshopRequest {
     private Long id;
     private String name;
     private String phoneNumber;
@@ -24,6 +24,4 @@ public class HairshopDto {
     private String profileImg;
     private String introduction;
     private Long userId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
