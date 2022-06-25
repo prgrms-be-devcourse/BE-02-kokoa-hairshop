@@ -3,12 +3,12 @@ package com.prgms.kokoahairshop.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
-public class RegisterUserDto {
+@Getter
+public class UserInfoDto {
 
+    private Long id;
     private String email;
-    private String password;
     private String auth;
 
 }

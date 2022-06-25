@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class Converter {
-    public User registerDtoToEntity(RegisterUserDto registerUserDto){
+
+    public User registerDtoToEntity(RegisterUserDto registerUserDto) {
         return User.builder()
-        .email(registerUserDto.getEmail())
-        .password(registerUserDto.getPassword())
-        .auth(registerUserDto.getAuth())
+            .email(registerUserDto.getEmail())
+            .password(registerUserDto.getPassword())
+            .auth(registerUserDto.getAuth())
             .build();
     }
+
 }
