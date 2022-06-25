@@ -34,6 +34,16 @@ public class User implements UserDetails {
 
     private String auth;
 
+    // TODO : 연관관계 매핑
+//    @OneToMany
+//    @JoinColumn(name = "user_id")
+//    private List<Reservation> reservations = new ArrayList<>();
+//
+//    @OneToMany
+//    @JoinColumn(name = "user_id")
+//    private List<HairShop> hairshops = new ArrayList<>();
+
+
     @Builder
     public User(String email, String password, String auth) {
         this.email = email;
@@ -62,22 +72,22 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public void encodePassword(String password) {
