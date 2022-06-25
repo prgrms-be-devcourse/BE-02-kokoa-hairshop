@@ -36,7 +36,7 @@ public class UserController {
         return userDetailService.login(loginUserDto);
     }
 
-    @GetMapping("/authentication")
+    @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public UserInfoDto test() {
         return userDetailService.userInfo();
