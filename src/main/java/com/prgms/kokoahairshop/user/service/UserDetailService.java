@@ -18,31 +18,32 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+
 @Slf4j
+@Service
 public class UserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    private Converter converter;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    private final Converter converter = new Converter();
+
 
     public UserDetailService(UserRepository userRepository,
-        JwtAuthenticationProvider jwtAuthenticationProvider,
-        Converter converter) {
+        JwtAuthenticationProvider jwtAuthenticationProvider) {
         this.userRepository = userRepository;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
-        this.converter = converter;
     }
 
     // 회원가입
     @Transactional
     public Long register(RegisterUserDto registerUserDto) {
-        if (checkExistEmail(registerUserDto.getEmail())) {
+        // 중복체크
+        if (userRepository.existsUserByEmail(registerUserDto.getEmail())) {
             throw new EmailAlreadyExistException("Same email already exists");
         }
         // 회원가입진행
@@ -53,10 +54,6 @@ public class UserDetailService implements UserDetailsService {
         return userRepository.save(userEntity).getId();
     }
 
-    // 회원가입시 회원 이메일 중복체크
-    boolean checkExistEmail(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
 
     // 로그인
     public TokenResponseDto login(LoginUserDto loginUserDto) {
@@ -81,11 +78,7 @@ public class UserDetailService implements UserDetailsService {
     public UserInfoDto userInfo() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return UserInfoDto.builder()
-            .id(user.getId())
-            .email(user.getEmail())
-            .auth(user.getAuth())
-            .build();
+        return converter.entityToUserInfoDto(user);
     }
 
     // 토큰에서 user객체조회
