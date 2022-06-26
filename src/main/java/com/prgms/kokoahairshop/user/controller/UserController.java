@@ -6,8 +6,11 @@ import com.prgms.kokoahairshop.user.dto.RegisterUserDto;
 import com.prgms.kokoahairshop.user.dto.TokenResponseDto;
 import com.prgms.kokoahairshop.user.dto.UserInfoDto;
 import com.prgms.kokoahairshop.user.service.UserDetailService;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,21 +28,19 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Long signup(@RequestBody RegisterUserDto registerUserDto) {
-        return userDetailService.register(registerUserDto);
+    public ResponseEntity<Long> signup(@RequestBody @Valid RegisterUserDto registerUserDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDetailService.register(registerUserDto));
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public TokenResponseDto login(@RequestBody LoginUserDto loginUserDto) {
-        return userDetailService.login(loginUserDto);
+    public ResponseEntity<TokenResponseDto> login(@RequestBody @Valid LoginUserDto loginUserDto) {
+        return ResponseEntity.ok().body(userDetailService.login(loginUserDto));
     }
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public UserInfoDto test() {
-        return userDetailService.userInfo();
+    public ResponseEntity<UserInfoDto> test() {
+        return ResponseEntity.ok().body(userDetailService.userInfo());
     }
 
 }
