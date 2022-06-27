@@ -1,16 +1,19 @@
 package com.prgms.kokoahairshop.user.dto;
 
-
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class LoginUserDto {
+public class RegisterRequestDto {
 
-    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Different from email format")
     private String email;
     @NotBlank(message = "Password cannot be blank")
     private String password;
+    @NotBlank(message = "auth cannot be blank")
+    private String auth;
+
 }

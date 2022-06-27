@@ -2,8 +2,9 @@ package com.prgms.kokoahairshop.user.service;
 
 import com.prgms.kokoahairshop.jwt.JwtAuthenticationProvider;
 import com.prgms.kokoahairshop.user.dto.Converter;
-import com.prgms.kokoahairshop.user.dto.LoginUserDto;
-import com.prgms.kokoahairshop.user.dto.RegisterUserDto;
+import com.prgms.kokoahairshop.user.dto.LoginRequestDto;
+import com.prgms.kokoahairshop.user.dto.RegisterRequestDto;
+import com.prgms.kokoahairshop.user.dto.RegisterResponseDto;
 import com.prgms.kokoahairshop.user.dto.TokenResponseDto;
 import com.prgms.kokoahairshop.user.dto.UserInfoDto;
 import com.prgms.kokoahairshop.user.entity.User;
@@ -41,24 +42,24 @@ public class UserDetailService implements UserDetailsService {
 
     // 회원가입
     @Transactional
-    public Long register(RegisterUserDto registerUserDto) {
+    public RegisterResponseDto register(RegisterRequestDto registerRequestDto) {
         // 중복체크
-        if (userRepository.existsUserByEmail(registerUserDto.getEmail())) {
+        if (userRepository.existsUserByEmail(registerRequestDto.getEmail())) {
             throw new EmailAlreadyExistException("Same email already exists");
         }
         // 회원가입진행
-        User userEntity = converter.registerDtoToEntity(registerUserDto);
+        User userEntity = converter.registerRequestToEntity(registerRequestDto);
         // 비밀번호 암호화
-        log.info(registerUserDto.getPassword());
-        userEntity.encodePassword(passwordEncoder.encode(registerUserDto.getPassword()));
-        return userRepository.save(userEntity).getId();
+        log.info(registerRequestDto.getPassword());
+        userEntity.encodePassword(passwordEncoder.encode(registerRequestDto.getPassword()));
+        return converter.toRegisterResponse(userRepository.save(userEntity).getId());
     }
 
 
     // 로그인
-    public TokenResponseDto login(LoginUserDto loginUserDto) {
-        User user = loadUserByUsername(loginUserDto.getEmail()); // 이메일 검증
-        if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
+    public TokenResponseDto login(LoginRequestDto loginRequestDto) {
+        User user = loadUserByUsername(loginRequestDto.getEmail()); // 이메일 검증
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다."); // 비밀번호 검증
         }
         return TokenResponseDto.builder()

@@ -1,18 +1,19 @@
 package com.prgms.kokoahairshop.user.dto;
 
 import com.prgms.kokoahairshop.user.entity.User;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 
 @Slf4j
-public class Converter<T> {
+@NoArgsConstructor
+public class Converter {
 
-    public User registerDtoToEntity(RegisterUserDto registerUserDto) {
+    public User registerRequestToEntity(RegisterRequestDto registerRequestDto) {
         return User.builder()
-            .email(registerUserDto.getEmail())
-            .password(registerUserDto.getPassword())
-            .auth(registerUserDto.getAuth())
+            .email(registerRequestDto.getEmail())
+            .password(registerRequestDto.getPassword())
+            .auth(registerRequestDto.getAuth())
             .build();
     }
 
@@ -22,6 +23,12 @@ public class Converter<T> {
             .email(user.getEmail())
             .auth(user.getAuth())
             .build();
+    }
+
+    public RegisterResponseDto toRegisterResponse(Long id){
+        return RegisterResponseDto.builder()
+                        .userId(id)
+                        .build();
     }
 
 }
