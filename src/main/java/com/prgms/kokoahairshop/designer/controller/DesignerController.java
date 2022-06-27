@@ -33,14 +33,19 @@ public class DesignerController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> insert(@RequestBody CreateDesignerRequest createDesignerRequest) {
+    public ResponseEntity<Long> insert(@RequestBody CreateDesignerRequest createDesignerRequest) throws NotFoundException {
         DesignerResponse insert = designerService.insert(createDesignerRequest);
-        return ResponseEntity.created(URI.create("/api/v1/designers/" + insert.getId())).body(insert.getId());
+        return ResponseEntity.created(URI.create("/designers/" + insert.getId())).body(insert.getId());
     }
 
     @GetMapping
     public ResponseEntity<Page<DesignerResponse>> getAll(Pageable pageable) {
         return ResponseEntity.ok(designerService.findAll(pageable));
+    }
+
+    @GetMapping("/hairshop/{id}")
+    public ResponseEntity<Page<DesignerResponse>> getByHairshop(Pageable pageable, @PathVariable Long id) throws NotFoundException {
+        return ResponseEntity.ok(designerService.findByHairshopId(pageable, id));
     }
 
     @GetMapping("/{id}")

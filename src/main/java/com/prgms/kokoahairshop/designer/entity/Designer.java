@@ -30,10 +30,8 @@ public class Designer extends DateEntity {
     @Column(name = "introduction", nullable = false, columnDefinition = "varchar(300)")
     private String introduction;
 
-    // TODO : Attribute Converter 사용고려 -> https://galid1.tistory.com/572
-    @Enumerated(EnumType.STRING)
-    @Column(name = "position", nullable = false, columnDefinition = "ENUM('원장', '실장', '디자이너')")
-    private Position position;
+    @Column(name = "position", nullable = false, columnDefinition = "char(1)")
+    private Integer position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
@@ -41,7 +39,7 @@ public class Designer extends DateEntity {
 
     @Builder(toBuilder = true)
     public Designer(Long id, String name, String image, String introduction,
-                    Position position, Hairshop hairshop) {
+                    Integer position, Hairshop hairshop) {
         this.id = id;
         this.name = name;
         this.image = image;
