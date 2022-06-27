@@ -32,7 +32,7 @@ class HairshopRepositoryTest {
                 .phoneNumber("010-1234-1234")
                 .startTime("11:00")
                 .endTime("20:00")
-                .closedDay("화")
+                .closedDay("2")
                 .reservationRange("1")
                 .reservationStartTime("11:00")
                 .reservationEndTime("19:30")

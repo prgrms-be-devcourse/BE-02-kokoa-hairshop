@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.DayOfWeek;
 
 @Entity
 @Getter
@@ -28,13 +29,11 @@ public class Menu extends DateEntity {
     @Column(name = "discount", nullable = false)
     private Integer discount;
 
-    @Column(name = "gender", nullable = false, columnDefinition = "ENUM('남', '여', '공용')")
+    @Column(name = "gender", nullable = false, columnDefinition = "char(1)")
     private String gender;
 
-    // TODO : Attribute Converter 사용고려 -> https://galid1.tistory.com/572
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, columnDefinition = "ENUM('커트', '펌', '컬러', '클리닉', '스타일링', '붙임머리', '메이크업')")
-    private Type type;
+    @Column(name = "type", nullable = false, columnDefinition = "char(1)")
+    private String type;
 
     @Column(name = "exposed_time", nullable = false)
     private Integer exposed_time;
@@ -49,7 +48,7 @@ public class Menu extends DateEntity {
 
     @Builder(toBuilder = true)
     public Menu(Long id, String name, Integer price, Integer discount, String gender,
-                Type type, Integer exposed_time, String image, Hairshop hairshop) {
+                String type, Integer exposed_time, String image, Hairshop hairshop) {
         this.id = id;
         this.name = name;
         this.price = price;
