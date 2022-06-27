@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1/designers")
+@RequestMapping("/designers")
 public class DesignerController {
     private final DesignerService designerService;
 
