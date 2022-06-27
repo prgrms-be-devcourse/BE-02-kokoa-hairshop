@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.*;
 
 import com.prgms.kokoahairshop.user.entity.User;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -16,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class UserRepositoryTest {
 
-    private final User user = new User("example@naver.com", "$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa","USER");
+    private final User user = new User("example1@naver.com", "$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa","USER");
 
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryTest.class);
 
