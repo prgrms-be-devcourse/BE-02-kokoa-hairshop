@@ -30,6 +30,7 @@ public class Designer extends DateEntity {
     @Column(name = "introduction", nullable = false, columnDefinition = "varchar(300)")
     private String introduction;
 
+    @Size(min = 1, max = 1)
     @Column(name = "position", nullable = false, columnDefinition = "char(1)")
     private String position;
 

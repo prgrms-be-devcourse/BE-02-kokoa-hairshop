@@ -29,9 +29,11 @@ public class Menu extends DateEntity {
     @Column(name = "discount", nullable = false)
     private Integer discount;
 
+    @Size(min = 1, max = 1)
     @Column(name = "gender", nullable = false, columnDefinition = "char(1)")
     private String gender;
 
+    @Size(min = 1, max = 1)
     @Column(name = "type", nullable = false, columnDefinition = "char(1)")
     private String type;
 
