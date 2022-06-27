@@ -1,6 +1,9 @@
 package com.prgms.kokoahairshop.designer.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
+import com.prgms.kokoahairshop.reservation.entity.Reservation;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +41,10 @@ public class Designer extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id")
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Builder(toBuilder = true)
     public Designer(Long id, String name, String image, String introduction,

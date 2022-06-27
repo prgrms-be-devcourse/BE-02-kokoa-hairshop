@@ -1,18 +1,28 @@
 package com.prgms.kokoahairshop.hairshop.entity;
 
+import com.prgms.kokoahairshop.reservation.entity.Reservation;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 @Getter
 @Table(name = "hairshop")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
 public class Hairshop extends DateEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -69,11 +79,15 @@ public class Hairshop extends DateEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<Reservation> reservations = new ArrayList<>();
+
     @Builder(toBuilder = true)
     public Hairshop(Long id, String name, String phoneNumber, String startTime, String endTime,
-                    String closedDay, String reservationRange, String reservationStartTime,
-                    String reservationEndTime, Boolean sameDayAvailable, String roadNameNumber,
-                    String profileImg, String introduction, Long userId) {
+        String closedDay, String reservationRange, String reservationStartTime,
+        String reservationEndTime, Boolean sameDayAvailable, String roadNameNumber,
+        String profileImg, String introduction, Long userId) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
