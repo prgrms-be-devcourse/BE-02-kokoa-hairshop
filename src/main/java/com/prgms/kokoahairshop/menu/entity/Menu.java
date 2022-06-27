@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.DayOfWeek;
 
 @Entity
 @Getter
@@ -31,11 +30,11 @@ public class Menu extends DateEntity {
 
     @Size(min = 1, max = 1)
     @Column(name = "gender", nullable = false, columnDefinition = "char(1)")
-    private String gender;
+    private Integer gender;
 
     @Size(min = 1, max = 1)
     @Column(name = "type", nullable = false, columnDefinition = "char(1)")
-    private String type;
+    private Integer type;
 
     @Column(name = "exposed_time", nullable = false)
     private Integer exposed_time;
@@ -49,8 +48,8 @@ public class Menu extends DateEntity {
     private Hairshop hairshop;
 
     @Builder(toBuilder = true)
-    public Menu(Long id, String name, Integer price, Integer discount, String gender,
-                String type, Integer exposed_time, String image, Hairshop hairshop) {
+    public Menu(Long id, String name, Integer price, Integer discount, Integer gender,
+                Integer type, Integer exposed_time, String image, Hairshop hairshop) {
         this.id = id;
         this.name = name;
         this.price = price;

@@ -32,7 +32,7 @@ public class Designer extends DateEntity {
 
     @Size(min = 1, max = 1)
     @Column(name = "position", nullable = false, columnDefinition = "char(1)")
-    private String position;
+    private Integer position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
@@ -40,7 +40,7 @@ public class Designer extends DateEntity {
 
     @Builder(toBuilder = true)
     public Designer(Long id, String name, String image, String introduction,
-                    String position, Hairshop hairshop) {
+                    Integer position, Hairshop hairshop) {
         this.id = id;
         this.name = name;
         this.image = image;
