@@ -43,7 +43,7 @@ public class MenuController {
         return ResponseEntity.ok(menuService.findAll(pageable));
     }
 
-    @GetMapping("/hairshop/{id}")
+    @GetMapping("/hairshops/{id}")
     public ResponseEntity<Page<MenuResponse>> getByHairshop(Pageable pageable, @PathVariable Long id) throws NotFoundException {
         return ResponseEntity.ok(menuService.findByHairshopId(pageable, id));
     }

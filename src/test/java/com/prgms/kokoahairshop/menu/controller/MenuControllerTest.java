@@ -179,7 +179,7 @@ class MenuControllerTest {
     @Test
     @DisplayName("헤어샵 아이디로 메뉴 조회 테스트")
     void GET_MENU_BY_HAIRSHOP_ID_TEST() throws Exception {
-        this.mockMvc.perform(get("/menu/hairshop/{id}", menuResponse.getId())
+        this.mockMvc.perform(get("/menu/hairshops/{id}", menuResponse.getId())
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", String.valueOf(0))
