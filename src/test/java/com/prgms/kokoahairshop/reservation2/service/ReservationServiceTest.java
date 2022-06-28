@@ -82,7 +82,7 @@ class ReservationServiceTest {
             Reservation.builder().id(1L).build());
 
         // when & then
-        assertThat(service.save(requestDto), is(1L));
+        assertThat(service.save(requestDto).getId(), is(1L));
     }
 
     @Test

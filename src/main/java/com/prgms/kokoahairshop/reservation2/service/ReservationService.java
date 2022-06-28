@@ -10,6 +10,7 @@ import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.repository.MenuRepository;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationConverter;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationRequestDto;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationResponseDto;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeRequestDto;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeResponseDto;
 import com.prgms.kokoahairshop.reservation2.entity.Reservation;
@@ -44,7 +45,7 @@ public class ReservationService {
     private final MenuRepository menuRepository;
 
     @Transactional
-    public Long save(ReservationRequestDto requestDto) {
+    public ReservationResponseDto save(ReservationRequestDto requestDto) {
         Optional<Designer> maybeDesigner = designerRepository.findById(requestDto.getDesignerId());
         if (maybeDesigner.isEmpty()) {
             throw new NotFoundException("해당 디자이너가 존재하지 않습니다.");
@@ -74,7 +75,7 @@ public class ReservationService {
             maybeHairshop.get(), maybeDesigner.get(), maybeMenu.get());
         Reservation savedReservation = repository.save(reservation);
 
-        return savedReservation.getId();
+        return ReservationResponseDto.builder().id(savedReservation.getId()).build();
     }
 
     @Transactional(readOnly = true)

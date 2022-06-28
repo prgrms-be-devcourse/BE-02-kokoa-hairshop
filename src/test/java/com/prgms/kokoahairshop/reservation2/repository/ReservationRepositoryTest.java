@@ -136,7 +136,8 @@ class ReservationRepositoryTest {
     @Test
     void 날짜_시간_디자이너_아이디로_예약이_존재하는지_확인할_수_있다() {
         // when
-        boolean exists = repository.existsByDateAndTimeAndDesignerId(LocalDate.now(), "12:00", designer.getId());
+        boolean exists = repository.existsByDateAndTimeAndDesignerId(LocalDate.now(), "12:00",
+            designer.getId());
 
         // then
         assertThat(exists, is(true));

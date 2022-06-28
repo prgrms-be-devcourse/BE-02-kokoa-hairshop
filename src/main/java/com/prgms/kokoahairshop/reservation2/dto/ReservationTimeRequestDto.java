@@ -14,6 +14,7 @@ import lombok.Getter;
 @Builder
 public class ReservationTimeRequestDto {
 
+    // TODO: LocalDate 검증
     @NotNull(message = "날짜를 입력해주세요.")
     private LocalDate date;
 

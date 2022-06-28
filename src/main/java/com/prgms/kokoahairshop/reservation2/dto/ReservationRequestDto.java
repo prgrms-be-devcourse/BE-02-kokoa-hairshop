@@ -1,6 +1,5 @@
 package com.prgms.kokoahairshop.reservation2.dto;
 
-import com.prgms.kokoahairshop.reservation2.entity.ReservationStatus;
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,6 +25,7 @@ public class ReservationRequestDto {
     @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$", message = "올바르지 않은 휴대폰 번호입니다.")
     private String phoneNumber;
 
+    // TODO: LocalDate 검증
     @NotNull(message = "날짜를 입력해주세요.")
     private LocalDate date;
 
