@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.reservation.entity;
+package com.prgms.kokoahairshop.reservation2.entity;
 
 public enum ReservationStatus {
 

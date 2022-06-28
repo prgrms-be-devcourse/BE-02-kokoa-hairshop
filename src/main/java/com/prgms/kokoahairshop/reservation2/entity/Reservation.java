@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.reservation.entity;
+package com.prgms.kokoahairshop.reservation2.entity;
 
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
@@ -34,54 +34,54 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     @NotBlank(message = "이름을 입력해주세요.")
     @Size(max = 20, message = "이름을 20자 이하로 작성해주세요.")
     @Column(name = "name", nullable = false, length = 20)
-    String name;
+    private String name;
     @NotBlank(message = "휴대폰 번호를 입력해주세요.")
     @Size(max = 20, message = "휴대폰 번호를 20자 이하로 작성해주세요.")
     @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$", message = "올바르지 않은 휴대폰 번호입니다.")
     @Column(name = "phoneNumber", nullable = false, length = 20)
-    String phoneNumber;
+    private String phoneNumber;
 
     @NotNull(message = "날짜를 입력해주세요.")
     @Column(name = "date", nullable = false)
-    LocalDate date;
+    private LocalDate date;
 
     @NotBlank(message = "시간을 입력해주세요.")
     @Size(min = 5, max = 5, message = "시간을 5자로 입력해주세요.")
     @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$", message = "시간을 HH:mm으로 입력해주세요.")
     @Column(name = "time", nullable = false, columnDefinition = "char(5)")
-    String time;
+    private String time;
 
     @Enumerated(EnumType.STRING)
-    ReservationStatus status;
+    private ReservationStatus status;
 
     @Size(min = 5, max = 100, message = "요청사항은 5자 이상 100로 입력해주세요.")
     @Column(name = "request", length = 100)
-    String request;
+    private String request;
 
     @PositiveOrZero(message = "결제 금액은 양수와 0만 가능합니다.")
     @Column(name = "payment_amount", nullable = false)
-    int paymentAmount;
+    private int paymentAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
-    Hairshop hairshop;
+    private Hairshop hairshop;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "designer_id", referencedColumnName = "id")
-    Designer designer;
+    private Designer designer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    Menu menu;
+    private Menu menu;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    User user;
+    @JoinColumn(name = "users_id", referencedColumnName = "id")
+    private User user;
 
     @Builder
     public Reservation(Long id, String name, String phoneNumber, LocalDate date, String time,

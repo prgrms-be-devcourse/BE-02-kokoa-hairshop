@@ -1,6 +1,6 @@
 package com.prgms.kokoahairshop.hairshop.entity;
 
-import com.prgms.kokoahairshop.reservation.entity.Reservation;
+import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import com.prgms.kokoahairshop.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class Hairshop extends DateEntity {
     private List<Reservation> reservations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
     @Builder(toBuilder = true)

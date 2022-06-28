@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.reservation.dto;
+package com.prgms.kokoahairshop.reservation2.dto;
 
 import com.prgms.kokoahairshop.designer.entity.Position;
 import java.util.List;

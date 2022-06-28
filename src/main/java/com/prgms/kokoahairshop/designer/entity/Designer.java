@@ -1,7 +1,7 @@
 package com.prgms.kokoahairshop.designer.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
-import com.prgms.kokoahairshop.reservation.entity.Reservation;
+import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -53,8 +53,7 @@ public class Designer extends DateEntity {
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reservation_id")
+    @OneToMany(mappedBy = "designer")
     private List<Reservation> reservations = new ArrayList<>();
 
     @Builder(toBuilder = true)

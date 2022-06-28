@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.reservation.dto;
+package com.prgms.kokoahairshop.reservation2.dto;
 
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;

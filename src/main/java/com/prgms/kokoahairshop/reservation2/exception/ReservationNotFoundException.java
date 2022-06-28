@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.reservation.exception;
+package com.prgms.kokoahairshop.reservation2.exception;
 
 public class ReservationNotFoundException extends RuntimeException {
 

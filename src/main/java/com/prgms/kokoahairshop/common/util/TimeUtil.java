@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.util;
+package com.prgms.kokoahairshop.common.util;
 
 import java.util.ArrayList;
 import java.util.List;

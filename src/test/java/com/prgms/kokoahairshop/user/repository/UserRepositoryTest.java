@@ -22,7 +22,6 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-
     @Test
     @DisplayName("email로 user를 조회할 수 있다.")
     void findByEmailTest() {

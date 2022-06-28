@@ -1,6 +1,9 @@
 package com.prgms.kokoahairshop.menu.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
+import com.prgms.kokoahairshop.reservation2.entity.Reservation;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +49,9 @@ public class Menu extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
+
+    @OneToMany(mappedBy = "menu")
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Builder(toBuilder = true)
     public Menu(Long id, String name, Integer price, Integer discount, String gender,

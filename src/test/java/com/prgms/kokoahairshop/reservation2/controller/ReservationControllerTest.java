@@ -1,14 +1,14 @@
-package com.prgms.kokoahairshop.reservation.controller;
+package com.prgms.kokoahairshop.reservation2.controller;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.prgms.kokoahairshop.reservation.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation.exception.ReservationNotFoundException;
-import com.prgms.kokoahairshop.reservation.exception.ReservationNotReservedException;
-import com.prgms.kokoahairshop.reservation.service.ReservationService;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
+import com.prgms.kokoahairshop.reservation2.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

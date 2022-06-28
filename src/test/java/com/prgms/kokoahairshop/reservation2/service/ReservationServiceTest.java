@@ -1,4 +1,4 @@
-package com.prgms.kokoahairshop.reservation.service;
+package com.prgms.kokoahairshop.reservation2.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -9,14 +9,14 @@ import static org.mockito.Mockito.when;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
-import com.prgms.kokoahairshop.reservation.dto.ReservationTimeRequestDto;
-import com.prgms.kokoahairshop.reservation.dto.ReservationTimeResponseDto;
-import com.prgms.kokoahairshop.reservation.entity.Reservation;
-import com.prgms.kokoahairshop.reservation.entity.ReservationStatus;
-import com.prgms.kokoahairshop.reservation.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation.exception.ReservationNotFoundException;
-import com.prgms.kokoahairshop.reservation.exception.ReservationNotReservedException;
-import com.prgms.kokoahairshop.reservation.repository.ReservationRepository;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeRequestDto;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeResponseDto;
+import com.prgms.kokoahairshop.reservation2.entity.Reservation;
+import com.prgms.kokoahairshop.reservation2.entity.ReservationStatus;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
+import com.prgms.kokoahairshop.reservation2.repository.ReservationRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;

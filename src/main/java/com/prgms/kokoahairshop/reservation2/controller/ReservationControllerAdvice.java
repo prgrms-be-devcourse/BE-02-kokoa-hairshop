@@ -1,10 +1,12 @@
-package com.prgms.kokoahairshop.reservation.controller;
+package com.prgms.kokoahairshop.reservation2.controller;
 
-import com.prgms.kokoahairshop.reservation.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation.exception.ReservationNotFoundException;
-import com.prgms.kokoahairshop.reservation.exception.ReservationNotReservedException;
+import com.prgms.kokoahairshop.reservation2.exception.DuplicateReservationException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
+import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +22,12 @@ public class ReservationControllerAdvice {
         e.getBindingResult().getAllErrors()
             .forEach(c -> errors.add(c.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(DuplicateReservationException.class)
+    ResponseEntity<String> handleDuplicateReservationException(DuplicateReservationException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(e.getMessage());
     }
 
     @ExceptionHandler(ReservationNotFoundException.class)

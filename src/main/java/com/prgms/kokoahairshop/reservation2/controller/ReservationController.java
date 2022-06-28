@@ -1,14 +1,16 @@
-package com.prgms.kokoahairshop.reservation.controller;
+package com.prgms.kokoahairshop.reservation2.controller;
 
-import com.prgms.kokoahairshop.reservation.dto.ReservationTimeRequestDto;
-import com.prgms.kokoahairshop.reservation.dto.ReservationTimeResponseDto;
-import com.prgms.kokoahairshop.reservation.service.ReservationService;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationRequestDto;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeRequestDto;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeResponseDto;
+import com.prgms.kokoahairshop.reservation2.service.ReservationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,13 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationService service;
+
+    @PostMapping("/reservations")
+    public ResponseEntity<Long> save(@RequestBody ReservationRequestDto requestDto) {
+        return ResponseEntity.ok()
+            .body(service.save(requestDto));
+    }
 
     @GetMapping("/reservations/reservation-times/hairshops/{hairshopId}")
     public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTime(
         @PathVariable Long hairshopId,
         @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        List<ReservationTimeResponseDto> responseDtos = reservationService.getReservationTime(
+        List<ReservationTimeResponseDto> responseDtos = service.getReservationTime(
             hairshopId, reservationTimeRequestDto);
 
         return ResponseEntity.ok()
@@ -31,7 +39,7 @@ public class ReservationController {
 
     @PatchMapping("/reservations/{reservationId}/user")
     public ResponseEntity<Object> cancelReservationUser(@PathVariable Long reservationId) {
-        reservationService.cancelReservation(reservationId);
+        service.cancelReservation(reservationId);
 
         return ResponseEntity.noContent()
             .build();
@@ -39,7 +47,7 @@ public class ReservationController {
 
     @PatchMapping("/reservations/{reservationId}/hairshop")
     public ResponseEntity<Object> cancelReservationHairshop(@PathVariable Long reservationId) {
-        reservationService.cancelReservation(reservationId);
+        service.cancelReservation(reservationId);
 
         return ResponseEntity.noContent()
             .build();
