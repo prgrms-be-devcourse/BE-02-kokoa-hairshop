@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "hairshop")
+@Table(name = "menu")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
 public class Menu {
     @Id
@@ -39,7 +39,7 @@ public class Menu {
     private Type type;
 
     @Column(name = "exposed_time", nullable = false)
-    private Integer exposed_time;
+    private Integer exposedTime;
 
     @Size(max = 200)
     @Column(name = "image", nullable = true, columnDefinition = "varchar(200)")
@@ -59,14 +59,14 @@ public class Menu {
 
     @Builder(toBuilder = true)
     public Menu(Long id, String name, Integer price, Integer discount, Gender gender,
-                Type type, Integer exposed_time, String image, Hairshop hairshop) {
+                Type type, Integer exposedTime, String image, Hairshop hairshop) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.discount = discount;
         this.gender = gender;
         this.type = type;
-        this.exposed_time = exposed_time;
+        this.exposedTime = exposedTime;
         this.image = image;
         this.hairshop = hairshop;
     }
