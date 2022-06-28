@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc(addFilters = false)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@WithMockUser(username = "example@gmail.com", roles = "USER")
 class MenuControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -175,7 +177,7 @@ class MenuControllerTest {
     }
 
     @Test
-    @DisplayName("메뉴 아이디로 메뉴 조회 테스트")
+    @DisplayName("헤어샵 아이디로 메뉴 조회 테스트")
     void GET_MENU_BY_HAIRSHOP_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/menu/hairshop/{id}", menuResponse.getId())
                         .characterEncoding("UTF-8")

@@ -46,6 +46,16 @@ public class MenuService {
     }
 
     @Transactional
+    public Page<MenuResponse> findByHairshopId(Pageable pageable, Long id) throws NotFoundException {
+        Hairshop hairshop = hairshopRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
+        List<MenuResponse> list = menuRepository.findByHairshop(hairshop)
+                .stream().map(menuConverter::convertToMenuResponse)
+                .collect(Collectors.toList());
+        return new PageImpl<>(list, pageable, list.size());
+    }
+
+    @Transactional
     public MenuResponse findById(Long id) throws NotFoundException {
         return menuRepository.findById(id)
                 .map(menuConverter::convertToMenuResponse)
