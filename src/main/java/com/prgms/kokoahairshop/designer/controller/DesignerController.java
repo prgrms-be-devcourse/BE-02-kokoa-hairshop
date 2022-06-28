@@ -5,6 +5,7 @@ import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
 import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
 import com.prgms.kokoahairshop.designer.service.DesignerService;
 import javassist.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/designers")
 public class DesignerController {
     private final DesignerService designerService;
@@ -28,19 +30,20 @@ public class DesignerController {
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
 
-    public DesignerController(DesignerService designerService) {
-        this.designerService = designerService;
-    }
-
     @PostMapping
-    public ResponseEntity<Long> insert(@RequestBody CreateDesignerRequest createDesignerRequest) {
+    public ResponseEntity<Long> insert(@RequestBody CreateDesignerRequest createDesignerRequest) throws NotFoundException {
         DesignerResponse insert = designerService.insert(createDesignerRequest);
-        return ResponseEntity.created(URI.create("/api/v1/designers/" + insert.getId())).body(insert.getId());
+        return ResponseEntity.created(URI.create("/designers/" + insert.getId())).body(insert.getId());
     }
 
     @GetMapping
     public ResponseEntity<Page<DesignerResponse>> getAll(Pageable pageable) {
         return ResponseEntity.ok(designerService.findAll(pageable));
+    }
+
+    @GetMapping("/hairshop/{id}")
+    public ResponseEntity<Page<DesignerResponse>> getByHairshop(Pageable pageable, @PathVariable Long id) throws NotFoundException {
+        return ResponseEntity.ok(designerService.findByHairshopId(pageable, id));
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,5 @@
-package com.prgms.kokoahairshop.designer.dto;
+package com.prgms.kokoahairshop.menu.dto;
 
-import com.prgms.kokoahairshop.designer.entity.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,12 +11,15 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DesignerResponse {
+public class MenuResponse {
     private Long id;
     private String name;
+    private Integer price;
+    private Integer discount;
+    private String gender;
+    private String type;
+    private Integer exposedTime;
     private String image;
-    private String introduction;
-    private String position;
     private Long hairshopId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

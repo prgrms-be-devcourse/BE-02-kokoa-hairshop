@@ -113,14 +113,14 @@ class ReservationServiceTest {
         // given
         Designer designer1 = Designer.builder()
             .name("디자이너1")
-            .position(Position.디자이너)
+            .position(Position.DESIGNER)
             .image("디자이너_이미지_URL1")
             .introduction("안녕하세요.")
             .build();
 
         Designer designer2 = Designer.builder()
             .name("디자이너2")
-            .position(Position.디자이너)
+            .position(Position.DESIGNER)
             .image("디자이너_이미지_URL2")
             .introduction("안녕하세요.")
             .build();

@@ -1,6 +1,5 @@
-package com.prgms.kokoahairshop.designer.dto;
+package com.prgms.kokoahairshop.menu.dto;
 
-import com.prgms.kokoahairshop.designer.entity.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModifyDesignerRequest {
+public class ModifyMenuRequest {
     private Long id;
     private String name;
+    private Integer price;
+    private Integer discount;
+    private String gender;
+    private String type;
+    private Integer exposedTime;
     private String image;
-    private String introduction;
-    private String position;
     private Long hairshopId;
 }

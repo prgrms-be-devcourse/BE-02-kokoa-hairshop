@@ -8,6 +8,7 @@ import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
+import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.entity.Type;
 import com.prgms.kokoahairshop.menu.repository.MenuRepository;
@@ -94,7 +95,7 @@ class ReservationRepositoryTest {
             .name("디자이너")
             .image("디자이너_이미지_URL")
             .introduction("안녕하세요.")
-            .position(Position.디자이너)
+            .position(Position.DESIGNER)
             .hairshop(hairshop)
             .build();
         designerRepository.save(designer);
@@ -103,8 +104,8 @@ class ReservationRepositoryTest {
             .name("기본 커트")
             .type(Type.커트)
             .price(20000)
-            .gender("남")
-            .exposed_time(30)
+            .gender(Gender.남)
+            .exposedTime(30)
             .discount(0)
             .image("커트_이미지_URL")
             .hairshop(hairshop)

@@ -16,6 +16,7 @@ import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
+import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.entity.Type;
 import com.prgms.kokoahairshop.menu.repository.MenuRepository;
@@ -127,7 +128,7 @@ class ReservationControllerTest {
             .name("디자이너")
             .image("디자이너_이미지_URL")
             .introduction("안녕하세요.")
-            .position(Position.디자이너)
+            .position(Position.DESIGNER)
             .hairshop(hairshop)
             .build();
         designerRepository.save(designer);
@@ -136,8 +137,8 @@ class ReservationControllerTest {
             .name("기본 커트")
             .type(Type.커트)
             .price(20000)
-            .gender("남")
-            .exposed_time(30)
+            .gender(Gender.남)
+            .exposedTime(30)
             .discount(0)
             .image("커트_이미지_URL")
             .hairshop(hairshop)
@@ -146,7 +147,7 @@ class ReservationControllerTest {
 
         reservation = Reservation.builder()
             .name("예약자")
-            .date(LocalDate.now())
+            .date(LocalDate.now().minusDays(1))
             .time("12:00")
             .paymentAmount(20000)
             .status(ReservationStatus.RESERVED)
@@ -227,7 +228,7 @@ class ReservationControllerTest {
         ReservationRequestDto requestDto = ReservationRequestDto.builder()
             .name("예약자")
             .phoneNumber("010-1234-5678")
-            .date(LocalDate.now())
+            .date(LocalDate.now().minusDays(1))
             .time("12:00") // 12시에는 이미 예약이 있으므로 실패
             .request("예쁘게 잘라주세요.")
             .paymentAmount(20000)
