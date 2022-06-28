@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.18'
     implementation 'com.auth0:java-jwt:3.19.2'
     implementation 'org.javassist:javassist:3.29.0-GA'
+    implementation 'org.projectlombok:lombok:1.18.20'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
