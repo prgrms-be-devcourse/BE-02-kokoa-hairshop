@@ -1,6 +1,9 @@
 package com.prgms.kokoahairshop.designer.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
+import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,14 +42,27 @@ public class Designer extends DateEntity {
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
 
+    @OneToMany(mappedBy = "designer")
+    List<ReservationTime> reservationTimes = new ArrayList<>();
+
+
     @Builder(toBuilder = true)
     public Designer(Long id, String name, String image, String introduction,
-                    Position position, Hairshop hairshop) {
+                    Position position, Hairshop hairshop, List<ReservationTime> reservationTimes) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.introduction = introduction;
         this.position = position;
         this.hairshop = hairshop;
+
+        if(reservationTimes != null) {
+            this.reservationTimes = reservationTimes;
+        }
+    }
+
+    public void addReservationTimes(ReservationTime reservationTime) {
+        this.reservationTimes.add(reservationTime);
+        reservationTime.setDesigner(this);
     }
 }
