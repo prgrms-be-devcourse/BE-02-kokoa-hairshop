@@ -1,7 +1,6 @@
 package com.prgms.kokoahairshop.designer.dto;
 
 import com.prgms.kokoahairshop.designer.entity.Designer;
-import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ public class DesignerConverter {
                 .name(createDesignerRequest.getName())
                 .image(createDesignerRequest.getImage())
                 .introduction(createDesignerRequest.getIntroduction())
-                .position(Position.valueOf(createDesignerRequest.getPosition()).getValue())
+                .position(createDesignerRequest.getPosition())
                 .hairshop(hairshop)
                 .build();
     }
@@ -23,7 +22,7 @@ public class DesignerConverter {
                 .name(modifyDesignerRequest.getName())
                 .image(modifyDesignerRequest.getImage())
                 .introduction(modifyDesignerRequest.getIntroduction())
-                .position(Position.valueOf(modifyDesignerRequest.getPosition()).getValue())
+                .position(modifyDesignerRequest.getPosition())
                 .hairshop(hairshop)
                 .build();
     }
@@ -34,7 +33,7 @@ public class DesignerConverter {
                 .name(designer.getName())
                 .image(designer.getImage())
                 .introduction(designer.getIntroduction())
-                .position(Position.of(designer.getPosition()).toString())
+                .position(designer.getPosition())
                 .hairshopId(designer.getId())
                 .createdAt(designer.getCreatedAt())
                 .updatedAt(designer.getUpdatedAt())

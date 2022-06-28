@@ -5,6 +5,7 @@ import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
 import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
 import com.prgms.kokoahairshop.designer.service.DesignerService;
 import javassist.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/designers")
 public class DesignerController {
     private final DesignerService designerService;
@@ -26,10 +28,6 @@ public class DesignerController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> internalServerErrorHandler(Exception e) {
         return ResponseEntity.internalServerError().body(e.getMessage());
-    }
-
-    public DesignerController(DesignerService designerService) {
-        this.designerService = designerService;
     }
 
     @PostMapping
