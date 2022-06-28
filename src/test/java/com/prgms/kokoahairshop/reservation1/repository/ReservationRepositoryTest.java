@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
+import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.entity.Type;
 import com.prgms.kokoahairshop.reservation1.entity.Reservation;
@@ -64,17 +65,17 @@ class ReservationRepositoryTest {
             .name("designer")
             .image("/image")
             .introduction("소개글")
-            .position(Position.디자이너)
+            .position(Position.DESIGNER)
             .hairshop(hairshop)
             .build();
         Menu menu = Menu.builder()
             .name("커트")
             .price(20000)
             .discount(1000)
-            .gender("남")
+            .gender(Gender.남)
             .type(Type.커트)
             .image("/image")
-            .exposed_time(1)
+            .exposedTime(1)
             .hairshop(hairshop)
             .build();
         em.persist(user);
