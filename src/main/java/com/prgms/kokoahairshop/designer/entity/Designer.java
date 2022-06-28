@@ -5,15 +5,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "designer")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
-public class Designer extends DateEntity {
+public class Designer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,14 +32,21 @@ public class Designer extends DateEntity {
     @Column(name = "introduction", nullable = false, columnDefinition = "varchar(300)")
     private String introduction;
 
-    // TODO : Attribute Converter 사용고려 -> https://galid1.tistory.com/572
     @Enumerated(EnumType.STRING)
-    @Column(name = "position", nullable = false, columnDefinition = "ENUM('원장', '실장', '디자이너')")
+    @Column(name = "position", nullable = false, columnDefinition = "varchar(20)")
     private Position position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @CreatedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder(toBuilder = true)
     public Designer(Long id, String name, String image, String introduction,

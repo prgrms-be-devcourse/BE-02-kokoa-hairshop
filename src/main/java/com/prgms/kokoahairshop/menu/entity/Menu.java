@@ -5,15 +5,17 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "hairshop")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
-public class Menu extends DateEntity {
+public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,12 +30,12 @@ public class Menu extends DateEntity {
     @Column(name = "discount", nullable = false)
     private Integer discount;
 
-    @Column(name = "gender", nullable = false, columnDefinition = "ENUM('남', '여', '공용')")
-    private String gender;
-
-    // TODO : Attribute Converter 사용고려 -> https://galid1.tistory.com/572
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, columnDefinition = "ENUM('커트', '펌', '컬러', '클리닉', '스타일링', '붙임머리', '메이크업')")
+    @Column(name = "gender", nullable = false, columnDefinition = "varchar(10)")
+    private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, columnDefinition = "varchar(20)")
     private Type type;
 
     @Column(name = "exposed_time", nullable = false)
@@ -47,8 +49,16 @@ public class Menu extends DateEntity {
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
 
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @CreatedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
     @Builder(toBuilder = true)
-    public Menu(Long id, String name, Integer price, Integer discount, String gender,
+    public Menu(Long id, String name, Integer price, Integer discount, Gender gender,
                 Type type, Integer exposed_time, String image, Hairshop hairshop) {
         this.id = id;
         this.name = name;
