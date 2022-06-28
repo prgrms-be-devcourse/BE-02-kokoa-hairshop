@@ -1,3 +1,19 @@
 spring:
-  profiles:
-    include: database
+  config.activate.on-profile: test
+  datasource:
+    url: jdbc:h2:mem:test
+#    url: jdbc:h2:tcp://localhost/~/kokoa
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    generate-ddl: true
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
