@@ -11,7 +11,7 @@ public class DesignerConverter {
                 .name(createDesignerRequest.getName())
                 .image(createDesignerRequest.getImage())
                 .introduction(Position.valueOf(createDesignerRequest.getIntroduction()).toString())
-                .position(Position.valueOf(createDesignerRequest.getPosition()).getValue())
+                .position(createDesignerRequest.getPosition())
                 .build();
     }
 
@@ -21,7 +21,7 @@ public class DesignerConverter {
                 .name(modifyDesignerRequest.getName())
                 .image(modifyDesignerRequest.getImage())
                 .introduction(modifyDesignerRequest.getIntroduction())
-                .position(Position.valueOf(modifyDesignerRequest.getPosition()).getValue())
+                .position(modifyDesignerRequest.getPosition())
                 .build();
     }
 
@@ -31,7 +31,7 @@ public class DesignerConverter {
                 .name(designer.getName())
                 .image(designer.getImage())
                 .introduction(designer.getIntroduction())
-                .position(Position.of(designer.getPosition()).toString())
+                .position(designer.getPosition())
                 .createdAt(designer.getCreatedAt())
                 .updatedAt(designer.getUpdatedAt())
                 .build();

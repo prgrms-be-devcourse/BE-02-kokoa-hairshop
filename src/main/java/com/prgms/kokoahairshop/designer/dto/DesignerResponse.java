@@ -1,5 +1,6 @@
 package com.prgms.kokoahairshop.designer.dto;
 
+import com.prgms.kokoahairshop.designer.entity.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class DesignerResponse {
     private String name;
     private String image;
     private String introduction;
-    private String position;
+    private Position position;
     private String hairshopId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
