@@ -58,6 +58,7 @@ class ReservationRepositoryTest {
 
     @BeforeAll
     void setup() {
+        // given
         hairshopManager = User.builder()
             .email("example1@naver.com")
             .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
@@ -113,6 +114,7 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void setupEach() {
+        // given
         repository.deleteAll();
 
         reservation = Reservation.builder()
@@ -133,39 +135,49 @@ class ReservationRepositoryTest {
 
     @Test
     void 날짜_시간_디자이너_아이디로_예약이_존재하는지_확인할_수_있다() {
+        // when
         boolean exists = repository.existsByDateAndTimeAndDesignerId(LocalDate.now(), "12:00", designer.getId());
 
+        // then
         assertThat(exists, is(true));
     }
 
     @Test
     void 예약을_생성할_수_있다() {
+        // when
         List<Reservation> reservations = repository.findAll();
 
+        // then
         assertThat(reservations.size(), is(1));
     }
 
     @Test
     void 예약을_조회할_수_있다() {
+        // when
         Reservation receivedReservation = repository.findById(reservation.getId()).get();
 
+        // then
         assertThat(receivedReservation.getName(), is("예약자"));
     }
 
     @Test
     void 예약을_수정할_수_있다() {
+        // when
         reservation.changeStatus(ReservationStatus.CANCELED);
         repository.save(reservation);
         Reservation receivedReservation = repository.findById(reservation.getId()).get();
 
+        // then
         assertThat(receivedReservation.getStatus(), is(ReservationStatus.CANCELED));
     }
 
     @Test
     void 예약을_삭제할_수_있다() {
+        // when
         repository.deleteById(reservation.getId());
         List<Reservation> reservations = repository.findAll();
 
+        // then
         assertThat(reservations.size(), is(0));
     }
 }

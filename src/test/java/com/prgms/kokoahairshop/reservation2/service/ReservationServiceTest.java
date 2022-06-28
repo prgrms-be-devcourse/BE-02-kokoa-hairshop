@@ -10,6 +10,10 @@ import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
+import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
+import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
+import com.prgms.kokoahairshop.menu.entity.Menu;
+import com.prgms.kokoahairshop.menu.repository.MenuRepository;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationRequestDto;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeRequestDto;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeResponseDto;
@@ -19,6 +23,8 @@ import com.prgms.kokoahairshop.reservation2.exception.DuplicateReservationExcept
 import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
 import com.prgms.kokoahairshop.reservation2.repository.ReservationRepository;
+import com.prgms.kokoahairshop.user.entity.User;
+import com.prgms.kokoahairshop.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,10 +45,49 @@ class ReservationServiceTest {
     ReservationRepository repository;
 
     @Mock
+    UserRepository userRepository;
+
+    @Mock
+    HairshopRepository hairshopRepository;
+
+    @Mock
     DesignerRepository designerRepository;
+
+    @Mock
+    MenuRepository menuRepository;
+
+    @Test
+    void 예약을_생성할_수_있다() {
+        // given
+        ReservationRequestDto requestDto = ReservationRequestDto.builder()
+            .name("예약자")
+            .phoneNumber("010-1234-5678")
+            .date(LocalDate.now())
+            .time("12:00")
+            .request("예쁘게 잘라주세요.")
+            .paymentAmount(20000)
+            .userId(1L)
+            .hairshopId(1L)
+            .designerId(1L)
+            .menuId(1L)
+            .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(User.builder().build()));
+        when(hairshopRepository.findById(1L)).thenReturn(Optional.of(Hairshop.builder().build()));
+        when(designerRepository.findById(1L)).thenReturn(Optional.of(Designer.builder().build()));
+        when(menuRepository.findById(1L)).thenReturn(Optional.of(Menu.builder().build()));
+        when(repository.existsByDateAndTimeAndDesignerId(LocalDate.now(), "12:00", 1L)).thenReturn(
+            false);
+        when(repository.save(any(Reservation.class))).thenReturn(
+            Reservation.builder().id(1L).build());
+
+        // when & then
+        assertThat(service.save(requestDto), is(1L));
+    }
 
     @Test
     void 예약_생성_시_이미_예약이_존재하면_예외가_발생한다() {
+        // given
         ReservationRequestDto requestDto = ReservationRequestDto.builder()
             .name("예약자")
             .phoneNumber("010-1234-5678")
@@ -59,6 +104,7 @@ class ReservationServiceTest {
         when(repository.existsByDateAndTimeAndDesignerId(LocalDate.now(), "12:00", 1L)).thenReturn(
             true);
 
+        // when & then
         assertThrows(DuplicateReservationException.class, () -> service.save(requestDto));
     }
 

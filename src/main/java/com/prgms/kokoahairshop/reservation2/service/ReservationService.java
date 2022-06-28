@@ -72,8 +72,9 @@ public class ReservationService {
 
         Reservation reservation = ReservationConverter.toEntity(requestDto, maybeUser.get(),
             maybeHairshop.get(), maybeDesigner.get(), maybeMenu.get());
+        Reservation savedReservation = repository.save(reservation);
 
-        return repository.save(reservation).getId();
+        return savedReservation.getId();
     }
 
     @Transactional(readOnly = true)

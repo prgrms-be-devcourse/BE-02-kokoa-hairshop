@@ -17,7 +17,7 @@ public class ReservationConverter {
             .status(ReservationStatus.RESERVED)
             .request(requestDto.getRequest())
             .date(requestDto.getDate())
-            .paymentAmount(menu.getPrice())
+            .paymentAmount(requestDto.getPaymentAmount())
             .phoneNumber(requestDto.getPhoneNumber())
             .time(requestDto.getTime())
             .user(user)
