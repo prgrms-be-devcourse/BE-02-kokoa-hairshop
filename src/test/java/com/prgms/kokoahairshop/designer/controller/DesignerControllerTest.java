@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.designer.dto.CreateDesignerRequest;
 import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
 import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
+import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.designer.service.DesignerService;
-import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import javassist.NotFoundException;
@@ -75,7 +75,7 @@ class DesignerControllerTest {
                 .name("나그맨")
                 .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
                 .introduction("안녕하세요.")
-                .position("디자이너")
+                .position(Position.DESIGNER.getPosition())
                 .hairshopId(hairshop.getId())
                 .build();
         designerResponse = designerService.insert(createDesignerRequest);
@@ -94,7 +94,7 @@ class DesignerControllerTest {
                 .name("데브")
                 .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
                 .introduction("안녕하세요.")
-                .position("실장")
+                .position(Position.MANAGER.getPosition())
                 .hairshopId(hairshop.getId())
                 .build();
         this.mockMvc.perform(post("/designers")
@@ -256,7 +256,7 @@ class DesignerControllerTest {
                 .name(designerResponse.getName())
                 .image(designerResponse.getImage())
                 .introduction(designerResponse.getIntroduction())
-                .position("원장")
+                .position(Position.DIRECTOR.getPosition())
                 .hairshopId(designerResponse.getHairshopId())
                 .build();
         this.mockMvc.perform(patch("/designers")

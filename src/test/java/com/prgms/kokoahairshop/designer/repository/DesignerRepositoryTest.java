@@ -1,6 +1,7 @@
 package com.prgms.kokoahairshop.designer.repository;
 
 import com.prgms.kokoahairshop.designer.entity.Designer;
+import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -56,7 +57,7 @@ class DesignerRepositoryTest {
                 .name("나그맨")
                 .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpgㅍ")
                 .introduction("안녕하세요.")
-                .position(3)
+                .position(Position.DESIGNER)
                 .hairshop(hairshop)
                 .build();
         designer = designerRepository.save(designer);
@@ -80,7 +81,7 @@ class DesignerRepositoryTest {
     void UPDATE_DESIGNER_TEST() {
         // given
         designer = designer.toBuilder()
-                .position(2)
+                .position(Position.MANAGER)
                 .build();
 
         // when
