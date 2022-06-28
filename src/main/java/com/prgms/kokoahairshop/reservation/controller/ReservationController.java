@@ -24,14 +24,13 @@ public class ReservationController {
         @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
         List<ReservationTimeResponseDto> responseDtos = reservationService.getReservationTime(
             hairshopId, reservationTimeRequestDto);
+
         return ResponseEntity.ok()
             .body(responseDtos);
     }
 
     @PatchMapping("/reservations/{reservationId}/user")
     public ResponseEntity<Object> cancelReservationUser(@PathVariable Long reservationId) {
-        // user 정보 검증
-
         reservationService.cancelReservation(reservationId);
 
         return ResponseEntity.noContent()
@@ -40,8 +39,6 @@ public class ReservationController {
 
     @PatchMapping("/reservations/{reservationId}/hairshop")
     public ResponseEntity<Object> cancelReservationHairshop(@PathVariable Long reservationId) {
-        // user 정보 검증
-
         reservationService.cancelReservation(reservationId);
 
         return ResponseEntity.noContent()

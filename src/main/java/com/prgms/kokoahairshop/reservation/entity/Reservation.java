@@ -3,6 +3,7 @@ package com.prgms.kokoahairshop.reservation.entity;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.menu.entity.Menu;
+import com.prgms.kokoahairshop.user.entity.User;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +51,7 @@ public class Reservation {
     LocalDate date;
 
     @NotBlank(message = "시간을 입력해주세요.")
-    @Size(max = 5, message = "시간을 HH:mm으로 입력해주세요.")
+    @Size(min = 5, max = 5, message = "시간을 5자로 입력해주세요.")
     @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$", message = "시간을 HH:mm으로 입력해주세요.")
     @Column(name = "time", nullable = false, columnDefinition = "char(5)")
     String time;
@@ -58,8 +59,8 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     ReservationStatus status;
 
+    @Size(min = 5, max = 100, message = "요청사항은 5자 이상 100로 입력해주세요.")
     @Column(name = "request", length = 100)
-    @Size(min = 10, max = 100, message = "요청사항은 10자 이상 100로 입력해주세요.")
     String request;
 
     @PositiveOrZero(message = "결제 금액은 양수와 0만 가능합니다.")
@@ -75,21 +76,17 @@ public class Reservation {
     Designer designer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menug_id", referencedColumnName = "id")
+    @JoinColumn(name = "menu_id", referencedColumnName = "id")
     Menu menu;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    User user;
-//
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    User user;
 
     @Builder
     public Reservation(Long id, String name, String phoneNumber, LocalDate date, String time,
         ReservationStatus status, String request, int paymentAmount, Hairshop hairshop,
-        Designer designer, Menu menu
-//      User user
-    ) {
+        Designer designer, Menu menu, User user) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -101,7 +98,7 @@ public class Reservation {
         this.hairshop = hairshop;
         this.designer = designer;
         this.menu = menu;
-//        this.user = user;
+        this.user = user;
     }
 
     public void changeStatus(ReservationStatus status) {

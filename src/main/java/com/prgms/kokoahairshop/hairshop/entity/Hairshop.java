@@ -1,14 +1,17 @@
 package com.prgms.kokoahairshop.hairshop.entity;
 
 import com.prgms.kokoahairshop.reservation.entity.Reservation;
+import com.prgms.kokoahairshop.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -79,15 +82,18 @@ public class Hairshop extends DateEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @OneToMany
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "hairshop")
     private List<Reservation> reservations = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Builder(toBuilder = true)
     public Hairshop(Long id, String name, String phoneNumber, String startTime, String endTime,
         String closedDay, String reservationRange, String reservationStartTime,
         String reservationEndTime, Boolean sameDayAvailable, String roadNameNumber,
-        String profileImg, String introduction, Long userId) {
+        String profileImg, String introduction, Long userId, User user) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -102,5 +108,6 @@ public class Hairshop extends DateEntity {
         this.profileImg = profileImg;
         this.introduction = introduction;
         this.userId = userId;
+        this.user = user;
     }
 }

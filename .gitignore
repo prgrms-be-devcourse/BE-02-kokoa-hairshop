@@ -36,4 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-/src/main/resources/application-dev.yaml
+### yaml ###
+/src/main/resources/application-database.yaml
+/src/main/resources/application-jwt.yaml

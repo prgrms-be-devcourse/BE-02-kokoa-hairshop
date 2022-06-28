@@ -41,7 +41,7 @@ public class ReservationService {
             List<String> reservationTimes = new ArrayList<>(times);
             List<Reservation> reservations = designer.getReservations();
             for (Reservation reservation : reservations) {
-                if(reservation.getStatus() == ReservationStatus.RESERVED) {
+                if (reservation.getStatus() == ReservationStatus.RESERVED) {
                     reservationTimes.remove(reservation.getTime());
                 }
             }
