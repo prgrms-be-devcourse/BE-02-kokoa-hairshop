@@ -1,5 +1,7 @@
 package com.prgms.kokoahairshop.reservation2.service;
 
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
+import com.prgms.kokoahairshop.common.util.TimeUtil;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
@@ -14,12 +16,10 @@ import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import com.prgms.kokoahairshop.reservation2.entity.ReservationStatus;
 import com.prgms.kokoahairshop.reservation2.exception.DuplicateReservationException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
 import com.prgms.kokoahairshop.reservation2.repository.ReservationRepository;
 import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.repository.UserRepository;
-import com.prgms.kokoahairshop.common.util.TimeUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,26 +47,27 @@ public class ReservationService {
     public Long save(ReservationRequestDto requestDto) {
         Optional<Designer> maybeDesigner = designerRepository.findById(requestDto.getDesignerId());
         if (maybeDesigner.isEmpty()) {
-            throw new RuntimeException("해당 디자이너가 존재하지 않습니다.");
+            throw new NotFoundException("해당 디자이너가 존재하지 않습니다.");
         }
 
-        if(repository.existsByTimeAndDesignerId(requestDto.getTime(), maybeDesigner.get().getId())) {
+        if (repository.existsByDateAndTimeAndDesignerId(requestDto.getDate(), requestDto.getTime(),
+            requestDto.getDesignerId())) {
             throw new DuplicateReservationException("이미 해당 디자이너의 예약이 존재합니다.");
         }
 
         Optional<User> maybeUser = userRepository.findById(requestDto.getUserId());
         if (maybeUser.isEmpty()) {
-            throw new RuntimeException("해당 사용자가 존재하지 않습니다.");
+            throw new NotFoundException("해당 사용자가 존재하지 않습니다.");
         }
 
         Optional<Hairshop> maybeHairshop = hairshopRepository.findById(requestDto.getHairshopId());
         if (maybeHairshop.isEmpty()) {
-            throw new RuntimeException("해당 헤어샵이 존재하지 않습니다.");
+            throw new NotFoundException("해당 헤어샵이 존재하지 않습니다.");
         }
 
         Optional<Menu> maybeMenu = menuRepository.findById(requestDto.getMenuId());
         if (maybeMenu.isEmpty()) {
-            throw new RuntimeException("해당 메뉴가 존재하지 않습니다.");
+            throw new NotFoundException("해당 메뉴가 존재하지 않습니다.");
         }
 
         Reservation reservation = ReservationConverter.toEntity(requestDto, maybeUser.get(),
@@ -103,7 +104,7 @@ public class ReservationService {
     public void cancelReservation(Long reservationId) {
         Optional<Reservation> maybeReservation = repository.findById(reservationId);
         if (maybeReservation.isEmpty()) {
-            throw new ReservationNotFoundException("해당 예약이 존재하지 않습니다.");
+            throw new NotFoundException("해당 예약이 존재하지 않습니다.");
         }
 
         Reservation reservation = maybeReservation.get();

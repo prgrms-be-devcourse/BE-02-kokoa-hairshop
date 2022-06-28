@@ -8,9 +8,13 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
+@Builder
 public class ReservationRequestDto {
 
     @NotBlank(message = "이름을 입력해주세요.")
@@ -29,8 +33,6 @@ public class ReservationRequestDto {
     @Size(min = 5, max = 5, message = "시간을 5자로 입력해주세요.")
     @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$", message = "시간을 HH:mm으로 입력해주세요.")
     private String time;
-
-    private ReservationStatus status;
 
     @Size(min = 5, max = 100, message = "요청사항은 5자 이상 100로 입력해주세요.")
     private String request;

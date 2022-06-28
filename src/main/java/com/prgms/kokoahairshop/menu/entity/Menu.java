@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Getter
-@Table(name = "hairshop")
+@Table(name = "menu")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
 public class Menu extends DateEntity {
     @Id

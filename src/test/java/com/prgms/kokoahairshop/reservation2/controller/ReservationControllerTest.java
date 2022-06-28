@@ -5,8 +5,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
 import com.prgms.kokoahairshop.reservation2.service.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,7 @@ class ReservationControllerTest {
 
     @Test
     void 예약_취소_엔터티_없으면_404에러_발생() throws Exception {
-        doThrow(ReservationNotFoundException.class).when(service).cancelReservation(1L);
+        doThrow(NotFoundException.class).when(service).cancelReservation(1L);
 
         mockMvc.perform(patch("/reservations/1/user"))
             .andExpect(status().isNotFound());

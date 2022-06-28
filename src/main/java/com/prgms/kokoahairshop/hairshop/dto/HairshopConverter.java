@@ -19,7 +19,6 @@ public class HairshopConverter {
                 .roadNameNumber(createHairshopRequest.getRoadNameNumber())
                 .profileImg(createHairshopRequest.getProfileImg())
                 .introduction(createHairshopRequest.getIntroduction())
-                .userId(createHairshopRequest.getUserId())
                 .build();
     }
 
@@ -38,7 +37,6 @@ public class HairshopConverter {
                 .roadNameNumber(modifyHairshopRequest.getRoadNameNumber())
                 .profileImg(modifyHairshopRequest.getProfileImg())
                 .introduction(modifyHairshopRequest.getIntroduction())
-                .userId(modifyHairshopRequest.getUserId())
                 .build();
     }
 

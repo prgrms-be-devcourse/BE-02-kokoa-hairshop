@@ -1,8 +1,8 @@
 package com.prgms.kokoahairshop.reservation2.controller;
 
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.reservation2.exception.DuplicateReservationException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,8 @@ public class ReservationControllerAdvice {
             .body(e.getMessage());
     }
 
-    @ExceptionHandler(ReservationNotFoundException.class)
-    ResponseEntity<Object> handleReservationNotFoundException(ReservationNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    ResponseEntity<Object> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.notFound().build();
     }
 

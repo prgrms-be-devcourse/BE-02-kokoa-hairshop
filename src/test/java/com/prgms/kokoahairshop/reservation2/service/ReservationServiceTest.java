@@ -6,15 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
+import com.prgms.kokoahairshop.reservation2.dto.ReservationRequestDto;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeRequestDto;
 import com.prgms.kokoahairshop.reservation2.dto.ReservationTimeResponseDto;
 import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import com.prgms.kokoahairshop.reservation2.entity.ReservationStatus;
+import com.prgms.kokoahairshop.reservation2.exception.DuplicateReservationException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationCancelTimeoutException;
-import com.prgms.kokoahairshop.reservation2.exception.ReservationNotFoundException;
 import com.prgms.kokoahairshop.reservation2.exception.ReservationNotReservedException;
 import com.prgms.kokoahairshop.reservation2.repository.ReservationRepository;
 import java.time.LocalDate;
@@ -34,10 +36,31 @@ class ReservationServiceTest {
     ReservationService service;
 
     @Mock
-    ReservationRepository reservationRepository;
+    ReservationRepository repository;
 
     @Mock
     DesignerRepository designerRepository;
+
+    @Test
+    void 예약_생성_시_이미_예약이_존재하면_예외가_발생한다() {
+        ReservationRequestDto requestDto = ReservationRequestDto.builder()
+            .name("예약자")
+            .phoneNumber("010-1234-5678")
+            .date(LocalDate.now())
+            .time("12:00")
+            .request("예쁘게 잘라주세요.")
+            .userId(1L)
+            .hairshopId(1L)
+            .designerId(1L)
+            .menuId(1L)
+            .build();
+        when(designerRepository.findById(1L)).thenReturn(
+            Optional.of(Designer.builder().id(1L).build()));
+        when(repository.existsByDateAndTimeAndDesignerId(LocalDate.now(), "12:00", 1L)).thenReturn(
+            true);
+
+        assertThrows(DuplicateReservationException.class, () -> service.save(requestDto));
+    }
 
     @Test
     void 헤어샵의_특정_날짜_예약_가능_시간들을_조회할_수_있다() {
@@ -104,7 +127,7 @@ class ReservationServiceTest {
         // then
         assertThat(responseDtos.size(), is(2));
         assertThat(responseDtos.get(0).getDesignerName(), is("디자이너1"));
-        assertThat(responseDtos.get(1).getDesignerName(),is("디자이너2"));
+        assertThat(responseDtos.get(1).getDesignerName(), is("디자이너2"));
         List<String> reservationTimes1 = responseDtos.get(0).getReservationTimes();
         assertThat(reservationTimes1.contains("12:00"), is(false));
         assertThat(reservationTimes1.contains("13:00"), is(false));
@@ -124,9 +147,9 @@ class ReservationServiceTest {
             .status(ReservationStatus.RESERVED)
             .build();
 
-        when(reservationRepository.findById(reservation.getId())).thenReturn(
+        when(repository.findById(reservation.getId())).thenReturn(
             Optional.of(reservation));
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(null);
+        when(repository.save(any(Reservation.class))).thenReturn(null);
 
         // when & then
         service.cancelReservation(1L);
@@ -135,11 +158,11 @@ class ReservationServiceTest {
     @Test
     void 예약_취소_예약이_존재하지_않으면_예외가_발생한다() {
         // given
-        when(reservationRepository.findById(0L)).thenThrow(
-            new ReservationNotFoundException("해당 예약이 존재하지 않습니다."));
+        when(repository.findById(0L)).thenThrow(
+            new NotFoundException("해당 예약이 존재하지 않습니다."));
 
         // when & then
-        assertThrows(ReservationNotFoundException.class,
+        assertThrows(NotFoundException.class,
             () -> service.cancelReservation(0L));
     }
 
@@ -154,7 +177,7 @@ class ReservationServiceTest {
             .status(ReservationStatus.CANCELED)
             .build();
 
-        when(reservationRepository.findById(reservation.getId())).thenReturn(
+        when(repository.findById(reservation.getId())).thenReturn(
             Optional.of(reservation));
 
         // when & then
@@ -174,7 +197,7 @@ class ReservationServiceTest {
             .status(ReservationStatus.RESERVED)
             .build();
 
-        when(reservationRepository.findById(reservation.getId())).thenReturn(
+        when(repository.findById(reservation.getId())).thenReturn(
             Optional.of(reservation));
 
         // when & then
