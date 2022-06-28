@@ -11,6 +11,7 @@ public enum Position {
 
     private static final Map<String, Position> ENUM_MAP =
             Stream.of(values()).collect(Collectors.toMap(Position::getPosition, o -> o));
+
     private final String position;
 
     Position(String position) {

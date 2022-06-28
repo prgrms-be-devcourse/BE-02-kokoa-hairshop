@@ -1,0 +1,54 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+
+= 계정관리
+
+== 회원가입
+
+=== /signup
+
+.Request
+include::{snippets}/sign-up/http-request.adoc[]
+
+include::{snippets}/sign-up/request-fields.adoc[]
+
+
+.Response
+include::{snippets}/sign-up/http-response.adoc[]
+
+include::{snippets}/sign-up/response-fields.adoc[]
+
+
+
+== 로그인
+
+=== /login
+
+.Request
+include::{snippets}/login/http-request.adoc[]
+
+include::{snippets}/login/request-fields.adoc[]
+
+
+.Response
+include::{snippets}/login/http-response.adoc[]
+
+include::{snippets}/login/response-fields.adoc[]
+
+
+== 내정보조회
+=== /me
+
+.Request
+include::{snippets}/me/http-request.adoc[]
+
+
+
+.Response
+include::{snippets}/me/http-response.adoc[]
+
+include::{snippets}/me/response-fields.adoc[]
+
+
