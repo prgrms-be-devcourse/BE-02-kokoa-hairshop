@@ -4,15 +4,15 @@ import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationResponseDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeResponseDto;
-import com.prgms.kokoahairshop.reservation1.entity.Reservation;
+import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationStatus;
 import java.util.stream.Collectors;
 
-public class ReservationConverter {
+public class ReservationConverter1 {
 
     //dto -> entity
-    public Reservation toReservationEntity (CreateReservationRequestDto requestDto) {
-        return Reservation.builder()
+    public Reservations toReservationEntity (CreateReservationRequestDto requestDto) {
+        return Reservations.builder()
             .name(requestDto.getName())
             .phoneNumber(requestDto.getPhoneNumber())
             .date(requestDto.getDate())
@@ -24,23 +24,23 @@ public class ReservationConverter {
     }
 
     //entity -> dto
-    public ReservationResponseDto toReservationResponseDto (Reservation reservation) {
+    public ReservationResponseDto toReservationResponseDto (Reservations reservations) {
         return ReservationResponseDto.builder()
-            .id(reservation.getId())
-            .name(reservation.getName())
-            .phoneNumber(reservation.getPhoneNumber())
-            .date(reservation.getDate())
-            .time(reservation.getTime())
-            .status(reservation.getStatus())
-            .request(reservation.getRequest())
-            .paymentAmount(reservation.getPaymentAmount())
-            .hairshopId(reservation.getHairshop().getId())
-            .hairshopName(reservation.getHairshop().getName())
-            .menuId(reservation.getMenu().getId())
-            .menuName(reservation.getMenu().getName())
-            .designerId(reservation.getDesigner().getId())
-            .designerPosition(reservation.getDesigner().getPosition())
-            .designerName(reservation.getDesigner().getName())
+            .id(reservations.getId())
+            .name(reservations.getName())
+            .phoneNumber(reservations.getPhoneNumber())
+            .date(reservations.getDate())
+            .time(reservations.getTime())
+            .status(reservations.getStatus())
+            .request(reservations.getRequest())
+            .paymentAmount(reservations.getPaymentAmount())
+            .hairshopId(reservations.getHairshop().getId())
+            .hairshopName(reservations.getHairshop().getName())
+            .menuId(reservations.getMenu().getId())
+            .menuName(reservations.getMenu().getName())
+            .designerId(reservations.getDesigner().getId())
+            .designerPosition(reservations.getDesigner().getPosition())
+            .designerName(reservations.getDesigner().getName())
             .build();
     }
 

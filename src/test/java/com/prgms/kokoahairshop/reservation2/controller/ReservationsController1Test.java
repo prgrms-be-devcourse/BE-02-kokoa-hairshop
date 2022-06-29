@@ -50,7 +50,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureRestDocs
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ReservationControllerTest {
+class ReservationsController1Test {
 
     @Autowired
     ReservationService service;

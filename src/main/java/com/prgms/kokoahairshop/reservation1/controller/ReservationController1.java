@@ -4,8 +4,8 @@ import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationResponseDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeResponseDto;
-import com.prgms.kokoahairshop.reservation1.entity.Reservation;
-import com.prgms.kokoahairshop.reservation1.service.ReservationService;
+import com.prgms.kokoahairshop.reservation1.entity.Reservations;
+import com.prgms.kokoahairshop.reservation1.service.ReservationService1;
 import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.service.UserDetailService;
 import java.util.List;
@@ -22,35 +22,35 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class ReservationController {
+public class ReservationController1 {
 
-    private final ReservationService reservationService;
+    private final ReservationService1 reservationService1;
     private final UserDetailService userDetailService;
 
-    @PostMapping("/reservations")
-    public ResponseEntity<Reservation> reserve(@Validated @RequestBody CreateReservationRequestDto createReservationRequestDto) {
-        Reservation reservation = reservationService.saveReservation(createReservationRequestDto);
-        return ResponseEntity.ok(reservation);
+    @PostMapping("/reservations/v1/")
+    public ResponseEntity<Reservations> reserve(@Validated @RequestBody CreateReservationRequestDto createReservationRequestDto) {
+        Reservations reservations = reservationService1.saveReservation(createReservationRequestDto);
+        return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/reservations/reservation-time/hairshops/{id}")
+    @GetMapping("/reservations/v1/reservation-time/hairshops/{id}")
     public ResponseEntity<List<ReservationTimeResponseDto>> reservationTimeList(@PathVariable("id") Long hairshopId, @Validated @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        List<ReservationTimeResponseDto> reservationTimes = reservationService.getReservationTimeList(
+        List<ReservationTimeResponseDto> reservationTimes = reservationService1.getReservationTimeList(
             hairshopId, reservationTimeRequestDto.getDate());
         return ResponseEntity.ok(reservationTimes);
     }
 
-    @GetMapping("/reservations/user")
+    @GetMapping("/reservations/v1/user")
     public ResponseEntity<List<ReservationResponseDto>> reservationListByUser() {
         User user = userDetailService.getUserFromSecurityContextHolder();
-        List<ReservationResponseDto> reservations = reservationService.getReservationListByUser(user.getId());
+        List<ReservationResponseDto> reservations = reservationService1.getReservationListByUser(user.getId());
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/reservations/hairshops/{id}")
+    @GetMapping("/reservations/v1/hairshops/{id}")
     public ResponseEntity<List<ReservationResponseDto>> reservationListByHairshop(@PathVariable("id") Long hairshopId) {
 
-        List<ReservationResponseDto> reservations = reservationService.getReservationListByHairshop(hairshopId);
+        List<ReservationResponseDto> reservations = reservationService1.getReservationListByHairshop(hairshopId);
         return ResponseEntity.ok(reservations);
     }
 }

@@ -28,7 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
-class ReservationRepositoryTest {
+class ReservationsRepository1Test {
 
     @Autowired
     UserRepository userRepository;

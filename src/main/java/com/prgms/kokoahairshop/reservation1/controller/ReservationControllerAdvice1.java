@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice
-public class ReservationControllerAdvice {
+@RestControllerAdvice("com.prgms.kokoahairshop.reservation1.controller")
+public class ReservationControllerAdvice1 {
 
     @ExceptionHandler
     public ResponseEntity<String> handleValidationException (MethodArgumentNotValidException e) {
