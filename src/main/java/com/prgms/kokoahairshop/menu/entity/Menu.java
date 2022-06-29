@@ -5,17 +5,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "menu")
+@Table(name = "hairshop")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
-public class Menu {
+public class Menu extends DateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,16 +28,16 @@ public class Menu {
     @Column(name = "discount", nullable = false)
     private Integer discount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false, columnDefinition = "varchar(10)")
-    private Gender gender;
+    @Column(name = "gender", nullable = false, columnDefinition = "ENUM('남', '여', '공용')")
+    private String gender;
 
+    // TODO : Attribute Converter 사용고려 -> https://galid1.tistory.com/572
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, columnDefinition = "varchar(20)")
+    @Column(name = "type", nullable = false, columnDefinition = "ENUM('커트', '펌', '컬러', '클리닉', '스타일링', '붙임머리', '메이크업')")
     private Type type;
 
     @Column(name = "exposed_time", nullable = false)
-    private Integer exposedTime;
+    private Integer exposed_time;
 
     @Size(max = 200)
     @Column(name = "image", nullable = true, columnDefinition = "varchar(200)")
@@ -49,24 +47,16 @@ public class Menu {
     @JoinColumn(name = "hairshop_id", referencedColumnName = "id")
     private Hairshop hairshop;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @CreatedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
     @Builder(toBuilder = true)
-    public Menu(Long id, String name, Integer price, Integer discount, Gender gender,
-                Type type, Integer exposedTime, String image, Hairshop hairshop) {
+    public Menu(Long id, String name, Integer price, Integer discount, String gender,
+                Type type, Integer exposed_time, String image, Hairshop hairshop) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.discount = discount;
         this.gender = gender;
         this.type = type;
-        this.exposedTime = exposedTime;
+        this.exposed_time = exposed_time;
         this.image = image;
         this.hairshop = hairshop;
     }
