@@ -1,5 +1,7 @@
 package com.prgms.kokoahairshop.user.entity;
 
+import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
+import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,15 +38,11 @@ public class User implements UserDetails {
 
     private String auth;
 
-    // TODO : 연관관계 매핑
-//    @OneToMany
-//    @JoinColumn(name = "user_id")
-//    private List<Reservation> reservations = new ArrayList<>();
-//
-//    @OneToMany
-//    @JoinColumn(name = "user_id")
-//    private List<HairShop> hairshops = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Hairshop> hairshops = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String auth) {
