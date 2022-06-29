@@ -68,6 +68,7 @@ public class Designer {
     @Builder(toBuilder = true)
     public Designer(Long id, String name, String image, String introduction,
         Position position, Hairshop hairshop) {
+
         this.id = id;
         this.name = name;
         this.image = image;
