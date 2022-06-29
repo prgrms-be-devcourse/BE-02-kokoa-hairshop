@@ -3,21 +3,23 @@ package com.prgms.kokoahairshop.hairshop.entity;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.user.entity.User;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "hairshop")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // https://erjuer.tistory.com/106
-public class Hairshop extends DateEntity {
+public class Hairshop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -79,6 +81,14 @@ public class Hairshop extends DateEntity {
 
     @OneToMany(mappedBy = "hairshop")
     private List<Menu> menus = new ArrayList<>();
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @CreatedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder(toBuilder = true)
     public Hairshop(Long id, String name, String phoneNumber, String startTime, String endTime,
