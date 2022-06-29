@@ -64,14 +64,5 @@ public class Designer {
         this.introduction = introduction;
         this.position = position;
         this.hairshop = hairshop;
-
-        if(reservationTimes != null) {
-            this.reservationTimes = reservationTimes;
-        }
-    }
-
-    public void addReservationTimes(ReservationTime reservationTime) {
-        this.reservationTimes.add(reservationTime);
-        reservationTime.setDesigner(this);
     }
 }

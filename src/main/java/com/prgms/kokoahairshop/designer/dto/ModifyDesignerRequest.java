@@ -15,6 +15,6 @@ public class ModifyDesignerRequest {
     private String name;
     private String image;
     private String introduction;
-    private String position;
-    private Long hairshopId;
+    private Position position;
+    private String hairshopId;
 }

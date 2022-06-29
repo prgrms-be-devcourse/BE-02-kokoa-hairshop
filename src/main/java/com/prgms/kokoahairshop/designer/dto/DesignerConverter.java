@@ -1,30 +1,26 @@
 package com.prgms.kokoahairshop.designer.dto;
 
 import com.prgms.kokoahairshop.designer.entity.Designer;
-import com.prgms.kokoahairshop.designer.entity.Position;
-import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DesignerConverter {
-    public Designer convertToDesigner(CreateDesignerRequest createDesignerRequest, Hairshop hairshop) {
+    public Designer convertToDesigner(CreateDesignerRequest createDesignerRequest) {
         return Designer.builder()
                 .name(createDesignerRequest.getName())
                 .image(createDesignerRequest.getImage())
                 .introduction(createDesignerRequest.getIntroduction())
-                .position(Position.getEnum(createDesignerRequest.getPosition()))
-                .hairshop(hairshop)
+                .position(createDesignerRequest.getPosition())
                 .build();
     }
 
-    public Designer convertToDesigner(ModifyDesignerRequest modifyDesignerRequest, Hairshop hairshop) {
+    public Designer convertToDesigner(ModifyDesignerRequest modifyDesignerRequest) {
         return Designer.builder()
                 .id(modifyDesignerRequest.getId())
                 .name(modifyDesignerRequest.getName())
                 .image(modifyDesignerRequest.getImage())
                 .introduction(modifyDesignerRequest.getIntroduction())
-                .position(Position.getEnum(modifyDesignerRequest.getPosition()))
-                .hairshop(hairshop)
+                .position(modifyDesignerRequest.getPosition())
                 .build();
     }
 
@@ -34,8 +30,7 @@ public class DesignerConverter {
                 .name(designer.getName())
                 .image(designer.getImage())
                 .introduction(designer.getIntroduction())
-                .position(designer.getPosition().getPosition())
-                .hairshopId(designer.getId())
+                .position(designer.getPosition())
                 .createdAt(designer.getCreatedAt())
                 .updatedAt(designer.getUpdatedAt())
                 .build();
