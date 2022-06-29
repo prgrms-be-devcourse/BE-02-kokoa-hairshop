@@ -53,8 +53,8 @@ class UserControllerTest {
             .build();
 
         mockMvc.perform(post("/signup")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(registerRequestDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(registerRequestDto)))
             .andExpect(status().isCreated())
             .andDo(print())
             .andDo(document("sign-up",
@@ -80,8 +80,8 @@ class UserControllerTest {
             .build();
 
         mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("login",
@@ -102,7 +102,7 @@ class UserControllerTest {
         String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY1NjM1MzYxMywidXNlck5hbWUiOiJ0ZXN0QGdtYWlsLmNvbSJ9.OMqQA6tgVtE7m4ZXNsQ9fYG1Mcuaw_JqNlghAlcNFZxzRKhwfRF4jPclkzvBtObzO58piNBfLKbo6nVKpf_d_w";
 
         mockMvc.perform(get("/me")
-            .header("Authorization", "Bearer " + accessToken))
+                .header("Authorization", "Bearer " + accessToken))
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("me",

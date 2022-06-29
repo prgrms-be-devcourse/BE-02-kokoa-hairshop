@@ -38,10 +38,10 @@ class UserDetailServiceTest {
     void register_test(){
         // given
         RegisterRequestDto registerRequestDto = RegisterRequestDto.builder()
-                                                    .email("test@gmail.com")
-                                                    .password("test1234")
-                                                    .auth("ADMIN")
-                                                    .build();
+            .email("test@gmail.com")
+            .password("test1234")
+            .auth("ADMIN")
+            .build();
 
         // when
         RegisterResponseDto responseDto = userDetailService.register(registerRequestDto);
@@ -57,9 +57,9 @@ class UserDetailServiceTest {
     void login_test() {
         // given
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
-                                            .email("test@gmail.com")
-                                            .password("test1234")
-                                            .build();
+            .email("test@gmail.com")
+            .password("test1234")
+            .build();
 
         // when
         TokenResponseDto token = userDetailService.login(loginRequestDto);
