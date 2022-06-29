@@ -1,12 +1,12 @@
 package com.prgms.kokoahairshop.designer.service;
 
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.designer.dto.CreateDesignerRequest;
 import com.prgms.kokoahairshop.designer.dto.DesignerConverter;
 import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
 import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +50,6 @@ public class DesignerService {
 
     @Transactional
     public DesignerResponse update(ModifyDesignerRequest modifyDesignerRequest) throws NotFoundException {
-        // Todo : referenceById 톭아보기
         designerRepository.findById(modifyDesignerRequest.getId())
                 .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
         Designer designer = designerConverter.convertToDesigner(modifyDesignerRequest);
