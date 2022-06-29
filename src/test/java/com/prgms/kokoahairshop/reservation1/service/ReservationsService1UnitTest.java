@@ -6,20 +6,15 @@ import static org.mockito.BDDMockito.given;
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
-import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import com.prgms.kokoahairshop.menu.entity.Menu;
-import com.prgms.kokoahairshop.menu.repository.MenuRepository;
-import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationResponseDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeResponseDto;
-import com.prgms.kokoahairshop.reservation1.entity.Reservation;
+import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
-import com.prgms.kokoahairshop.reservation1.repository.ReservationRepository;
-import com.prgms.kokoahairshop.reservation1.repository.ReservationTimeRepository;
+import com.prgms.kokoahairshop.reservation1.repository.ReservationRepository1;
 import com.prgms.kokoahairshop.user.entity.User;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,13 +25,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-class ReservationServiceUnitTest {
+class ReservationsService1UnitTest {
 
     @InjectMocks
-    private ReservationServiceImpl reservationService;
+    private ReservationService1Impl reservationService;
 
     @Mock
-    private ReservationRepository reservationRepository;
+    private ReservationRepository1 reservationRepository1;
 
     @Mock
     private DesignerRepository designerRepository;
@@ -47,7 +42,7 @@ class ReservationServiceUnitTest {
     void getReservationListByUserTest() {
         // Given
         Long userId = 1L;
-        given(reservationRepository.findReservationsByUserId(userId))
+        given(reservationRepository1.findReservationsByUserId(userId))
             .willReturn(List.of(
                 createReservation(1L, "11:00"),
                 createReservation(2L, "12:00"),
@@ -68,7 +63,7 @@ class ReservationServiceUnitTest {
     void getReservationListByHairshopTest() {
         // Given
         Long hairshopId = 1L;
-        given(reservationRepository.findReservationsByHairshopId(hairshopId))
+        given(reservationRepository1.findReservationsByHairshopId(hairshopId))
             .willReturn(List.of(
                 createReservation(1L, "11:00"),
                 createReservation(2L, "12:00"),
@@ -113,8 +108,8 @@ class ReservationServiceUnitTest {
     }
 
 
-    private Reservation createReservation(Long id, String time) {
-        return Reservation.builder()
+    private Reservations createReservation(Long id, String time) {
+        return Reservations.builder()
             .id(id)
             .time(time)
             .user(User.builder().build())

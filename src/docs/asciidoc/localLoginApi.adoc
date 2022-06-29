@@ -60,31 +60,31 @@ include::{snippets}/me/response-fields.adoc[]
 === /reservations
 
 .Request
-include::{snippets}/create-reservation/http-request.adoc[]
+include::{snippets}/create-reservations/http-request.adoc[]
 
-include::{snippets}/create-reservation/request-fields.adoc[]
+include::{snippets}/create-reservations/request-fields.adoc[]
 
 
 .Response
-include::{snippets}/create-reservation/http-response.adoc[]
+include::{snippets}/create-reservations/http-response.adoc[]
 
-include::{snippets}/create-reservation/response-fields.adoc[]
+include::{snippets}/create-reservations/response-fields.adoc[]
 
 
 == 예약 가능시간 조회
 
-=== /reservations/reservation-times/hairshops/{hairshopId}
+=== /reservations/reservations-times/hairshops/{hairshopId}
 
 .Request
-include::{snippets}/get-reservation-times/http-request.adoc[]
+include::{snippets}/get-reservations-times/http-request.adoc[]
 
-include::{snippets}/get-reservation-times/request-fields.adoc[]
+include::{snippets}/get-reservations-times/request-fields.adoc[]
 
 
 .Response
-include::{snippets}/get-reservation-times/http-response.adoc[]
+include::{snippets}/get-reservations-times/http-response.adoc[]
 
-include::{snippets}/get-reservation-times/response-fields.adoc[]
+include::{snippets}/get-reservations-times/response-fields.adoc[]
 
 
 == 예약 취소
@@ -92,8 +92,8 @@ include::{snippets}/get-reservation-times/response-fields.adoc[]
 === /reservations/{reservationId}
 
 .Request
-include::{snippets}/cancel-reservation/http-request.adoc[]
+include::{snippets}/cancel-reservations/http-request.adoc[]
 
 
 .Response
-include::{snippets}/cancel-reservation/http-response.adoc[]
+include::{snippets}/cancel-reservations/http-response.adoc[]

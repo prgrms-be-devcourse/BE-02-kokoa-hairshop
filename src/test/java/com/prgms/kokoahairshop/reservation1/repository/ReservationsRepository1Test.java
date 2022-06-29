@@ -8,7 +8,7 @@ import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.entity.Type;
-import com.prgms.kokoahairshop.reservation1.entity.Reservation;
+import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationStatus;
 import com.prgms.kokoahairshop.user.entity.User;
 import java.time.LocalDate;
@@ -27,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @Slf4j
-class ReservationRepositoryTest {
+class ReservationsRepository1Test {
 
     @Autowired
-    ReservationRepository reservationRepository;
+    ReservationRepository1 reservationRepository1;
 
     @PersistenceContext
     EntityManager em;
@@ -59,7 +59,7 @@ class ReservationRepositoryTest {
             .roadNameNumber("대구 중구 동성로2가 141-9 2층3층")
             .profileImg("이미지 URL")
             .introduction("안녕하세요.")
-            .userId(1L)
+            .user(user)
             .build();
         Designer designer = Designer.builder()
             .name("designer")
@@ -83,7 +83,7 @@ class ReservationRepositoryTest {
         em.persist(designer);
         em.persist(menu);
 
-        Reservation reservation = Reservation.builder()
+        Reservations reservations = Reservations.builder()
             .name("CHOI")
             .phoneNumber("01000000000")
             .date(LocalDate.now())
@@ -96,7 +96,7 @@ class ReservationRepositoryTest {
             .hairshop(hairshop)
             .menu(menu)
             .build();
-        reservationRepository.save(reservation);
+        reservationRepository1.save(reservations);
     }
 
     @Test
@@ -106,7 +106,7 @@ class ReservationRepositoryTest {
         // When
         em.clear();
 
-        List<Reservation> reservations = reservationRepository.findReservationsByUserId(user.getId());
+        List<Reservations> reservations = reservationRepository1.findReservationsByUserId(user.getId());
 
         // Then
         assertThat(reservations.size()).isEqualTo(1);
@@ -118,7 +118,7 @@ class ReservationRepositoryTest {
         // When
         em.clear();
 
-        List<Reservation> reservations = reservationRepository.findReservationsByHairshopId(hairshop.getId());
+        List<Reservations> reservations = reservationRepository1.findReservationsByHairshopId(hairshop.getId());
 
         // Then
         assertThat(reservations.size()).isEqualTo(1);

@@ -21,10 +21,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reservation")
+@Table(name = "reservations")
 @Getter
 @NoArgsConstructor
-public class Reservation {
+public class Reservations {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -66,7 +66,7 @@ public class Reservation {
     Hairshop hairshop;
 
     @Builder
-    public Reservation(Long id, String name, String phoneNumber, LocalDate date,
+    public Reservations(Long id, String name, String phoneNumber, LocalDate date,
         String time, ReservationStatus status, String request,
         int paymentAmount, User user, Menu menu, Designer designer, Hairshop hairshop) {
         this.id = id;

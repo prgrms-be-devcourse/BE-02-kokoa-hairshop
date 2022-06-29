@@ -99,7 +99,7 @@ class UserControllerTest {
     @Test
     @DisplayName("인증테스트")
     void me_test() throws Exception {
-        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY1NjM1MzYxMywidXNlck5hbWUiOiJ0ZXN0QGdtYWlsLmNvbSJ9.OMqQA6tgVtE7m4ZXNsQ9fYG1Mcuaw_JqNlghAlcNFZxzRKhwfRF4jPclkzvBtObzO58piNBfLKbo6nVKpf_d_w";
+        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY1NjQ5NTU0NSwidXNlck5hbWUiOiJ0ZXN0QGdtYWlsLmNvbSJ9.872qTthWz1Tn-FHjEDh0Z2pqpUU5jcAy4MscJW3H4YA9x1IyIpNOblZJdEdpsZ1WKPNUwOfn2sP-caH1GZgLRg";
 
         mockMvc.perform(get("/me")
                 .header("Authorization", "Bearer " + accessToken))

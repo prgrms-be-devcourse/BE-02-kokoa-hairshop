@@ -1,6 +1,12 @@
 package com.prgms.kokoahairshop.reservation1.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.designer.entity.Designer;
@@ -8,17 +14,17 @@ import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
+import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.entity.Type;
 import com.prgms.kokoahairshop.menu.repository.MenuRepository;
-import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeRequestDto;
-import com.prgms.kokoahairshop.reservation1.entity.Reservation;
+import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationStatus;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
-import com.prgms.kokoahairshop.reservation1.repository.ReservationRepository;
+import com.prgms.kokoahairshop.reservation1.repository.ReservationRepository1;
 import com.prgms.kokoahairshop.reservation1.repository.ReservationTimeRepository;
-import com.prgms.kokoahairshop.reservation1.service.ReservationService;
+import com.prgms.kokoahairshop.reservation1.service.ReservationService1;
 import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.repository.UserRepository;
 import java.time.LocalDate;
@@ -32,18 +38,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest
-class ReservationControllerTest {
+@Transactional
+class ReservationsController1Test {
 
     @Autowired
-    ReservationService service;
+    ReservationService1 service;
 
     @Autowired
     MockMvc mockMvc;
@@ -64,7 +73,7 @@ class ReservationControllerTest {
     MenuRepository menuRepository;
 
     @Autowired
-    ReservationRepository repository;
+    ReservationRepository1 repository;
 
     @Autowired
     ReservationTimeRepository reservationTimeRepository;
@@ -79,9 +88,9 @@ class ReservationControllerTest {
 
     Menu menu;
 
-    Reservation reservation; // 예약 취소 가능시간 지난 예약
+    Reservations reservations; // 예약 취소 가능시간 지난 예약
 
-    Reservation reservation2; // 예약 취소 가능시간 안지난 예약
+    Reservations reservations2; // 예약 취소 가능시간 안지난 예약
 
     @BeforeEach
     void beforeEach() {
@@ -111,7 +120,7 @@ class ReservationControllerTest {
             .sameDayAvailable(true)
             .roadNameNumber("대구 중구 동성로2가 141-9 2층3층")
             .profileImg("헤어샵_이미지_URL")
-            .userId(user.getId())
+            .user(user)
             .introduction("시간 여유 충분히 가지고 여유롭게 와주시면 감사하겠습니다 :)")
             .build();
         hairshopRepository.save(hairshop);
@@ -120,7 +129,7 @@ class ReservationControllerTest {
             .name("디자이너")
             .image("디자이너_이미지_URL")
             .introduction("안녕하세요.")
-            .position(Position.디자이너)
+            .position(Position.DESIGNER)
             .hairshop(hairshop)
             .build();
         designerRepository.save(designer);
@@ -129,15 +138,15 @@ class ReservationControllerTest {
             .name("기본 커트")
             .type(Type.커트)
             .price(20000)
-            .gender("남")
-            .exposed_time(30)
+            .gender(Gender.남)
+            .exposedTime(30)
             .discount(0)
             .image("커트_이미지_URL")
             .hairshop(hairshop)
             .build();
         menuRepository.save(menu);
 
-        reservation = Reservation.builder()
+        reservations = Reservations.builder()
             .name("예약자")
             .date(LocalDate.now().minusDays(1))
             .time("12:00")
@@ -150,9 +159,9 @@ class ReservationControllerTest {
             .designer(designer)
             .menu(menu)
             .build();
-        repository.save(reservation);
+        repository.save(reservations);
 
-        reservation2 = Reservation.builder()
+        reservations2 = Reservations.builder()
             .name("예약자")
             .date(LocalDate.now().plusDays(1))
             .time("12:00")
@@ -165,7 +174,7 @@ class ReservationControllerTest {
             .designer(designer)
             .menu(menu)
             .build();
-        repository.save(reservation2);
+        repository.save(reservations2);
 
         LocalDate date = LocalDate.now();
         StringTokenizer st;
@@ -202,29 +211,32 @@ class ReservationControllerTest {
     void reservationTimeListTest() throws Exception {
         ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(LocalDate.now());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/reservation-time/hairshops/{id}", hairshop.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/v1/reservation-time/hairshops/{id}",
+                    hairshop.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print());
     }
 
-    @Test
-    @DisplayName("사용자의 예약 리스트 조회")
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
-    void reservationListByUserTest() throws Exception {
-        //Todo : Mock jwt를 만들어서 test
-        mockMvc.perform(MockMvcRequestBuilders.get(  "/reservations/user", user.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print());
-    }
+//    @Test
+//    @DisplayName("사용자의 예약 리스트 조회")
+//    @WithMockUser(username = "example@gmail.com", roles = "USER")
+//    void reservationListByUserTest() throws Exception {
+//        //Todo : Mock jwt를 만들어서 test
+//        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/user", user.getId())
+//                .header()
+//                .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(MockMvcResultMatchers.status().isOk())
+//            .andDo(MockMvcResultHandlers.print());
+//    }
 
     @Test
     @DisplayName("헤어샵의 예약 리스트 조회")
+    @Rollback(value = false)
     @WithMockUser(username = "example@gmail.com", roles = "USER")
     void reservationListByHairshopTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get( "/reservations/hairshops/{id}", hairshop.getId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/v1/hairshops/{id}", hairshop.getId())
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print());
