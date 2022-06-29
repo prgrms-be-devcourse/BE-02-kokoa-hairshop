@@ -37,9 +37,16 @@ public class ReservationTimeScheduler {
             int endMinute = Integer.parseInt(st.nextToken());
 
             while (startHour <= endHour) {
+                if(startHour == endHour && startMinute > endMinute) break;
+                String str;
+                if(startMinute == 0) {
+                    str = "00";
+                } else {
+                    str = "30";
+                }
                 ReservationTime reservationTime = ReservationTime.builder()
                     .date(date)
-                    .time(startHour + ":" + startMinute)
+                    .time(startHour + ":" + str)
                     .reserved(false)
                     .build();
                 reservationTime.setDesigner(designer);
@@ -47,7 +54,7 @@ public class ReservationTimeScheduler {
                 reservationTimeRepository.save(reservationTime);
 
                 startMinute += 30;
-                if(startMinute >= 60) {
+                if (startMinute >= 60) {
                     startHour += 1;
                     startMinute = 0;
                 }

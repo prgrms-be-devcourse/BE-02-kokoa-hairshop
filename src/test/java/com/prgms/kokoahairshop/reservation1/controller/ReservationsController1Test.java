@@ -1,6 +1,7 @@
 package com.prgms.kokoahairshop.reservation1.controller;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,6 +19,7 @@ import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.entity.Type;
 import com.prgms.kokoahairshop.menu.repository.MenuRepository;
+import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeRequestDto;
 import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationStatus;
@@ -29,6 +31,9 @@ import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.StringTokenizer;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,19 +42,23 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest
 @Transactional
 class ReservationsController1Test {
+
+    @PersistenceContext
+    EntityManager em;
 
     @Autowired
     ReservationService1 service;
@@ -188,9 +197,16 @@ class ReservationsController1Test {
         int endMinute = Integer.parseInt(st.nextToken());
 
         while (startHour <= endHour) {
+            if(startHour == endHour && startMinute > endMinute) break;
+            String str;
+            if(startMinute == 0) {
+                str = "00";
+            } else {
+                str = "30";
+            }
             ReservationTime reservationTime = ReservationTime.builder()
                 .date(date)
-                .time(startHour + ":" + startMinute)
+                .time(startHour + ":" + str)
                 .reserved(false)
                 .build();
             reservationTime.setDesigner(designer);
@@ -203,6 +219,51 @@ class ReservationsController1Test {
                 startMinute = 0;
             }
         }
+
+        em.clear();
+    }
+
+    @Test
+    @DisplayName("예약 생성")
+    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    void createReservationTest() throws Exception {
+        log.info("{}", user.getId());
+        CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
+            .name("예약자")
+            .phoneNumber("010-1234-5678")
+            .date(LocalDate.now())
+            .time("11:00")
+            .request("예쁘게 잘라주세요.")
+            .paymentAmount(20000)
+            .userId(user.getId())
+            .hairshopId(hairshop.getId())
+            .designerId(designer.getId())
+            .menuId(menu.getId())
+            .build();
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/reservations/v1/")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(document("create-reservation",
+                requestFields(
+                    fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
+                    fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("phoneNumber"),
+                    fieldWithPath("date").type(JsonFieldType.STRING).description("date"),
+                    fieldWithPath("time").type(JsonFieldType.STRING).description("time"),
+                    fieldWithPath("request").type(JsonFieldType.STRING).description("request"),
+                    fieldWithPath("paymentAmount").type(JsonFieldType.NUMBER).description("paymentAmount"),
+                    fieldWithPath("userId").type(JsonFieldType.NUMBER).description("userId"),
+                    fieldWithPath("hairshopId").type(JsonFieldType.NUMBER).description("hairshopId"),
+                    fieldWithPath("designerId").type(JsonFieldType.NUMBER).description("designerId"),
+                    fieldWithPath("menuId").type(JsonFieldType.NUMBER).description("menuId")
+                ),
+                responseFields(
+                    fieldWithPath("id").type(JsonFieldType.NUMBER).description("id")
+                )
+            ));
     }
 
     @Test
@@ -211,12 +272,32 @@ class ReservationsController1Test {
     void reservationTimeListTest() throws Exception {
         ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(LocalDate.now());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/v1/reservation-time/hairshops/{id}",
-                    hairshop.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDto)))
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/reservations/v1/reservation-time/hairshops/{id}",
+                        hairshop.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(document("get-reservationTimes-v1",
+                requestFields(
+                    fieldWithPath("date").type(JsonFieldType.STRING).description("date")
+                ),
+                responseFields(
+                    fieldWithPath("[].designerId").type(JsonFieldType.NUMBER)
+                        .description("[].designerId"),
+                    fieldWithPath("[].designerPosition").type(JsonFieldType.STRING)
+                        .description("[].designerPosition"),
+                    fieldWithPath("[].designerName").type(JsonFieldType.STRING)
+                        .description("[].designerName"),
+                    fieldWithPath("[].designerImage").type(JsonFieldType.STRING)
+                        .description("[].designerImage"),
+                    fieldWithPath("[].designerInstruction").type(JsonFieldType.STRING)
+                        .description("[].designerInstruction"),
+                    fieldWithPath("[].reservationTimes[]").type(JsonFieldType.ARRAY)
+                        .description("[].reservationTimes")
+                )
+            ));
     }
 
 //    @Test
@@ -233,11 +314,11 @@ class ReservationsController1Test {
 
     @Test
     @DisplayName("헤어샵의 예약 리스트 조회")
-    @Rollback(value = false)
     @WithMockUser(username = "example@gmail.com", roles = "USER")
     void reservationListByHairshopTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/v1/hairshops/{id}", hairshop.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/reservations/v1/hairshops/{id}", hairshop.getId())
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print());
     }

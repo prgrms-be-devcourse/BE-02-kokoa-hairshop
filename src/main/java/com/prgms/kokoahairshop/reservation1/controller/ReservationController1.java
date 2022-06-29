@@ -2,6 +2,7 @@ package com.prgms.kokoahairshop.reservation1.controller;
 
 import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationResponseDto;
+import com.prgms.kokoahairshop.reservation1.dto.ReservationSuccessResponseDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeResponseDto;
 import com.prgms.kokoahairshop.reservation1.entity.Reservations;
@@ -28,9 +29,9 @@ public class ReservationController1 {
     private final UserDetailService userDetailService;
 
     @PostMapping("/reservations/v1/")
-    public ResponseEntity<Reservations> reserve(@Validated @RequestBody CreateReservationRequestDto createReservationRequestDto) {
-        Reservations reservations = reservationService1.saveReservation(createReservationRequestDto);
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<ReservationSuccessResponseDto> reserve(@Validated @RequestBody CreateReservationRequestDto createReservationRequestDto) {
+        ReservationSuccessResponseDto responseDto = reservationService1.saveReservation(createReservationRequestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/reservations/v1/reservation-time/hairshops/{id}")

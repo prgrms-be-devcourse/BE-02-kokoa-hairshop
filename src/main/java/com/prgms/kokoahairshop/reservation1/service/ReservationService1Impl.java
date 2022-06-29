@@ -10,6 +10,7 @@ import com.prgms.kokoahairshop.menu.repository.MenuRepository;
 import com.prgms.kokoahairshop.reservation1.convert.ReservationConverter1;
 import com.prgms.kokoahairshop.reservation1.dto.CreateReservationRequestDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationResponseDto;
+import com.prgms.kokoahairshop.reservation1.dto.ReservationSuccessResponseDto;
 import com.prgms.kokoahairshop.reservation1.dto.ReservationTimeResponseDto;
 import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
@@ -17,6 +18,8 @@ import com.prgms.kokoahairshop.reservation1.exception.DuplicateReservationExcept
 import com.prgms.kokoahairshop.reservation1.exception.ReservationNotFoundException;
 import com.prgms.kokoahairshop.reservation1.repository.ReservationRepository1;
 import com.prgms.kokoahairshop.reservation1.repository.ReservationTimeRepository;
+import com.prgms.kokoahairshop.user.entity.User;
+import com.prgms.kokoahairshop.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,13 +39,14 @@ public class ReservationService1Impl implements ReservationService1 {
     private final HairshopRepository hairshopRepository;
     private final DesignerRepository designerRepository;
     private final MenuRepository menuRepository;
+    private final UserRepository userRepository;
 
     private final ReservationConverter1 reservationConverter1 = new ReservationConverter1();
 
 
     @Override
     @Transactional
-    public Reservations saveReservation(CreateReservationRequestDto createReservationRequestDto) {
+    public ReservationSuccessResponseDto saveReservation(CreateReservationRequestDto createReservationRequestDto) {
         ReservationTime reservationTime = reservationTimeRepository.findReservationTimeByDesignerIdAndDateAndTime(
                 createReservationRequestDto.getDesignerId(),
                 createReservationRequestDto.getDate(),
@@ -54,6 +58,9 @@ public class ReservationService1Impl implements ReservationService1 {
 
         Reservations reservations = reservationConverter1.toReservationEntity(
             createReservationRequestDto);
+
+        User user = userRepository.findById(createReservationRequestDto.getUserId())
+            .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
         Hairshop hairshop = hairshopRepository.findById(createReservationRequestDto.getHairshopId())
             .orElseThrow(() -> new NotFoundException("존재하지 않는 헤어샵입니다."));
         Designer designer = designerRepository.findById(createReservationRequestDto.getDesignerId())
@@ -61,11 +68,14 @@ public class ReservationService1Impl implements ReservationService1 {
         Menu menu = menuRepository.findById(createReservationRequestDto.getMenuId())
             .orElseThrow(() -> new NotFoundException("존재하지 않는 시술 메뉴입니다."));
 
+        reservations.setUser(user);
         reservations.setHairshop(hairshop);
         reservations.setDesigner(designer);
         reservations.setMenu(menu);
 
-        return reservationRepository1.save(reservations);
+        reservationRepository1.save(reservations);
+
+        return new ReservationSuccessResponseDto(reservations.getId());
     }
 
     //예약자별 예약 조회
@@ -88,15 +98,10 @@ public class ReservationService1Impl implements ReservationService1 {
 
     //예약 가능한 시간 검색
     @Override
-    public List<ReservationTimeResponseDto> getReservationTimeList(Long hairShopId,
-        LocalDate date) {
-        List<Designer> designers = designerRepository.findDesignerFetchJoinByHairshopIdAndDate(
-            hairShopId, date);
-        log.info("{} {}", hairShopId, date);
-        log.info("{} {}", designers.get(0).getId(), designers.get(0).getReservationTimes());
-        return designers.stream()
-            .map(designer -> reservationConverter1.toReservationTimeResponseDto(designer))
-                .collect(Collectors.toList());
+    public List<ReservationTimeResponseDto> getReservationTimeList(Long hairShopId, LocalDate date) {
+        return designerRepository.findDesignerFetchJoinByHairshopIdAndDate(hairShopId, date)
+            .stream().map(designer -> reservationConverter1.toReservationTimeResponseDto(designer))
+            .collect(Collectors.toList());
     }
 
 
