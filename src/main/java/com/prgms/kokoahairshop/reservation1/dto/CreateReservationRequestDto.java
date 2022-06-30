@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -18,16 +19,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateReservationRequestDto {
 
-    @NotBlank
+    @Positive(message = "사용자 id를 양수로 입력해주세요.")
     private Long userId;
 
-    @NotBlank
+    @Positive(message = "헤어샵 id를 양수로 입력해주세요.")
     private Long hairshopId;
 
-    @NotBlank
+    @Positive(message = "디자이너 id를 양수로 입력해주세요.")
     private Long designerId;
 
-    @NotBlank
+    @Positive(message = "메뉴 id를 양수로 입력해주세요.")
     private Long menuId;
 
     @NotBlank(message = "이름을 입력해주세요.")

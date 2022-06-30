@@ -21,7 +21,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -101,7 +100,6 @@ class ReservationsRepository1Test {
 
     @Test
     @DisplayName("사용자의 예약 리스트를 검색할 수 있다.")
-    @Rollback(value = false)
     void findReservationsByUserIdTest() {
         // When
         em.clear();

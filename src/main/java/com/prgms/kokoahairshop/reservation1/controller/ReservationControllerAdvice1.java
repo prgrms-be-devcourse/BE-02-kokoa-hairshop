@@ -33,7 +33,6 @@ public class ReservationControllerAdvice1 {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public ResponseEntity<String> exceptionHandler (Exception e) {
         log.error("Exception", e);

@@ -79,14 +79,14 @@ public class Designer {
         this.introduction = introduction;
         this.position = position;
         this.hairshop = hairshop;
-        this.reservationTimes = reservationTimes;
+        if(reservationTimes != null) {
+            this.reservationTimes = reservationTimes;
+        }
+
     }
 
     public void addReservation(Reservation reservation) {
         this.reservations.add(reservation);
     }
 
-    public void addReservationTimes(ReservationTime reservationTime) {
-        this.reservationTimes.add(reservationTime);
-    }
 }

@@ -30,7 +30,6 @@ class ReservationsTimeRepositoryTest {
 
     @Test
     @DisplayName("ReservationTime 저장 성공")
-    @Rollback(false)
     void saveTest() {
         User user = User.builder()
             .email("example2@naver.com")

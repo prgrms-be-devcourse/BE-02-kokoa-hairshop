@@ -47,8 +47,10 @@ public class ReservationConverter1 {
     // entity -> dto
     public ReservationTimeResponseDto toReservationTimeResponseDto (Designer designer) {
         return ReservationTimeResponseDto.builder()
+            .designerId(designer.getId())
             .designerPosition(designer.getPosition())
             .designerName(designer.getName())
+            .designerImage(designer.getImage())
             .designerInstruction(designer.getIntroduction())
             .reservationTimes(designer.getReservationTimes()
                 .stream().map(reservationTime -> reservationTime.getTime())
