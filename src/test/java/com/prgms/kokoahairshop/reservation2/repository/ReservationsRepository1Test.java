@@ -102,9 +102,9 @@ class ReservationsRepository1Test {
 
         menu = Menu.builder()
             .name("기본 커트")
-            .type(Type.커트)
+            .type(Type.haircut)
             .price(20000)
-            .gender(Gender.남)
+            .gender(Gender.man)
             .exposedTime(30)
             .discount(0)
             .image("커트_이미지_URL")

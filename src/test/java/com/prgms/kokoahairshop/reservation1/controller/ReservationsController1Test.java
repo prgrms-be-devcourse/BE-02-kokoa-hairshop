@@ -34,9 +34,12 @@ import java.util.StringTokenizer;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,6 +47,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -54,6 +58,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @SpringBootTest
+@TestInstance(Lifecycle.PER_CLASS)
 @Transactional
 class ReservationsController1Test {
 
@@ -101,8 +106,8 @@ class ReservationsController1Test {
 
     Reservations reservations2; // 예약 취소 가능시간 안지난 예약
 
-    @BeforeEach
-    void beforeEach() {
+    @BeforeAll
+    void beforeAll() {
         user = User.builder()
             .email("example2@naver.com")
             .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
@@ -145,9 +150,9 @@ class ReservationsController1Test {
 
         menu = Menu.builder()
             .name("기본 커트")
-            .type(Type.커트)
+            .type(Type.haircut)
             .price(20000)
-            .gender(Gender.남)
+            .gender(Gender.unisex)
             .exposedTime(30)
             .discount(0)
             .image("커트_이미지_URL")
@@ -220,7 +225,7 @@ class ReservationsController1Test {
             }
         }
 
-        em.clear();
+//        em.clear();
     }
 
     @Test
@@ -319,6 +324,18 @@ class ReservationsController1Test {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/reservations/v1/hairshops/{id}", hairshop.getId())
                     .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("Default ReservationTimes 생성")
+    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @Rollback(value = false)
+    void createFirstReservationTimes() throws Exception {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/reservations/v1/reservationTimes")
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print());
     }

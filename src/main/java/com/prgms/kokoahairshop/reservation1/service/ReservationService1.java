@@ -14,4 +14,5 @@ public interface ReservationService1 {
     List<ReservationResponseDto> getReservationListByUser(Long userId);
     List<ReservationResponseDto> getReservationListByHairshop(Long hairshopId);
     List<ReservationTimeResponseDto> getReservationTimeList(Long hairShopId, LocalDate date);
+    void createReservationTimes();
 }

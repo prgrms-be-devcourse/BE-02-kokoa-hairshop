@@ -5,13 +5,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum Type {
-    커트("haircut"),
-    펌("perm"),
-    컬러("color"),
-    클리닉("clinic"),
-    스타일링("styling"),
-    붙임머리("extensions"),
-    메이크업("makeup");
+    haircut("커트"),
+    perm("펌"),
+    color ("컬러"),
+    clinic ("클리닉"),
+    styling ("스타일링"),
+    extensions ("붙임머리"),
+    makeup ("메이크업");
 
     private static final Map<String, Type> ENUM_MAP =
             Stream.of(values()).collect(Collectors.toMap(Type::getType, o -> o));

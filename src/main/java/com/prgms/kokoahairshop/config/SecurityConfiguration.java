@@ -56,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
             .formLogin().disable()
             .authorizeRequests()
-            .antMatchers("/login", "/signup").permitAll() // 로그인, 회원가입은 모두 접근가능
+            .antMatchers("/login", "/signup", "/**").permitAll() // 로그인, 회원가입은 모두 접근가능
             .anyRequest().authenticated()
             .and()// 나머지 요청들은 권한 필요 : 없으면 403
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

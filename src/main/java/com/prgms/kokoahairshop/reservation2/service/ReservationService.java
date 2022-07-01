@@ -81,8 +81,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationTimeResponseDto> getReservationTime(Long hairshopId,
         ReservationTimeRequestDto requestDto) {
-        List<Designer> designers = designerRepository.findByHairshopIdAndDate(hairshopId,
-            requestDto.getDate());
+        List<Designer> designers = designerRepository.findByHairshopIdAndDate(hairshopId, requestDto.getDate());
         List<String> times = TimeUtil.getTimesFromStartAndEndTime(
             requestDto.getReservationStartTime(), requestDto.getReservationEndTime());
         List<ReservationTimeResponseDto> responseDtos = new ArrayList<>();

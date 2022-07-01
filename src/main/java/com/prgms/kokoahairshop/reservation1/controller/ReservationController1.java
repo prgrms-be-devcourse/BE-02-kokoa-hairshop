@@ -28,7 +28,7 @@ public class ReservationController1 {
     private final ReservationService1 reservationService1;
     private final UserDetailService userDetailService;
 
-    @PostMapping("/reservations/v1/")
+    @PostMapping("/reservations/v1")
     public ResponseEntity<ReservationSuccessResponseDto> reserve(@Validated @RequestBody CreateReservationRequestDto createReservationRequestDto) {
         ReservationSuccessResponseDto responseDto = reservationService1.saveReservation(createReservationRequestDto);
         return ResponseEntity.ok(responseDto);
@@ -53,5 +53,11 @@ public class ReservationController1 {
 
         List<ReservationResponseDto> reservations = reservationService1.getReservationListByHairshop(hairshopId);
         return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/reservations/v1/reservationTimes")
+    public ResponseEntity<Void> createFirstReservationTime() {
+        reservationService1.createReservationTimes();
+        return ResponseEntity.ok().build();
     }
 }

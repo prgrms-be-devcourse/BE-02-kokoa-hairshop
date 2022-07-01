@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum Gender {
-    남("man"),
-    녀("woman"),
-    공용("unisex");
+    man("남"),
+    woman("녀"),
+    unisex("공용");
 
     private static final Map<String, Gender> ENUM_MAP =
             Stream.of(values()).collect(Collectors.toMap(Gender::getGender, o -> o));
