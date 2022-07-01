@@ -57,7 +57,7 @@ public class ReservationTime {
             this.designer.getReservationTimes().remove(this);
         }
         this.designer = designer;
-        designer.getReservationTimes().add(this);
+//        designer.getReservationTimes().add(this);
     }
 
     public void setHairshop(Hairshop hairshop) {

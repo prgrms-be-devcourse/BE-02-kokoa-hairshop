@@ -22,6 +22,7 @@ import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,5 +105,58 @@ public class ReservationService1Impl implements ReservationService1 {
             .collect(Collectors.toList());
     }
 
+    //30일치 ReservationTimes 생성
+    @Transactional
+    public void createReservationTimes() {
+        List<Designer> designers = designerRepository.findAllDesignerFetchJoin();
+        LocalDate date = LocalDate.now();
+        StringTokenizer st;
+
+        for(int i = 0; i < 30; i++) {
+            LocalDate date2 = date.plusDays(i);
+
+            for (Designer designer : designers) {
+                String reservationStartTime = designer.getHairshop().getReservationStartTime();
+                String reservationEndTime = designer.getHairshop().getReservationEndTime();
+                st = new StringTokenizer(reservationStartTime, ":");
+                int startHour = Integer.parseInt(st.nextToken());
+                int startMinute = Integer.parseInt(st.nextToken());
+                st = new StringTokenizer(reservationEndTime, ":");
+                int endHour = Integer.parseInt(st.nextToken());
+                int endMinute = Integer.parseInt(st.nextToken());
+
+                while (startHour <= endHour) {
+                    if(startHour == endHour && startMinute > endMinute) break;
+                    String strHour = "";
+                    String strMinute;
+                    if(startHour < 10) {
+                        strHour = "0" + startHour;
+                    } else {
+                        strHour += startHour;
+                    }
+
+                    if(startMinute == 0) {
+                        strMinute = "00";
+                    } else {
+                        strMinute = "30";
+                    }
+                    ReservationTime reservationTime = ReservationTime.builder()
+                        .date(date2)
+                        .time(strHour + ":" + strMinute)
+                        .reserved(false)
+                        .build();
+                    reservationTime.setDesigner(designer);
+                    reservationTime.setHairshop(designer.getHairshop());
+                    reservationTimeRepository.save(reservationTime);
+
+                    startMinute += 30;
+                    if (startMinute >= 60) {
+                        startHour += 1;
+                        startMinute = 0;
+                    }
+                }
+            }
+        }
+    }
 
 }

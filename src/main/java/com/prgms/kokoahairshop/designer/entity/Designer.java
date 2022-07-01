@@ -2,6 +2,7 @@ package com.prgms.kokoahairshop.designer.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
+import com.prgms.kokoahairshop.reservation1.entity.Reservations;
 import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -65,6 +66,9 @@ public class Designer {
 
     @OneToMany(mappedBy = "designer")
     private List<Reservation> reservations = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "designer")
+//    private List<Reservations> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "designer")
     private List<ReservationTime> reservationTimes = new ArrayList<>();
