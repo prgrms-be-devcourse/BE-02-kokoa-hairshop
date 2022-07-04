@@ -11,6 +11,8 @@ import lombok.Getter;
 @Builder
 public class ReservationTimeResponseDto {
 
+    private Long designerId;
+
     private Position designerPosition;
 
     private String designerName;

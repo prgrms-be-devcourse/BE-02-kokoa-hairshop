@@ -30,6 +30,7 @@ public class ReservationConverter {
     public static ReservationTimeResponseDto toReservationTimeResponseDto(Designer designer,
         List<String> reservationTimes) {
         return ReservationTimeResponseDto.builder()
+            .designerId(designer.getId())
             .designerPosition(designer.getPosition())
             .designerImage(designer.getImage())
             .designerName(designer.getName())
