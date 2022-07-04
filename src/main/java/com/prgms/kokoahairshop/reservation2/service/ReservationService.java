@@ -82,6 +82,8 @@ public class ReservationService {
     public List<ReservationTimeResponseDto> getReservationTime(Long hairshopId,
         ReservationTimeRequestDto requestDto) {
         List<Designer> designers = designerRepository.findByHairshopIdAndDate(hairshopId, requestDto.getDate());
+
+
         List<String> times = TimeUtil.getTimesFromStartAndEndTime(
             requestDto.getReservationStartTime(), requestDto.getReservationEndTime());
         List<ReservationTimeResponseDto> responseDtos = new ArrayList<>();
@@ -96,6 +98,23 @@ public class ReservationService {
 
             responseDtos.add(ReservationConverter.toReservationTimeResponseDto(
                 designer, reservationTimes));
+        }
+
+        List<Designer> allDesigners = designerRepository.findByHairshopId(hairshopId);
+        for(Designer designer : allDesigners) {
+            boolean contains = false;
+            Long id = designer.getId();
+            for(ReservationTimeResponseDto responseDto : responseDtos) {
+                if(responseDto.getDesignerId() == id) {
+                    contains = true;
+                    break;
+                }
+            }
+            if(!contains) {
+                responseDtos.add( ReservationConverter.toReservationTimeResponseDto(
+                    designer, times
+                ));
+            }
         }
 
         return responseDtos;
