@@ -12,5 +12,4 @@ public interface ReservationTimeRepository extends JpaRepository<ReservationTime
     @Query("select r from ReservationTime r "
         + "where r.designer.id = :designerId and r.date = :date and r.time = :time")
     Optional<ReservationTime> findReservationTimeByDesignerIdAndDateAndTime(@Param("designerId") Long designerId, @Param("date") LocalDate date, @Param("time") String time);
-
 }
