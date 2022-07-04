@@ -57,8 +57,7 @@ public class ReservationService1Impl implements ReservationService1 {
             throw new DuplicateReservationException("이미 예약된 시간입니다.");
         }
 
-        Reservations reservations = reservationConverter1.toReservationEntity(
-            createReservationRequestDto);
+        Reservations reservations = reservationConverter1.toReservationEntity(createReservationRequestDto);
 
         User user = userRepository.findById(createReservationRequestDto.getUserId())
             .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
@@ -75,6 +74,8 @@ public class ReservationService1Impl implements ReservationService1 {
         reservations.setMenu(menu);
 
         reservationRepository1.save(reservations);
+        reservationTime.changeReserved();
+        reservationTimeRepository.save(reservationTime);
 
         return new ReservationSuccessResponseDto(reservations.getId());
     }

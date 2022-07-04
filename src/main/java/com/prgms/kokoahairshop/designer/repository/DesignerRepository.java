@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface DesignerRepository extends JpaRepository<Designer, Long> {
 
-    @Query("select d from Designer d join fetch d.reservationTimes r "
+    @Query("select distinct d from Designer d join fetch d.reservationTimes r "
         + "where d.hairshop.id = :hairshopId and r.date = :date and r.reserved = false")
     List<Designer> findDesignerFetchJoinByHairshopIdAndDate(@Param("hairshopId") Long hairshopId, @Param("date") LocalDate date);
 

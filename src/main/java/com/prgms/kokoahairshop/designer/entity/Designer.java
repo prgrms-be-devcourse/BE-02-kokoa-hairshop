@@ -67,9 +67,6 @@ public class Designer {
     @OneToMany(mappedBy = "designer")
     private List<Reservation> reservations = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "designer")
-//    private List<Reservations> reservations = new ArrayList<>();
-
     @OneToMany(mappedBy = "designer")
     private List<ReservationTime> reservationTimes = new ArrayList<>();
 

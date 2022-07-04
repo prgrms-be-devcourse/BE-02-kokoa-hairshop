@@ -33,13 +33,14 @@ import lombok.NoArgsConstructor;
 public class Reservation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "이름을 입력해주세요.")
     @Size(max = 20, message = "이름을 20자 이하로 작성해주세요.")
     @Column(name = "name", nullable = false, length = 20)
     private String name;
+
     @NotBlank(message = "휴대폰 번호를 입력해주세요.")
     @Size(max = 20, message = "휴대폰 번호를 20자 이하로 작성해주세요.")
     @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$", message = "올바르지 않은 휴대폰 번호입니다.")

@@ -1,5 +1,6 @@
 package com.prgms.kokoahairshop.designer.repository;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +44,8 @@ class DesignerRepositoryTest {
     Designer designer;
     Menu menu;
     Reservation reservation;
+    ReservationTime reservationTime1;
+    ReservationTime reservationTime2;
 
     @BeforeEach
     void beforeEach() {
@@ -67,6 +71,7 @@ class DesignerRepositoryTest {
             .introduction("안녕하세요.")
             .user(user)
             .build();
+        em.persist(hairshop);
 
         designer = Designer.builder()
             .name("디자이너1")
@@ -75,21 +80,7 @@ class DesignerRepositoryTest {
             .image("이미지 URL")
             .hairshop(hairshop)
             .build();
-
-        em.persist(hairshop);
         em.persist(designer);
-
-        menu = Menu.builder()
-            .name("기본 커트")
-            .type(Type.haircut)
-            .price(20000)
-            .gender(Gender.man)
-            .exposedTime(30)
-            .discount(0)
-            .image("커트_이미지_URL")
-            .hairshop(hairshop)
-            .build();
-        em.persist(menu);
 
         reservation = Reservation.builder()
             .name("예약자")
@@ -106,26 +97,36 @@ class DesignerRepositoryTest {
             .build();
         em.persist(reservation);
 
-        ReservationTime reservationTime = ReservationTime.builder()
+        reservationTime1 = ReservationTime.builder()
             .date(LocalDate.now())
             .time("11:00")
             .reserved(false)
+            .designer(designer)
+            .build();
+        em.persist(reservationTime1);
+
+        reservationTime2 = ReservationTime.builder()
+            .date(LocalDate.now())
+            .time("11:00")
+            .reserved(false)
+            .designer(designer)
             .build();
 
-        reservationTime.setDesigner(designer);
-        em.persist(reservationTime);
+//        reservationTime.setDesigner(designer);
+        em.persist(reservationTime2);
     }
 
     @Test
     @DisplayName("designer와 ReservationTimes 테이블을 fetch join 해서 가져올 수 있다.")
+    @Rollback(value = false)
     void findDesignerFetchJoinByHairshopIdAndDateTest() {
 
         // When
         List<Designer> designers = designerRepository.findDesignerFetchJoinByHairshopIdAndDate(
             hairshop.getId(), LocalDate.now());
+
         // Then
-        log.info("{}, {}, {}", designers.get(0).getName(), designers.get(0).getPosition(), designers.get(0).getReservationTimes().get(0));
+        log.info("{}", designers.size());
+        assertThat(designers.get(0).getReservationTimes()).isIn(reservationTime1, reservationTime2);
     }
-
-
 }

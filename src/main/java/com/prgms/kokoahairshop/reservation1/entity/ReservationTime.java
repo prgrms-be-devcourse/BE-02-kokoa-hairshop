@@ -57,11 +57,15 @@ public class ReservationTime {
             this.designer.getReservationTimes().remove(this);
         }
         this.designer = designer;
-//        designer.getReservationTimes().add(this);
+        designer.getReservationTimes().add(this);
     }
 
     public void setHairshop(Hairshop hairshop) {
         this.hairshop = hairshop;
+    }
+
+    public void changeReserved() {
+        this.reserved = true;
     }
 
 
