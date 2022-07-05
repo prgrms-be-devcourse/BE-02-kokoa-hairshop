@@ -269,6 +269,8 @@ class ReservationsController1Test {
                         .description("reservationEndTime")
                 ),
                 responseFields(
+                    fieldWithPath("[].designerId").type(JsonFieldType.NUMBER)
+                        .description("[].designerId"),
                     fieldWithPath("[].designerPosition").type(JsonFieldType.STRING)
                         .description("[].designerPosition"),
                     fieldWithPath("[].designerName").type(JsonFieldType.STRING)

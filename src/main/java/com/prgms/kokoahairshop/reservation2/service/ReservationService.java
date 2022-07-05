@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationRepository repository;
@@ -78,17 +80,17 @@ public class ReservationService {
         return ReservationResponseDto.builder().id(savedReservation.getId()).build();
     }
 
-    @Transactional(readOnly = true)
     public List<ReservationTimeResponseDto> getReservationTime(Long hairshopId,
         ReservationTimeRequestDto requestDto) {
-        List<Designer> designers = designerRepository.findByHairshopIdAndDate(hairshopId, requestDto.getDate());
+        List<Designer> reservedDesigner = designerRepository.findByHairshopIdAndDate(hairshopId,
+            requestDto.getDate());
+        List<Designer> allDesigners = designerRepository.findByHairshopId(hairshopId);
 
-
-        List<String> times = TimeUtil.getTimesFromStartAndEndTime(
+        List<String> allTimes = TimeUtil.getTimesFromStartAndEndTime(
             requestDto.getReservationStartTime(), requestDto.getReservationEndTime());
         List<ReservationTimeResponseDto> responseDtos = new ArrayList<>();
-        for (Designer designer : designers) {
-            List<String> reservationTimes = new ArrayList<>(times);
+        for (Designer designer : reservedDesigner) {
+            List<String> reservationTimes = new ArrayList<>(allTimes);
             List<Reservation> reservations = designer.getReservations();
             for (Reservation reservation : reservations) {
                 if (reservation.getStatus() == ReservationStatus.RESERVED) {
@@ -100,20 +102,18 @@ public class ReservationService {
                 designer, reservationTimes));
         }
 
-        List<Designer> allDesigners = designerRepository.findByHairshopId(hairshopId);
-        for(Designer designer : allDesigners) {
+        for (Designer designer : allDesigners) {
             boolean contains = false;
-            Long id = designer.getId();
-            for(ReservationTimeResponseDto responseDto : responseDtos) {
-                if(responseDto.getDesignerId() == id) {
+            for (ReservationTimeResponseDto responseDto : responseDtos) {
+                if (Objects.equals(responseDto.getDesignerId(), designer.getId())) {
                     contains = true;
                     break;
                 }
             }
-            if(!contains) {
-                responseDtos.add( ReservationConverter.toReservationTimeResponseDto(
-                    designer, times
-                ));
+
+            if (!contains) {
+                responseDtos.add(ReservationConverter.toReservationTimeResponseDto(
+                    designer, allTimes));
             }
         }
 
