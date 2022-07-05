@@ -6,6 +6,8 @@ import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
+import com.prgms.kokoahairshop.user.entity.User;
+import com.prgms.kokoahairshop.user.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -26,9 +28,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
 @AutoConfigureRestDocs
 @DisplayName("헤어샵 CRUD API 테스트")
+@AutoConfigureMockMvc(addFilters = false)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class HairshopControllerTest {
     @Autowired
@@ -43,27 +45,21 @@ class HairshopControllerTest {
     @Autowired
     private HairshopRepository hairshopRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     HairshopResponse hairshopResponse;
     CreateHairshopRequest createHairshopRequest;
+    User user;
 
     @BeforeEach
     void setup() {
-        createHairshopRequest = CreateHairshopRequest.builder()
-                .name("데브헤어")
-                .phoneNumber("010-1234-1234")
-                .startTime("11:00")
-                .endTime("20:00")
-                .closedDay("화")
-                .reservationRange("1")
-                .reservationStartTime("11:00")
-                .reservationEndTime("19:30")
-                .sameDayAvailable(true)
-                .roadNameNumber("대구 중구 동성로2가 141-9 2층3층")
-                .profileImg("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
-                .introduction("시간 여유 충분히 가지고 여유롭게 와주시면 감사하겠습니다 :)")
-                .userId(1L)
+        user = User.builder()
+                .email("example2@naver.com")
+                .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
+                .auth("USER")
                 .build();
-        hairshopResponse = hairshopService.insert(createHairshopRequest);
+        userRepository.save(user);
     }
 
     @AfterEach
@@ -72,10 +68,10 @@ class HairshopControllerTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("헤어샵 등록 테스트")
     void HAIRSHOP_INSERT_TEST() throws Exception {
-        // TODO : 유저 기능 작성 완료 후 리팩토링
-        CreateHairshopRequest createHairshopRequest = CreateHairshopRequest.builder()
+        createHairshopRequest = CreateHairshopRequest.builder()
                 .name("코스헤어")
                 .phoneNumber("010-1234-1234")
                 .startTime("11:00")
@@ -88,8 +84,9 @@ class HairshopControllerTest {
                 .roadNameNumber("대구 중구 동성로2가 143-9 2층")
                 .profileImg("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
                 .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
-                .userId(2L)
+                .userId(user.getId())
                 .build();
+        hairshopResponse = hairshopService.insert(createHairshopRequest);
         this.mockMvc.perform(post("/api/v1/hairshops")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,6 +114,7 @@ class HairshopControllerTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("전체 헤어샵 조회 테스트")
     void GET_HAIRSHOP_LIST_TEST() throws Exception {
         this.mockMvc.perform(get("/api/v1/hairshops")
@@ -171,6 +169,7 @@ class HairshopControllerTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("헤어샵 아이디로 헤어샵 조회 테스트")
     void GET_HAIRSHOP_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/api/v1/hairshops/{id}", hairshopResponse.getId())
@@ -213,6 +212,7 @@ class HairshopControllerTest {
     }
 
     @Test
+    @Order(4)
     @DisplayName("해당 아이디의 헤어샵이 없을 경우 테스트")
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
         this.mockMvc.perform(get("/api/v1/hairshops/{id}", 999L)
@@ -223,9 +223,9 @@ class HairshopControllerTest {
     }
 
     @Test
+    @Order(5)
     @DisplayName("헤어샵 정보를 수정 할 수 있다.")
     void MODIFY_HAIRSHOP_TEST() throws Exception {
-        // TODO : 유저 기능 작성 완료 후 리팩토링
         ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
                 .id(hairshopResponse.getId())
                 .name(hairshopResponse.getName())
@@ -268,6 +268,7 @@ class HairshopControllerTest {
     }
 
     @Test
+    @Order(6)
     @DisplayName("수정하려는 헤어샵이 없을 경우 테스트")
     void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
         ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
@@ -282,7 +283,8 @@ class HairshopControllerTest {
     }
 
     @Test
-    @DisplayName("게시물을 삭제 할 수 있다.")
+    @Order(7)
+    @DisplayName("헤어샵을 삭제 할 수 있다.")
     void REMOVE_USER_TEST() throws Exception {
         this.mockMvc.perform(delete("/api/v1/hairshops/{id}", hairshopResponse.getId()))
                 .andExpect(status().isNoContent())

@@ -32,7 +32,6 @@ public class Hairshop {
     @Column(name = "phone_number", nullable = false, columnDefinition = "varchar(14)")
     private String phoneNumber;
 
-    // TODO : 오픈시간 마감시간 유효성 검사
     @Size(min = 4, max = 6)
     @Column(name = "start_time", nullable = false, columnDefinition = "char(5)")
     private String startTime;

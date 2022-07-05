@@ -1,25 +1,14 @@
 package com.prgms.kokoahairshop.designer.repository;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.prgms.kokoahairshop.designer.entity.Designer;
 import com.prgms.kokoahairshop.designer.entity.Position;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
-import com.prgms.kokoahairshop.menu.entity.Gender;
 import com.prgms.kokoahairshop.menu.entity.Menu;
-import com.prgms.kokoahairshop.menu.entity.Type;
 import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
 import com.prgms.kokoahairshop.reservation2.entity.Reservation;
 import com.prgms.kokoahairshop.reservation2.entity.ReservationStatus;
 import com.prgms.kokoahairshop.user.entity.User;
-import java.time.LocalDate;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Slf4j
 @SpringBootTest
 @Transactional
@@ -35,7 +31,6 @@ class DesignerRepositoryTest {
 
     @Autowired
     private DesignerRepository designerRepository;
-
 
     @PersistenceContext
     EntityManager em;

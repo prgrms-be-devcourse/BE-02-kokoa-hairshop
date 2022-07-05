@@ -18,16 +18,6 @@ import java.net.URI;
 public class HairshopController {
     private final HairshopService hairshopService;
 
-    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
-    public ResponseEntity<Object> notFoundHandler() {
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> internalServerErrorHandler(Exception e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
-    }
-
     public HairshopController(HairshopService hairshopService) {
         this.hairshopService = hairshopService;
     }

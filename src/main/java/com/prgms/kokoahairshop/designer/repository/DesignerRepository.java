@@ -17,9 +17,6 @@ public interface DesignerRepository extends JpaRepository<Designer, Long> {
     @Query("select d from Designer d join fetch d.hairshop h")
     List<Designer> findAllDesignerFetchJoin();
 
-    @Query("SELECT o FROM Designer AS o WHERE o.hairshop = ?1")
-    List<Designer> findByHairshop(Hairshop hairshop);
-
     @Query(value = "SELECT distinct d from Designer d left join fetch d.reservations r where d.hairshop.id = :hairshopId and r.date=:date")
     List<Designer> findByHairshopIdAndDate(@Param("hairshopId") Long hairshopId, @Param("date") LocalDate date);
 

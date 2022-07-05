@@ -15,5 +15,5 @@ public class CreateDesignerRequest {
     private String image;
     private String introduction;
     private Position position;
-    private String hairshopId;
+    private Long hairshopId;
 }

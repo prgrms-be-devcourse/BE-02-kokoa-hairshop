@@ -18,16 +18,6 @@ import java.net.URI;
 public class DesignerController {
     private final DesignerService designerService;
 
-    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
-    public ResponseEntity<Object> notFoundHandler() {
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> internalServerErrorHandler(Exception e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
-    }
-
     public DesignerController(DesignerService designerService) {
         this.designerService = designerService;
     }
@@ -47,6 +37,11 @@ public class DesignerController {
     public ResponseEntity<DesignerResponse> getById(@PathVariable Long id) throws NotFoundException {
         DesignerResponse byId = designerService.findById(id);
         return ResponseEntity.ok(byId);
+    }
+
+    @GetMapping("/hairshop/{id}")
+    public ResponseEntity<Page<DesignerResponse>> getByHairshopId(Pageable pageable, @PathVariable Long id) throws NotFoundException {
+        return ResponseEntity.ok(designerService.findByHairshopId(pageable, id));
     }
 
     @PatchMapping

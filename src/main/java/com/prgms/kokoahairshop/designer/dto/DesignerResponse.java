@@ -18,7 +18,7 @@ public class DesignerResponse {
     private String image;
     private String introduction;
     private Position position;
-    private String hairshopId;
+    private Long hairshopId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -50,7 +50,6 @@ public class HairshopService {
 
     @Transactional
     public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest) throws NotFoundException {
-        // Todo : referenceById 톭아보기
         hairshopRepository.findById(modifyHairshopRequest.getId())
                 .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
         Hairshop hairshop = hairshopConverter.convertToHairshop(modifyHairshopRequest);
