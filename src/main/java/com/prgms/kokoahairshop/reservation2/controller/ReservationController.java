@@ -25,16 +25,18 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> save(
         @Validated @RequestBody ReservationRequestDto requestDto) {
+        ReservationResponseDto responseDto = service.save(requestDto);
+
         return ResponseEntity.ok()
-            .body(service.save(requestDto));
+            .body(responseDto);
     }
 
     @GetMapping("/reservations/reservation-times/hairshops/{hairshopId}")
     public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTimes(
         @PathVariable Long hairshopId,
-        @Validated @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
+        @Validated @RequestBody ReservationTimeRequestDto requestDto) {
         List<ReservationTimeResponseDto> responseDtos = service.getReservationTime(
-            hairshopId, reservationTimeRequestDto);
+            hairshopId, requestDto);
 
         return ResponseEntity.ok()
             .body(responseDtos);

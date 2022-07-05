@@ -75,9 +75,14 @@ public class ReservationService {
 
         Reservation reservation = ReservationConverter.toEntity(requestDto, maybeUser.get(),
             maybeHairshop.get(), maybeDesigner.get(), maybeMenu.get());
+
         Reservation savedReservation = repository.save(reservation);
 
-        return ReservationResponseDto.builder().id(savedReservation.getId()).build();
+        ReservationResponseDto responseDto = ReservationResponseDto.builder()
+            .id(savedReservation.getId())
+            .build();
+
+        return responseDto;
     }
 
     public List<ReservationTimeResponseDto> getReservationTime(Long hairshopId,
@@ -140,15 +145,15 @@ public class ReservationService {
 
     public void checkCancelTimeout(Reservation reservation) {
         LocalDateTime now = LocalDateTime.now();
+
         LocalDate date = reservation.getDate();
         String[] time = reservation.getTime().split(":");
         int hour = Integer.parseInt(time[0]);
         int min = Integer.parseInt(time[1]);
-        LocalDateTime dateTime = LocalDateTime.of(date.getYear(), date.getMonth(),
-            date.getDayOfMonth(), hour, min);
-        LocalDateTime limitDateTime = dateTime.minusHours(2);
+        LocalDateTime limit = LocalDateTime.of(date.getYear(), date.getMonth(),
+            date.getDayOfMonth(), hour, min).minusHours(2);
 
-        if (now.isAfter(limitDateTime)) {
+        if (now.isAfter(limit)) {
             throw new ReservationCancelTimeoutException("해당 예약의 취소 가능시간이 초과하였습니다.");
         }
     }

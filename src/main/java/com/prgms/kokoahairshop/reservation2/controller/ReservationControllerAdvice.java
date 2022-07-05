@@ -17,11 +17,11 @@ public class ReservationControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidationException(
         MethodArgumentNotValidException e) {
-        List<String> errors = new ArrayList<>();
-        e.getBindingResult().getAllErrors()
-            .forEach(c -> errors.add(c.getDefaultMessage()));
+        List<String> errorMassages = new ArrayList<>();
+        e.getBindingResult().getAllErrors().forEach(c -> errorMassages.add(c.getDefaultMessage()));
+
         return ResponseEntity.badRequest()
-            .body(errors);
+            .body(errorMassages);
     }
 
     @ExceptionHandler(DuplicateReservationException.class)
