@@ -5,14 +5,19 @@ import static org.hamcrest.Matchers.*;
 
 import com.prgms.kokoahairshop.user.entity.User;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class UserRepositoryTest {
 
     private final User user = new User("example1@naver.com", "$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa","USER");
@@ -20,7 +25,7 @@ class UserRepositoryTest {
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryTest.class);
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
 
     @Test
@@ -32,4 +37,5 @@ class UserRepositoryTest {
         assertThat(findUser.get(), samePropertyValuesAs(user));
 
     }
+
 }
