@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,11 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final UserDetailService userDetailService;
 
     @PostMapping("/v1/reservations")
-    public ResponseEntity<CreateReservationResponseDto> reserveStatic(
+    public ResponseEntity<CreateReservationResponseDto> reserveStatic(@AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
+        // 본인확인
+        if (!user.getId().equals(requestDto.getUserId())){
+            throw new IllegalArgumentException("본인의 예약만 할 수 있습니다.");
+        }
+
         CreateReservationResponseDto responseDto = reservationService.saveStatic(
             requestDto);
 
@@ -39,16 +44,20 @@ public class ReservationController {
     }
 
     @PostMapping("/v2/reservations")
-    public ResponseEntity<CreateReservationResponseDto> reserveDynamic(
+    public ResponseEntity<CreateReservationResponseDto> reserveDynamic(@AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
+        // 본인확인
+        if (!user.getId().equals(requestDto.getUserId())){
+            throw new IllegalArgumentException("본인의 예약만 할 수 있습니다.");
+        }
+
         CreateReservationResponseDto responseDto = reservationService.saveDynamic(requestDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping("/reservations/user")
-    public ResponseEntity<List<ReservationResponseDto>> getReservationsByUser() {
-        User user = userDetailService.getUserFromSecurityContextHolder();
+    public ResponseEntity<List<ReservationResponseDto>> getReservationsByUser(@AuthenticationPrincipal User user) {
         List<ReservationResponseDto> responseDtos = reservationService.findReservationsByUser(
             user.getId());
 
@@ -86,16 +95,18 @@ public class ReservationController {
     }
 
     @PatchMapping("/v2/reservations/{reservationId}/user")
-    public ResponseEntity<Object> cancelReservationByUserDynamic(@PathVariable Long reservationId) {
-        reservationService.cancelReservation(reservationId);
+    public ResponseEntity<Object> cancelReservationByUserDynamic(@AuthenticationPrincipal User user,
+        @PathVariable Long reservationId) {
+
+        reservationService.cancelReservation(reservationId, user);
 
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/v2/reservations/{reservationId}/hairshop")
-    public ResponseEntity<Object> cancelReservationByHairshopDynamic(
+    public ResponseEntity<Object> cancelReservationByHairshopDynamic(@AuthenticationPrincipal User user,
         @PathVariable Long reservationId) {
-        reservationService.cancelReservation(reservationId);
+        reservationService.cancelReservation(reservationId, user);
 
         return ResponseEntity.noContent().build();
     }

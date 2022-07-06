@@ -186,7 +186,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(Long reservationId) {
+    public void cancelReservation(Long reservationId, User user) {
         Optional<Reservation> maybeReservation = reservationRepository.findById(reservationId);
         if (maybeReservation.isEmpty()) {
             throw new NotFoundException("해당 예약이 존재하지 않습니다.");
@@ -195,6 +195,11 @@ public class ReservationService {
         Reservation reservation = maybeReservation.get();
         if (reservation.getStatus() != ReservationStatus.RESERVED) {
             throw new ReservationNotReservedException("해당 예약은 예약 상태가 아닙니다.");
+        }
+
+        // 본인예약확인
+        if (reservation.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("본인의 예약만 삭제할 수 있습니다.");
         }
 
         checkCancelTimeout(reservation);
