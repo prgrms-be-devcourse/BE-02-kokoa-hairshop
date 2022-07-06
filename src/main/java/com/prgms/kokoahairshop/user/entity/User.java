@@ -1,7 +1,7 @@
 package com.prgms.kokoahairshop.user.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
-import com.prgms.kokoahairshop.reservation2.entity.Reservation;
+import com.prgms.kokoahairshop.reservation.entity.Reservation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
