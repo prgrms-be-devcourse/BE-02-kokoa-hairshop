@@ -1,9 +1,8 @@
 package com.prgms.kokoahairshop.designer.entity;
 
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
-import com.prgms.kokoahairshop.reservation1.entity.ReservationTime;
-import com.prgms.kokoahairshop.reservation1.entity.Reservations;
-import com.prgms.kokoahairshop.reservation2.entity.Reservation;
+import com.prgms.kokoahairshop.reservation.entity.ReservationTime;
+import com.prgms.kokoahairshop.reservation.entity.Reservation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
