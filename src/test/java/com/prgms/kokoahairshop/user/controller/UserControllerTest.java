@@ -1,5 +1,7 @@
 package com.prgms.kokoahairshop.user.controller;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -13,11 +15,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.user.dto.LoginRequestDto;
 import com.prgms.kokoahairshop.user.dto.RegisterRequestDto;
+import com.prgms.kokoahairshop.user.dto.TokenResponseDto;
+import com.prgms.kokoahairshop.user.entity.User;
+import com.prgms.kokoahairshop.user.repository.UserRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -27,11 +37,13 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs()
+@TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserControllerTest {
 
@@ -39,7 +51,12 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    private static String accessToken = "";
 
 
     @Test
@@ -79,9 +96,9 @@ class UserControllerTest {
             .password("test1234")
             .build();
 
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequestDto)))
+        ResultActions resultActions = mockMvc.perform(post("/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(loginRequestDto)))
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("login",
@@ -90,16 +107,26 @@ class UserControllerTest {
                     fieldWithPath("password").type(JsonFieldType.STRING).description("password")
                 ),
                 responseFields(
-                    fieldWithPath("accessToken").type(JsonFieldType.STRING).description("accessToken")
+                    fieldWithPath("accessToken").type(JsonFieldType.STRING)
+                        .description("accessToken")
                 )
             ));
+
+
+        // Response Body에서 Access Token 빼오기
+        MvcResult result = resultActions.andReturn();
+        String contentAsString = result.getResponse().getContentAsString();
+
+        TokenResponseDto response = objectMapper.readValue(contentAsString, TokenResponseDto.class);
+
+        accessToken = response.getAccessToken();
+
 
     }
 
     @Test
     @DisplayName("인증테스트")
     void me_test() throws Exception {
-        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY1NjQ5NTU0NSwidXNlck5hbWUiOiJ0ZXN0QGdtYWlsLmNvbSJ9.872qTthWz1Tn-FHjEDh0Z2pqpUU5jcAy4MscJW3H4YA9x1IyIpNOblZJdEdpsZ1WKPNUwOfn2sP-caH1GZgLRg";
 
         mockMvc.perform(get("/me")
                 .header("Authorization", "Bearer " + accessToken))
@@ -114,5 +141,13 @@ class UserControllerTest {
             ));
 
 
+    }
+
+    @AfterAll
+    @DisplayName("테스트 데이터 모두삭제")
+    void roll_back() {
+        userRepository.deleteAll();
+        List<User> all = userRepository.findAll();
+        assertThat(all.isEmpty(), is(true));
     }
 }

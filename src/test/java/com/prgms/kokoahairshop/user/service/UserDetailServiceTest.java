@@ -10,27 +10,38 @@ import com.prgms.kokoahairshop.user.dto.LoginRequestDto;
 import com.prgms.kokoahairshop.user.dto.RegisterRequestDto;
 import com.prgms.kokoahairshop.user.dto.RegisterResponseDto;
 import com.prgms.kokoahairshop.user.dto.TokenResponseDto;
+import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.exception.EmailAlreadyExistException;
+import com.prgms.kokoahairshop.user.repository.UserRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
 @SpringBootTest
+@TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserDetailServiceTest {
 
     @Autowired
-    UserDetailService userDetailService;
+    private UserDetailService userDetailService;
 
     @Autowired
-    JwtAuthenticationProvider jwtAuthenticationProvider;
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtAuthenticationProvider jwtAuthenticationProvider;
 
     @Test
     @DisplayName("이메일,비밀번호,권한정보로 회원가입을 할 수 있다")
@@ -44,10 +55,11 @@ class UserDetailServiceTest {
             .build();
 
         // when
-        RegisterResponseDto responseDto = userDetailService.register(registerRequestDto);
+        userDetailService.register(registerRequestDto);
+        List<User> all = userRepository.findAll();
 
         // then
-        assertThat(responseDto.getUserId(), is(1L));
+        assertThat(all.size(), is(1));
 
     }
 
@@ -118,6 +130,15 @@ class UserDetailServiceTest {
 
 
 
+    }
+
+    @Test
+    @AfterAll
+    @DisplayName("테스트 데이터 모두삭제")
+    void roll_back() {
+        userRepository.deleteAll();
+        List<User> all = userRepository.findAll();
+        assertThat(all.isEmpty(), is(true));
     }
 
 
