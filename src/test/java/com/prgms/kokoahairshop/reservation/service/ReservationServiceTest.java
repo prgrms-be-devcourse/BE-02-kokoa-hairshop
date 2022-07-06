@@ -195,6 +195,7 @@ public class ReservationServiceTest {
     }
 
     @Test
+    // TODO : 예약자를 확인할 수 있도록..?
     void 예약을_취소할_수_있다() {
         // given
         LocalDate today = LocalDate.now();
@@ -214,6 +215,7 @@ public class ReservationServiceTest {
     }
 
     @Test
+    // TODO : 예약자를 확인할 수 있도록..?
     void 예약_취소_예약이_존재하지_않으면_예외가_발생한다() {
         // given
         when(reservationRepository.findById(0L)).thenThrow(
@@ -225,6 +227,7 @@ public class ReservationServiceTest {
     }
 
     @Test
+    // TODO : 예약자를 확인할 수 있도록..?
     void 예약_취소_RESERVED가_아니면_예외가_발생한다() {
         // given
         LocalDate today = LocalDate.now();

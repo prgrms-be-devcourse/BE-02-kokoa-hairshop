@@ -50,6 +50,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -241,7 +242,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(1)
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void 예약을_생성할_수_있다() throws Exception {
         CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
             .name("예약자")
@@ -286,7 +287,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(2)
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void 예약_존재하면_400에러_발생() throws Exception {
         CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
             .name("예약자")
@@ -309,7 +310,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(3)
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void 예약_가능시간을_조회할_수_있다() throws Exception {
         ReservationTimeRequestDtoDynamic requestDto = ReservationTimeRequestDtoDynamic.builder()
             .date(LocalDate.now())
@@ -350,7 +351,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(4)
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void 사용자는_예약을_취소할_수_있다() throws Exception {
         mockMvc.perform(
                 patch("/v2/reservations/{reservationId}/user", reservation2.getId()))
@@ -361,9 +362,11 @@ class ReservationControllerTest {
         // 헤어샵도 동일하기 때문에 패스
     }
 
+
+
     @Test
     @Order(5)
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void 예약_취소가눙_시간이_지나면_400에러를_반환한다() throws Exception {
         mockMvc.perform(
                 patch("/v2/reservations/{reservationId}/user", reservation1.getId()))
@@ -378,7 +381,7 @@ class ReservationControllerTest {
 
     @Test
     @DisplayName("예약 생성")
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void createReservationTest() throws Exception {
         log.info("{}", user.getId());
         CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
@@ -424,8 +427,33 @@ class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("남의 예약을 생성할 수 없음")
+    @WithUserDetails(value = "example2@naver.com")
+    void createOtherReservationTest() throws Exception {
+        log.info("{}", user.getId());
+        CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
+            .name("예약자")
+            .phoneNumber("010-1234-5678")
+            .date(LocalDate.now())
+            .time("11:00")
+            .request("예쁘게 잘라주세요.")
+            .paymentAmount(20000)
+            .userId(user.getId()+1) // 다른 user_id
+            .hairshopId(hairshop.getId())
+            .designerId(designer.getId())
+            .menuId(menu.getId())
+            .build();
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/v1/reservations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("예약 가능한 시간 조회")
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void reservationTimeListTest() throws Exception {
         ReservationTimeRequestDtoStatic requestDto = new ReservationTimeRequestDtoStatic(
             LocalDate.now());
@@ -458,21 +486,21 @@ class ReservationControllerTest {
             ));
     }
 
-//    @Test
-//    @DisplayName("사용자의 예약 리스트 조회")
-//    @WithMockUser(username = "example@gmail.com", roles = "USER")
-//    void reservationListByUserTest() throws Exception {
-//        //Todo : Mock jwt를 만들어서 test
-//        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/user", user.getId())
-//                .header()
-//                .contentType(MediaType.APPLICATION_JSON))
-//            .andExpect(MockMvcResultMatchers.status().isOk())
-//            .andDo(MockMvcResultHandlers.print());
-//    }
+    @Test
+    @DisplayName("사용자의 예약 리스트 조회")
+    @WithUserDetails(value = "example2@naver.com")
+    void reservationListByUserTest() throws Exception {
+        //Todo : Mock jwt를 만들어서 test -> 토큰으로직접 인증 등록은 한번만 따로, 예약테스트에서는 어노테이션으로 주입
+        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/user", user.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andDo(MockMvcResultHandlers.print());
+    }
+
 
     @Test
     @DisplayName("헤어샵의 예약 리스트 조회")
-    @WithMockUser(username = "example@gmail.com", roles = "USER")
+    @WithUserDetails(value = "example2@naver.com")
     void reservationListByHairshopTest() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/reservations/hairshops/{hairshopId}", hairshop.getId())
@@ -480,4 +508,5 @@ class ReservationControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andDo(MockMvcResultHandlers.print());
     }
+
 }
