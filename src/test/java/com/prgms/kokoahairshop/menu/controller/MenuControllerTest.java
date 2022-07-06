@@ -279,7 +279,7 @@ class MenuControllerTest {
         this.mockMvc.perform(get("/menu/{id}", 999L)
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().isNotFound())
                 .andDo(document("getById-notFound-menu"));
     }
 
@@ -322,13 +322,20 @@ class MenuControllerTest {
     void MODIFY_MENU_NOT_FOUND_TEST() throws Exception {
         ModifyMenuRequest modifyMenuRequest = ModifyMenuRequest.builder()
                 .id(999L)
+                .name("커트")
+                .price(10000)
+                .discount(0)
+                .gender(Gender.unisex.getGender())
+                .type(Type.haircut.getType())
+                .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .exposedTime(30)
                 .hairshopId(menuResponse.getHairshopId())
                 .build();
         this.mockMvc.perform(patch("/menu")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(modifyMenuRequest)))
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().isNotFound())
                 .andDo(document("modify-notFound-menu"));
     }
 

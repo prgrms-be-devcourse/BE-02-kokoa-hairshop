@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @Builder
@@ -20,7 +18,8 @@ public class CreateMenuRequest {
     @NotNull(message = "가격을 입력해주세요.")
     private Integer price;
     @NotNull(message = "할인율을 입력해주세요.")
-    @Size(min = 1, max = 100, message = "할인율은 1~100 사이로 해주세요.")
+    @Min(value = 0,message = "할인율은 0~100 사이로 해주세요.")
+    @Max(value = 100,message = "할인율은 0~100 사이로 해주세요.")
     private Integer discount;
     private String gender;
     private String type;
