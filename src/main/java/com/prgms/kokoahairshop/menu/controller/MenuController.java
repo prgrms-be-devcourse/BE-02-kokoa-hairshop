@@ -4,7 +4,6 @@ import com.prgms.kokoahairshop.menu.dto.CreateMenuRequest;
 import com.prgms.kokoahairshop.menu.dto.MenuResponse;
 import com.prgms.kokoahairshop.menu.dto.ModifyMenuRequest;
 import com.prgms.kokoahairshop.menu.service.MenuService;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.net.URI;
 
 @Slf4j
@@ -22,18 +21,8 @@ import java.net.URI;
 public class MenuController {
     private final MenuService menuService;
 
-    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
-    public ResponseEntity<Object> notFoundHandler() {
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> internalServerErrorHandler(Exception e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
-    }
-
     @PostMapping
-    public ResponseEntity<Long> insert(@RequestBody CreateMenuRequest createMenuRequest) throws NotFoundException {
+    public ResponseEntity<Long> insert(@Valid @RequestBody CreateMenuRequest createMenuRequest) {
         MenuResponse insert = menuService.insert(createMenuRequest);
         return ResponseEntity.created(URI.create("/menu/" + insert.getId())).body(insert.getId());
     }
@@ -44,18 +33,18 @@ public class MenuController {
     }
 
     @GetMapping("/hairshops/{id}")
-    public ResponseEntity<Page<MenuResponse>> getByHairshop(Pageable pageable, @PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<Page<MenuResponse>> getByHairshop(Pageable pageable, @PathVariable Long id) {
         return ResponseEntity.ok(menuService.findByHairshopId(pageable, id));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MenuResponse> getById(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<MenuResponse> getById(@PathVariable Long id) {
         MenuResponse byId = menuService.findById(id);
         return ResponseEntity.ok(byId);
     }
 
     @PatchMapping
-    public ResponseEntity<Object> modify(@RequestBody ModifyMenuRequest modifyMenuRequest) throws NotFoundException {
+    public ResponseEntity<Object> modify(@Valid @RequestBody ModifyMenuRequest modifyMenuRequest) {
         menuService.update(modifyMenuRequest);
         return ResponseEntity.noContent().build();
     }

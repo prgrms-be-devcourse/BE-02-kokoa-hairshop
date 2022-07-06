@@ -3,6 +3,7 @@ package com.prgms.kokoahairshop.designer.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.designer.dto.CreateDesignerRequest;
+import com.prgms.kokoahairshop.designer.dto.DesignerConverter;
 import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
 import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
 import com.prgms.kokoahairshop.designer.entity.Position;
@@ -54,6 +55,9 @@ class DesignerControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DesignerConverter designerConverter;
 
     private Hairshop hairshop;
     private DesignerResponse designerResponse;
@@ -257,7 +261,7 @@ class DesignerControllerTest {
         this.mockMvc.perform(get("/designers/{id}", 999L)
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().isNotFound())
                 .andDo(document("getById-notFound-designer"));
     }
 
@@ -294,13 +298,17 @@ class DesignerControllerTest {
     void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
         ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
                 .id(999L)
-                .hairshopId(designerResponse.getHairshopId())
+                .name("나그맨")
+                .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .introduction("안녕하세요.")
+                .position(Position.DESIGNER)
+                .hairshopId(hairshop.getId())
                 .build();
         this.mockMvc.perform(patch("/designers")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(modifyDesignerRequest)))
-                .andExpect(status().is5xxServerError())
+                .andExpect(status().isNotFound())
                 .andDo(document("modify-notFound-designer"));
     }
 

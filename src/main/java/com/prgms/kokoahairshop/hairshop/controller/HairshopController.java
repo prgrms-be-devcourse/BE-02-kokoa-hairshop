@@ -4,13 +4,12 @@ import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -23,7 +22,7 @@ public class HairshopController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> insert(@RequestBody CreateHairshopRequest createHairshopRequest) {
+    public ResponseEntity<Long> insert(@Valid @RequestBody CreateHairshopRequest createHairshopRequest) {
         HairshopResponse insert = hairshopService.insert(createHairshopRequest);
         return ResponseEntity.created(URI.create("/api/v1/hairshops/" + insert.getId())).body(insert.getId());
     }
@@ -34,13 +33,13 @@ public class HairshopController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HairshopResponse> getById(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<HairshopResponse> getById(@PathVariable Long id) {
         HairshopResponse byId = hairshopService.findById(id);
         return ResponseEntity.ok(byId);
     }
 
     @PatchMapping
-    public ResponseEntity<Object> modify(@RequestBody ModifyHairshopRequest modifyHairshopRequest) throws NotFoundException {
+    public ResponseEntity<Object> modify(@Valid @RequestBody ModifyHairshopRequest modifyHairshopRequest) {
         hairshopService.update(modifyHairshopRequest);
         return ResponseEntity.noContent().build();
     }

@@ -2,8 +2,9 @@ package com.prgms.kokoahairshop.hairshop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
-import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
+import com.prgms.kokoahairshop.hairshop.dto.HairshopConverter;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
+import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
 import com.prgms.kokoahairshop.user.entity.User;
@@ -31,7 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @DisplayName("헤어샵 CRUD API 테스트")
 @AutoConfigureMockMvc(addFilters = false)
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class HairshopControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -48,11 +50,14 @@ class HairshopControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    HairshopResponse hairshopResponse;
+    @Autowired
+    private HairshopConverter hairshopConverter;
+
+    Hairshop hairshop;
     CreateHairshopRequest createHairshopRequest;
     User user;
 
-    @BeforeEach
+    @BeforeAll
     void setup() {
         user = User.builder()
                 .email("example2@naver.com")
@@ -60,11 +65,29 @@ class HairshopControllerTest {
                 .auth("USER")
                 .build();
         userRepository.save(user);
+        createHairshopRequest = CreateHairshopRequest.builder()
+                .name("코스헤어")
+                .phoneNumber("010-1234-1234")
+                .startTime("11:00")
+                .endTime("20:00")
+                .closedDay("화")
+                .reservationRange("1")
+                .reservationStartTime("11:00")
+                .reservationEndTime("19:30")
+                .sameDayAvailable(true)
+                .roadNameNumber("대구 중구 동성로2가 143-9 2층")
+                .profileImg("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
+                .userId(user.getId())
+                .build();
+        hairshop = hairshopConverter.convertToHairshop(createHairshopRequest);
+        hairshop = hairshopRepository.save(hairshop);
     }
 
-    @AfterEach
+    @AfterAll
     void tearDown() {
         hairshopRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -86,7 +109,6 @@ class HairshopControllerTest {
                 .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
                 .userId(user.getId())
                 .build();
-        hairshopResponse = hairshopService.insert(createHairshopRequest);
         this.mockMvc.perform(post("/api/v1/hairshops")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -172,24 +194,24 @@ class HairshopControllerTest {
     @Order(3)
     @DisplayName("헤어샵 아이디로 헤어샵 조회 테스트")
     void GET_HAIRSHOP_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(get("/api/v1/hairshops/{id}", hairshopResponse.getId())
+        this.mockMvc.perform(get("/api/v1/hairshops/{id}", hairshop.getId())
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("application/json")))
-                .andExpect(jsonPath("$.id").value(hairshopResponse.getId()))
-                .andExpect(jsonPath("$.name").value(hairshopResponse.getName()))
-                .andExpect(jsonPath("$.phoneNumber").value(hairshopResponse.getPhoneNumber()))
-                .andExpect(jsonPath("$.startTime").value(hairshopResponse.getStartTime()))
-                .andExpect(jsonPath("$.endTime").value(hairshopResponse.getEndTime()))
-                .andExpect(jsonPath("$.closedDay").value(hairshopResponse.getClosedDay()))
-                .andExpect(jsonPath("$.reservationRange").value(hairshopResponse.getReservationRange()))
-                .andExpect(jsonPath("$.reservationStartTime").value(hairshopResponse.getReservationStartTime()))
-                .andExpect(jsonPath("$.reservationEndTime").value(hairshopResponse.getReservationEndTime()))
-                .andExpect(jsonPath("$.sameDayAvailable").value(hairshopResponse.getSameDayAvailable()))
-                .andExpect(jsonPath("$.roadNameNumber").value(hairshopResponse.getRoadNameNumber()))
-                .andExpect(jsonPath("$.profileImg").value(hairshopResponse.getProfileImg()))
-                .andExpect(jsonPath("$.introduction").value(hairshopResponse.getIntroduction()))
+                .andExpect(jsonPath("$.id").value(hairshop.getId()))
+                .andExpect(jsonPath("$.name").value(hairshop.getName()))
+                .andExpect(jsonPath("$.phoneNumber").value(hairshop.getPhoneNumber()))
+                .andExpect(jsonPath("$.startTime").value(hairshop.getStartTime()))
+                .andExpect(jsonPath("$.endTime").value(hairshop.getEndTime()))
+                .andExpect(jsonPath("$.closedDay").value(hairshop.getClosedDay()))
+                .andExpect(jsonPath("$.reservationRange").value(hairshop.getReservationRange()))
+                .andExpect(jsonPath("$.reservationStartTime").value(hairshop.getReservationStartTime()))
+                .andExpect(jsonPath("$.reservationEndTime").value(hairshop.getReservationEndTime()))
+                .andExpect(jsonPath("$.sameDayAvailable").value(hairshop.getSameDayAvailable()))
+                .andExpect(jsonPath("$.roadNameNumber").value(hairshop.getRoadNameNumber()))
+                .andExpect(jsonPath("$.profileImg").value(hairshop.getProfileImg()))
+                .andExpect(jsonPath("$.introduction").value(hairshop.getIntroduction()))
                 .andDo(document("getById-hairshop",
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("id"),
@@ -227,19 +249,19 @@ class HairshopControllerTest {
     @DisplayName("헤어샵 정보를 수정 할 수 있다.")
     void MODIFY_HAIRSHOP_TEST() throws Exception {
         ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
-                .id(hairshopResponse.getId())
-                .name(hairshopResponse.getName())
-                .phoneNumber(hairshopResponse.getPhoneNumber())
-                .startTime(hairshopResponse.getStartTime())
-                .endTime(hairshopResponse.getEndTime())
-                .closedDay(hairshopResponse.getClosedDay())
-                .reservationRange(hairshopResponse.getReservationRange())
-                .reservationStartTime(hairshopResponse.getReservationStartTime())
-                .reservationEndTime(hairshopResponse.getEndTime())
-                .sameDayAvailable(hairshopResponse.getSameDayAvailable())
-                .roadNameNumber(hairshopResponse.getRoadNameNumber())
-                .profileImg(hairshopResponse.getProfileImg())
-                .introduction(hairshopResponse.getIntroduction())
+                .id(hairshop.getId())
+                .name(hairshop.getName())
+                .phoneNumber(hairshop.getPhoneNumber())
+                .startTime(hairshop.getStartTime())
+                .endTime(hairshop.getEndTime())
+                .closedDay(hairshop.getClosedDay())
+                .reservationRange(hairshop.getReservationRange())
+                .reservationStartTime(hairshop.getReservationStartTime())
+                .reservationEndTime(hairshop.getEndTime())
+                .sameDayAvailable(hairshop.getSameDayAvailable())
+                .roadNameNumber(hairshop.getRoadNameNumber())
+                .profileImg(hairshop.getProfileImg())
+                .introduction(hairshop.getIntroduction())
                 .userId(createHairshopRequest.getUserId())
                 .build();
         this.mockMvc.perform(patch("/api/v1/hairshops")
@@ -273,6 +295,19 @@ class HairshopControllerTest {
     void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
         ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
                 .id(999L)
+                .name("코스헤어")
+                .phoneNumber("010-1234-1234")
+                .startTime("11:00")
+                .endTime("20:00")
+                .closedDay("화")
+                .reservationRange("1")
+                .reservationStartTime("11:00")
+                .reservationEndTime("19:30")
+                .sameDayAvailable(true)
+                .roadNameNumber("대구 중구 동성로2가 143-9 2층")
+                .profileImg("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
+                .userId(user.getId())
                 .build();
         this.mockMvc.perform(patch("/api/v1/hairshops")
                         .characterEncoding("UTF-8")
@@ -286,7 +321,7 @@ class HairshopControllerTest {
     @Order(7)
     @DisplayName("헤어샵을 삭제 할 수 있다.")
     void REMOVE_USER_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/v1/hairshops/{id}", hairshopResponse.getId()))
+        this.mockMvc.perform(delete("/api/v1/hairshops/{id}", hairshop.getId()))
                 .andExpect(status().isNoContent())
                 .andDo(document("remove-hairshop"));
     }

@@ -30,6 +30,7 @@ public class Menu {
     @Column(name = "price", nullable = false)
     private Integer price;
 
+    @Size(min = 0, max = 100)
     @Column(name = "discount", nullable = false)
     private Integer discount;
 
