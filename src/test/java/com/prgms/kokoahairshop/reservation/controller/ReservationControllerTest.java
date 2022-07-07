@@ -375,8 +375,6 @@ class ReservationControllerTest {
             .andExpect(status().isNoContent())
             .andDo(print())
             .andDo(document("cancel-reservation"));
-
-        // 헤어샵도 동일하기 때문에 패스
     }
 
     @Test
@@ -389,8 +387,6 @@ class ReservationControllerTest {
             .andExpect(status().isNoContent())
             .andDo(print())
             .andDo(document("cancel-reservation"));
-
-        // 헤어샵도 동일하기 때문에 패스
     }
 
     @Test
@@ -515,7 +511,41 @@ class ReservationControllerTest {
         mockMvc.perform(get("/reservations/user", user.getId())
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(print())
+            .andDo(document("get-reservations-by-user",
+                    responseFields(
+                        fieldWithPath("[].id").type(JsonFieldType.NUMBER)
+                            .description("[].id"),
+                        fieldWithPath("[].name").type(JsonFieldType.STRING)
+                            .description("[].name"),
+                        fieldWithPath("[].phoneNumber").type(JsonFieldType.STRING)
+                            .description("[].phoneNumber"),
+                        fieldWithPath("[].date").type(JsonFieldType.STRING)
+                            .description("[].date"),
+                        fieldWithPath("[].time").type(JsonFieldType.STRING)
+                            .description("[].time"),
+                        fieldWithPath("[].status").type(JsonFieldType.STRING)
+                            .description("[].status"),
+                        fieldWithPath("[].request").type(JsonFieldType.STRING)
+                            .description("[].request"),
+                        fieldWithPath("[].paymentAmount").type(JsonFieldType.NUMBER)
+                            .description("[].paymentAmount"),
+                        fieldWithPath("[].hairshopId").type(JsonFieldType.NUMBER)
+                            .description("[].hairshopId"),
+                        fieldWithPath("[].hairshopName").type(JsonFieldType.STRING)
+                            .description("[].hairshopName"),
+                        fieldWithPath("[].menuId").type(JsonFieldType.NUMBER)
+                            .description("[].menuId"),
+                        fieldWithPath("[].menuName").type(JsonFieldType.STRING)
+                            .description("[].menuName"),
+                        fieldWithPath("[].designerId").type(JsonFieldType.NUMBER)
+                            .description("[].designerId"),
+                        fieldWithPath("[].designerPosition").type(JsonFieldType.STRING)
+                            .description("[].designerPosition"),
+                        fieldWithPath("[].designerName").type(JsonFieldType.STRING)
+                            .description("[].designerName")
+                    )
+                ));
     }
 
 
@@ -527,7 +557,41 @@ class ReservationControllerTest {
                 get("/reservations/hairshops/{hairshopId}", hairshop.getId())
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(print())
+            .andDo(document("get-reservations-by-user",
+                responseFields(
+                    fieldWithPath("[].id").type(JsonFieldType.NUMBER)
+                        .description("[].id"),
+                    fieldWithPath("[].name").type(JsonFieldType.STRING)
+                        .description("[].name"),
+                    fieldWithPath("[].phoneNumber").type(JsonFieldType.STRING)
+                        .description("[].phoneNumber"),
+                    fieldWithPath("[].date").type(JsonFieldType.STRING)
+                        .description("[].date"),
+                    fieldWithPath("[].time").type(JsonFieldType.STRING)
+                        .description("[].time"),
+                    fieldWithPath("[].status").type(JsonFieldType.STRING)
+                        .description("[].status"),
+                    fieldWithPath("[].request").type(JsonFieldType.STRING)
+                        .description("[].request"),
+                    fieldWithPath("[].paymentAmount").type(JsonFieldType.NUMBER)
+                        .description("[].paymentAmount"),
+                    fieldWithPath("[].hairshopId").type(JsonFieldType.NUMBER)
+                        .description("[].hairshopId"),
+                    fieldWithPath("[].hairshopName").type(JsonFieldType.STRING)
+                        .description("[].hairshopName"),
+                    fieldWithPath("[].menuId").type(JsonFieldType.NUMBER)
+                        .description("[].menuId"),
+                    fieldWithPath("[].menuName").type(JsonFieldType.STRING)
+                        .description("[].menuName"),
+                    fieldWithPath("[].designerId").type(JsonFieldType.NUMBER)
+                        .description("[].designerId"),
+                    fieldWithPath("[].designerPosition").type(JsonFieldType.STRING)
+                        .description("[].designerPosition"),
+                    fieldWithPath("[].designerName").type(JsonFieldType.STRING)
+                        .description("[].designerName")
+                )
+            ));
     }
 
 }
