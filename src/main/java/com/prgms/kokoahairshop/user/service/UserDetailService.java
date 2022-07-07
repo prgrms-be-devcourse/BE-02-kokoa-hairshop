@@ -27,11 +27,9 @@ public class UserDetailService implements UserDetailsService {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final Converter converter = new Converter();
-
 
     public UserDetailService(UserRepository userRepository,
         JwtAuthenticationProvider jwtAuthenticationProvider) {
@@ -53,7 +51,6 @@ public class UserDetailService implements UserDetailsService {
         userEntity.encodePassword(passwordEncoder.encode(registerRequestDto.getPassword()));
         return converter.toRegisterResponse(userRepository.save(userEntity).getId());
     }
-
 
     // 로그인
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
@@ -80,7 +77,4 @@ public class UserDetailService implements UserDetailsService {
 
         return converter.entityToUserInfoDto(user);
     }
-
-
-
 }

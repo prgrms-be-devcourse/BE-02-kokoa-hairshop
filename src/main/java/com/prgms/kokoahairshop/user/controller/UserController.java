@@ -27,13 +27,15 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<RegisterResponseDto> signup(@RequestBody @Valid RegisterRequestDto registerRequestDto) {
+    public ResponseEntity<RegisterResponseDto> signup(
+        @RequestBody @Valid RegisterRequestDto registerRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userDetailService.register(
             registerRequestDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
+    public ResponseEntity<TokenResponseDto> login(
+        @RequestBody @Valid LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok().body(userDetailService.login(loginRequestDto));
     }
 

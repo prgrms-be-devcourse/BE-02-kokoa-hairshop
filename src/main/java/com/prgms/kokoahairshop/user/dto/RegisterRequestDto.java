@@ -16,8 +16,10 @@ public class RegisterRequestDto {
 
     @Email(message = "Different from email format")
     private String email;
+
     @NotBlank(message = "Password cannot be blank")
     private String password;
+
     @NotBlank(message = "auth cannot be blank")
     private String auth;
 

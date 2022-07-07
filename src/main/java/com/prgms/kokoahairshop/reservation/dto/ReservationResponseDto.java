@@ -16,22 +16,33 @@ import lombok.NoArgsConstructor;
 public class ReservationResponseDto {
 
     private Long id;
+
     private String name;
+
     private String phoneNumber;
+
     private LocalDate date;
+
     private String time;
+
     private ReservationStatus status;
+
     private String request;
+
     private int paymentAmount;
 
     private Long hairshopId;
+
     private String hairshopName;
 
     private Long menuId;
+
     private String menuName;
 
     private Long designerId;
+
     private Position designerPosition;
+
     private String designerName;
 
 }

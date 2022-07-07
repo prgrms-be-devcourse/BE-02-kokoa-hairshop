@@ -13,6 +13,7 @@ public class JwtAuthenticationProvider {
 
     @Value("${jwt.client-secret}")
     private String clientSecret;
+
     @Value("${jwt.expire-seconds}")
     private long expireSeconds;
 

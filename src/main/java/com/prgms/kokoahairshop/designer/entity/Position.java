@@ -10,7 +10,7 @@ public enum Position {
     DESIGNER("디자이너");
 
     private static final Map<String, Position> ENUM_MAP =
-            Stream.of(values()).collect(Collectors.toMap(Position::getPosition, o -> o));
+        Stream.of(values()).collect(Collectors.toMap(Position::getPosition, o -> o));
 
     private final String position;
 

@@ -23,7 +23,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationTime {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "date", nullable = false)
@@ -44,7 +45,8 @@ public class ReservationTime {
     Hairshop hairshop;
 
     @Builder
-    public ReservationTime(Long id, LocalDate date, String time, boolean reserved, Designer designer, Hairshop hairshop) {
+    public ReservationTime(Long id, LocalDate date, String time, boolean reserved,
+        Designer designer, Hairshop hairshop) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -54,7 +56,7 @@ public class ReservationTime {
     }
 
     public void setDesigner(Designer designer) {
-        if(this.designer != null) {
+        if (this.designer != null) {
             this.designer.getReservationTimes().remove(this);
         }
         this.designer = designer;

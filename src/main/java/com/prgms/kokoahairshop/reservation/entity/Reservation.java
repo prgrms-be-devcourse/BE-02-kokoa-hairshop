@@ -86,8 +86,7 @@ public class Reservation {
 
     @Builder
     public Reservation(Long id, String name, String phoneNumber, LocalDate date, String time,
-        ReservationStatus status, String request,
-        int paymentAmount, Hairshop hairshop,
+        ReservationStatus status, String request, int paymentAmount, Hairshop hairshop,
         Designer designer, Menu menu, User user) {
         this.id = id;
         this.name = name;

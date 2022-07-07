@@ -1,6 +1,6 @@
 package com.prgms.kokoahairshop.reservation.exception;
 
-public class HairshopClosedDayException extends RuntimeException{
+public class HairshopClosedDayException extends RuntimeException {
 
     public HairshopClosedDayException() {
     }

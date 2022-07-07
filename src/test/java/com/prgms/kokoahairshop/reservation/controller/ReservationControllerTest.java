@@ -4,13 +4,10 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,12 +49,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 @Slf4j
@@ -398,8 +391,8 @@ class ReservationControllerTest {
             .build();
 
         mockMvc.perform(post("/v1/reservations")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("create-reservation",
@@ -437,7 +430,7 @@ class ReservationControllerTest {
             .time("11:00")
             .request("예쁘게 잘라주세요.")
             .paymentAmount(20000)
-            .userId(user.getId()+1) // 다른 user_id
+            .userId(user.getId() + 1) // 다른 user_id
             .hairshopId(hairshop.getId())
             .designerId(designer.getId())
             .menuId(menu.getId())
@@ -457,8 +450,8 @@ class ReservationControllerTest {
             LocalDate.now());
 
         mockMvc.perform(
-                get("/v1/reservations/reservation-time/hairshops/{hairshopId}",
-                        hairshop.getId())
+                get("/v1/reservations/reservation-times/hairshops/{hairshopId}",
+                    hairshop.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())

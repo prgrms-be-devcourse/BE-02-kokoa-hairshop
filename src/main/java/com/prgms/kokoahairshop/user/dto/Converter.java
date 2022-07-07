@@ -25,10 +25,10 @@ public class Converter {
             .build();
     }
 
-    public RegisterResponseDto toRegisterResponse(Long id){
+    public RegisterResponseDto toRegisterResponse(Long id) {
         return RegisterResponseDto.builder()
-                        .userId(id)
-                        .build();
+            .userId(id)
+            .build();
     }
 
 }
