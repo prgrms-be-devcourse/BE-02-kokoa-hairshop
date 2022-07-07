@@ -98,9 +98,11 @@ class ReservationControllerTest {
 
     Menu menu;
 
-    Reservation reservation1; // 예약 취소 가능시간 지난 예약
+    Reservation reservation1;
 
-    Reservation reservation2; // 예약 취소 가능시간 안지난 예약
+    Reservation reservation2;
+
+    Reservation reservation3;
 
     @BeforeAll
     void setup() {
@@ -186,6 +188,21 @@ class ReservationControllerTest {
             .menu(menu)
             .build();
         reservationRepository.save(reservation2);
+
+        reservation3 = Reservation.builder()
+            .name("예약자")
+            .date(LocalDate.now().plusDays(1))
+            .time("12:00")
+            .paymentAmount(20000)
+            .status(ReservationStatus.RESERVED)
+            .phoneNumber("010-1234-5678")
+            .request("예쁘게 잘라주세요.")
+            .user(user)
+            .hairshop(hairshop)
+            .designer(designer)
+            .menu(menu)
+            .build();
+        reservationRepository.save(reservation3);
 
         // ReservationTime 생성
         LocalDate date = LocalDate.now();
@@ -352,7 +369,7 @@ class ReservationControllerTest {
     @Order(4)
     @DisplayName("사용자는_예약을_취소할_수_있다")
     @WithUserDetails(value = "example2@naver.com")
-    void CANCEL_RESERVATION_DYNAMIC_TEST() throws Exception {
+    void CANCEL_RESERVATION_BY_USER_DYNAMIC_TEST() throws Exception {
         mockMvc.perform(
                 patch("/v2/reservations/{reservationId}/user", reservation2.getId()))
             .andExpect(status().isNoContent())
@@ -364,6 +381,20 @@ class ReservationControllerTest {
 
     @Test
     @Order(5)
+    @DisplayName("헤어샵은_예약을_취소할_수_있다")
+    @WithUserDetails(value = "example1@naver.com")
+    void CANCEL_RESERVATION_BY_HAIRSHOP_DYNAMIC_TEST() throws Exception {
+        mockMvc.perform(
+                patch("/v2/reservations/{reservationId}/hairshop", reservation3.getId()))
+            .andExpect(status().isNoContent())
+            .andDo(print())
+            .andDo(document("cancel-reservation"));
+
+        // 헤어샵도 동일하기 때문에 패스
+    }
+
+    @Test
+    @Order(6)
     @DisplayName("예약_취소가눙_시간이_지나면_400에러를_반환한다")
     @WithUserDetails(value = "example2@naver.com")
     void RETURN_400_ERROR_IF_EXPIRE_TIME_TEST() throws Exception {
