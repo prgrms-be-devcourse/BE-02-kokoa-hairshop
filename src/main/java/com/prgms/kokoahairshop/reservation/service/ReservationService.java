@@ -197,7 +197,7 @@ public class ReservationService {
             throw new ReservationNotReservedException("해당 예약은 예약 상태가 아닙니다.");
         }
 
-        if (!reservation.getUser().getId().equals(user.getId())){
+        if (!reservation.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("본인의 예약만 삭제할 수 있습니다.");
         }
 
@@ -219,7 +219,7 @@ public class ReservationService {
             throw new ReservationNotReservedException("해당 예약은 예약 상태가 아닙니다.");
         }
 
-        if (!reservation.getHairshop().getUser().getId().equals(user.getId())){
+        if (!reservation.getHairshop().getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("본인의 예약만 삭제할 수 있습니다.");
         }
 

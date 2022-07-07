@@ -4,17 +4,24 @@ import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.service.HairshopService;
+import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/hairshops")
 public class HairshopController {
+
     private final HairshopService hairshopService;
 
     public HairshopController(HairshopService hairshopService) {
@@ -22,9 +29,11 @@ public class HairshopController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> insert(@Valid @RequestBody CreateHairshopRequest createHairshopRequest) {
+    public ResponseEntity<Long> insert(
+        @Valid @RequestBody CreateHairshopRequest createHairshopRequest) {
         HairshopResponse insert = hairshopService.insert(createHairshopRequest);
-        return ResponseEntity.created(URI.create("/api/v1/hairshops/" + insert.getId())).body(insert.getId());
+        return ResponseEntity.created(URI.create("/api/v1/hairshops/" + insert.getId()))
+            .body(insert.getId());
     }
 
     @GetMapping
@@ -39,7 +48,8 @@ public class HairshopController {
     }
 
     @PatchMapping
-    public ResponseEntity<Object> modify(@Valid @RequestBody ModifyHairshopRequest modifyHairshopRequest) {
+    public ResponseEntity<Object> modify(
+        @Valid @RequestBody ModifyHairshopRequest modifyHairshopRequest) {
         hairshopService.update(modifyHairshopRequest);
         return ResponseEntity.noContent().build();
     }

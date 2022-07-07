@@ -8,7 +8,9 @@ import lombok.Getter;
 public class UserInfoDto {
 
     private Long id;
+
     private String email;
+
     private String auth;
 
 }

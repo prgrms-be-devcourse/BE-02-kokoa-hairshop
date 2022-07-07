@@ -29,10 +29,11 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/v1/reservations")
-    public ResponseEntity<CreateReservationResponseDto> createStatic(@AuthenticationPrincipal User user,
+    public ResponseEntity<CreateReservationResponseDto> createStatic(
+        @AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
         // 본인확인
-        if (!user.getId().equals(requestDto.getUserId())){
+        if (!user.getId().equals(requestDto.getUserId())) {
             throw new IllegalArgumentException("본인의 예약만 할 수 있습니다.");
         }
 
@@ -43,10 +44,11 @@ public class ReservationController {
     }
 
     @PostMapping("/v2/reservations")
-    public ResponseEntity<CreateReservationResponseDto> createDynamic(@AuthenticationPrincipal User user,
+    public ResponseEntity<CreateReservationResponseDto> createDynamic(
+        @AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
         // 본인확인
-        if (!user.getId().equals(requestDto.getUserId())){
+        if (!user.getId().equals(requestDto.getUserId())) {
             throw new IllegalArgumentException("본인의 예약만 할 수 있습니다.");
         }
 
@@ -56,7 +58,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations/user")
-    public ResponseEntity<List<ReservationResponseDto>> getReservationsByUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<ReservationResponseDto>> getReservationsByUser(
+        @AuthenticationPrincipal User user) {
         List<ReservationResponseDto> responseDtos = reservationService.findReservationsByUser(
             user.getId());
 
@@ -103,7 +106,8 @@ public class ReservationController {
     }
 
     @PatchMapping("/v2/reservations/{reservationId}/hairshop")
-    public ResponseEntity<Object> cancelReservationByHairshopDynamic(@AuthenticationPrincipal User user,
+    public ResponseEntity<Object> cancelReservationByHairshopDynamic(
+        @AuthenticationPrincipal User user,
         @PathVariable Long reservationId) {
         reservationService.cancelReservationByHairShop(reservationId, user);
 

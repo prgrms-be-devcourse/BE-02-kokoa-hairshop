@@ -1,14 +1,12 @@
 package com.prgms.kokoahairshop.user.service;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 import com.prgms.kokoahairshop.jwt.JwtAuthenticationProvider;
 import com.prgms.kokoahairshop.user.dto.LoginRequestDto;
 import com.prgms.kokoahairshop.user.dto.RegisterRequestDto;
-import com.prgms.kokoahairshop.user.dto.RegisterResponseDto;
 import com.prgms.kokoahairshop.user.dto.TokenResponseDto;
 import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.exception.EmailAlreadyExistException;
@@ -25,7 +23,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
@@ -46,7 +43,7 @@ class UserDetailServiceTest {
     @Test
     @DisplayName("이메일,비밀번호,권한정보로 회원가입을 할 수 있다")
     @Order(1)
-    void register_test(){
+    void register_test() {
         // given
         RegisterRequestDto registerRequestDto = RegisterRequestDto.builder()
             .email("test@gmail.com")
@@ -77,14 +74,15 @@ class UserDetailServiceTest {
         TokenResponseDto token = userDetailService.login(loginRequestDto);
 
         // then
-        assertThat(jwtAuthenticationProvider.getUserNameFromToken(token.getAccessToken()), is("test@gmail.com"));
+        assertThat(jwtAuthenticationProvider.getUserNameFromToken(token.getAccessToken()),
+            is("test@gmail.com"));
 
     }
 
     @Test
     @DisplayName("같은 이메일로 회원가입을 할 수 없다")
     @Order(3)
-    void email_already_exist_test(){
+    void email_already_exist_test() {
         // given
         RegisterRequestDto registerRequestDto = RegisterRequestDto.builder()
             .email("test@gmail.com")
@@ -102,7 +100,7 @@ class UserDetailServiceTest {
     @Test
     @DisplayName("없는 이메일로 로그인시도")
     @Order(4)
-    void email_doesnt_matching_test(){
+    void email_doesnt_matching_test() {
         // given
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
             .email("test1@gmail.com")
@@ -110,7 +108,8 @@ class UserDetailServiceTest {
             .build();
 
         // when
-        assertThrows(UsernameNotFoundException.class, () -> userDetailService.login(loginRequestDto));
+        assertThrows(UsernameNotFoundException.class,
+            () -> userDetailService.login(loginRequestDto));
 
 
     }
@@ -118,7 +117,7 @@ class UserDetailServiceTest {
     @Test
     @DisplayName("잘못된 비밀번호로 로그인 시도")
     @Order(5)
-    void password_doesnt_matching_test(){
+    void password_doesnt_matching_test() {
         // given
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
             .email("test@gmail.com")
@@ -126,8 +125,8 @@ class UserDetailServiceTest {
             .build();
 
         // when
-        assertThrows(IllegalArgumentException.class, () -> userDetailService.login(loginRequestDto));
-
+        assertThrows(IllegalArgumentException.class,
+            () -> userDetailService.login(loginRequestDto));
 
 
     }

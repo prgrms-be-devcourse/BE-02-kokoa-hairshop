@@ -6,11 +6,10 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgms.kokoahairshop.user.dto.LoginRequestDto;
@@ -21,7 +20,6 @@ import com.prgms.kokoahairshop.user.repository.UserRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -97,8 +95,8 @@ class UserControllerTest {
             .build();
 
         ResultActions resultActions = mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequestDto)))
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("login",
@@ -111,7 +109,6 @@ class UserControllerTest {
                         .description("accessToken")
                 )
             ));
-
 
         // Response Body에서 Access Token 빼오기
         MvcResult result = resultActions.andReturn();
