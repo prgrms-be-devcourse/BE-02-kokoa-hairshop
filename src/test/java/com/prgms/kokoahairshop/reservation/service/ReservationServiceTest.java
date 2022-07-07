@@ -211,7 +211,7 @@ public class ReservationServiceTest {
         when(reservationRepository.save(any(Reservation.class))).thenReturn(null);
 
         // when & then
-        reservationService.cancelReservation(1L);
+        reservationService.cancelReservationByUser(1L);
     }
 
     @Test
@@ -223,7 +223,7 @@ public class ReservationServiceTest {
 
         // when & then
         assertThrows(NotFoundException.class,
-            () -> reservationService.cancelReservation(0L));
+            () -> reservationService.cancelReservationByUser(0L));
     }
 
     @Test

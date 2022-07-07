@@ -4,10 +4,13 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -397,12 +400,11 @@ class ReservationControllerTest {
             .menuId(menu.getId())
             .build();
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/v1/reservations")
+        mockMvc.perform(post("/v1/reservations")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDto)))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo(print())
             .andDo(document("create-reservation",
                 requestFields(
                     fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
@@ -444,8 +446,7 @@ class ReservationControllerTest {
             .menuId(menu.getId())
             .build();
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/v1/reservations")
+        mockMvc.perform(post("/v1/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isBadRequest());
@@ -459,12 +460,12 @@ class ReservationControllerTest {
             LocalDate.now());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/reservations/reservation-time/hairshops/{hairshopId}",
+                get("/v1/reservations/reservation-time/hairshops/{hairshopId}",
                         hairshop.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDto)))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo(print())
             .andDo(document("get-reservationTimes-v1",
                 requestFields(
                     fieldWithPath("date").type(JsonFieldType.STRING).description("date")
@@ -490,11 +491,10 @@ class ReservationControllerTest {
     @DisplayName("사용자의 예약 리스트 조회")
     @WithUserDetails(value = "example2@naver.com")
     void reservationListByUserTest() throws Exception {
-        //Todo : Mock jwt를 만들어서 test -> 토큰으로직접 인증 등록은 한번만 따로, 예약테스트에서는 어노테이션으로 주입
-        mockMvc.perform(MockMvcRequestBuilders.get("/reservations/user", user.getId())
+        mockMvc.perform(get("/reservations/user", user.getId())
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isOk())
+            .andDo(print());
     }
 
 
@@ -503,10 +503,10 @@ class ReservationControllerTest {
     @WithUserDetails(value = "example2@naver.com")
     void reservationListByHairshopTest() throws Exception {
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/reservations/hairshops/{hairshopId}", hairshop.getId())
+                get("/reservations/hairshops/{hairshopId}", hairshop.getId())
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andDo(MockMvcResultHandlers.print());
+            .andExpect(status().isOk())
+            .andDo(print());
     }
 
 }
