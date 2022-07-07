@@ -58,6 +58,15 @@ public class ReservationControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<String> handleIllegalArgumentException(
+        IllegalArgumentException e) {
+        log.error("Identification error", e);
+
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         log.error("Exception", e);
