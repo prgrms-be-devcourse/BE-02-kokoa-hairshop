@@ -65,7 +65,8 @@ public class ReservationServiceTest {
     MenuRepository menuRepository;
 
     @Test
-    void 예약을_생성할_수_있다() {
+    @DisplayName("동적 예약 생성 테스트")
+    void SAVE_DYNAMIC_TEST() {
         // given
         CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
             .name("예약자")
@@ -95,7 +96,8 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void 예약_생성_시_이미_예약이_존재하면_예외가_발생한다() {
+    @DisplayName("동적 예약 생성 중복 예외 테스트")
+    void SAVE_DYNAMIC_DUPLICATE_RESERVATION_EXCEPTION_TEST() {
         // given
         CreateReservationRequestDto requestDto = CreateReservationRequestDto.builder()
             .name("예약자")
@@ -120,7 +122,8 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void 헤어샵의_특정_날짜_예약_가능_시간들을_조회할_수_있다() {
+    @DisplayName("동적 예약 가능시간 조회 테스트")
+    void FIND_RESERVATION_TIMES_DYNAMIC_TEST() {
         // given
         Designer designer1 = Designer.builder()
             .name("디자이너1")
@@ -195,15 +198,20 @@ public class ReservationServiceTest {
     }
 
     @Test
-    // TODO : 예약자를 확인할 수 있도록..?
-    void 예약을_취소할_수_있다() {
+    @DisplayName("사용자별 예약 취소 테스트")
+    void CANCEL_RESERVATION_BY_USER_TEST() {
         // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
         LocalDate today = LocalDate.now();
         Reservation reservation = Reservation.builder()
             .id(1L)
             .date(today.plusDays(1))
             .time("12:00")
             .status(ReservationStatus.RESERVED)
+            .user(user)
             .build();
 
         when(reservationRepository.findById(reservation.getId())).thenReturn(
@@ -211,31 +219,123 @@ public class ReservationServiceTest {
         when(reservationRepository.save(any(Reservation.class))).thenReturn(null);
 
         // when & then
-        reservationService.cancelReservationByUser(1L);
+        reservationService.cancelReservationByUser(1L, user);
     }
 
     @Test
-    // TODO : 예약자를 확인할 수 있도록..?
-    void 예약_취소_예약이_존재하지_않으면_예외가_발생한다() {
+    @DisplayName("헤어샵별 예약 취소 테스트")
+    void CANCEL_RESERVATION_BY_HAIRSHOP_TEST() {
         // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
+        Hairshop hairshop = Hairshop.builder()
+            .user(user)
+            .build();
+
+        LocalDate today = LocalDate.now();
+        Reservation reservation = Reservation.builder()
+            .id(1L)
+            .date(today.plusDays(1))
+            .time("12:00")
+            .status(ReservationStatus.RESERVED)
+            .hairshop(hairshop)
+            .build();
+
+        when(reservationRepository.findById(reservation.getId())).thenReturn(
+            Optional.of(reservation));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(null);
+
+        // when & then
+        reservationService.cancelReservationByHairShop(1L, user);
+    }
+
+    @Test
+    @DisplayName("사용자별 예약 취소 인증 예외 테스트")
+    void CANCEL_RESERVATION_BY_USER_ILLEGAL_ARGUMENT_EXCEPTION_TEST() {
+        // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
+        LocalDate today = LocalDate.now();
+        Reservation reservation = Reservation.builder()
+            .id(1L)
+            .date(today.plusDays(1))
+            .time("12:00")
+            .status(ReservationStatus.RESERVED)
+            .user(user)
+            .build();
+
+        when(reservationRepository.findById(reservation.getId())).thenReturn(
+            Optional.of(reservation));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(null);
+
+        // when & then
+        reservationService.cancelReservationByUser(1L, user);
+    }
+
+    @Test
+    @DisplayName("헤어샵별 예약 취소 인증 예외 테스트")
+    void CANCEL_RESERVATION_BY_HAIRSHOP_ILLEGAL_ARGUMENT_EXCEPTION_TEST() {
+        // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
+        Hairshop hairshop = Hairshop.builder()
+            .user(user)
+            .build();
+
+        LocalDate today = LocalDate.now();
+        Reservation reservation = Reservation.builder()
+            .id(1L)
+            .date(today.plusDays(1))
+            .time("12:00")
+            .status(ReservationStatus.RESERVED)
+            .hairshop(hairshop)
+            .build();
+
+        when(reservationRepository.findById(reservation.getId())).thenReturn(
+            Optional.of(reservation));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(null);
+
+        // when & then
+        reservationService.cancelReservationByHairShop(1L, user);
+    }
+
+    @Test
+    @DisplayName("사용자별 예약 취소 예약 없음 예외 테스트")
+    void CANCEL_RESERVATION_BY_USER_NOT_FOUND_EXCEPTION_TEST() {
+        // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
         when(reservationRepository.findById(0L)).thenThrow(
             new NotFoundException("해당 예약이 존재하지 않습니다."));
 
         // when & then
         assertThrows(NotFoundException.class,
-            () -> reservationService.cancelReservationByUser(0L));
+            () -> reservationService.cancelReservationByUser(0L, user));
     }
 
     @Test
-    // TODO : 예약자를 확인할 수 있도록..?
-    void 예약_취소_RESERVED가_아니면_예외가_발생한다() {
+    @DisplayName("사용자별 예약 취소 예약 상태 아님 예외 테스트")
+    void CANCEL_RESERVATION_BY_USER_RESERVATION_NOT_RESERVED_EXCEPTION_TEST() {
         // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
         LocalDate today = LocalDate.now();
         Reservation reservation = Reservation.builder()
             .id(1L)
             .date(today.plusDays(1))
             .time("12:00")
             .status(ReservationStatus.CANCELED)
+            .user(user)
             .build();
 
         when(reservationRepository.findById(reservation.getId())).thenReturn(
@@ -243,12 +343,17 @@ public class ReservationServiceTest {
 
         // when & then
         assertThrows(ReservationNotReservedException.class,
-            () -> reservationService.cancelReservation(reservation.getId()));
+            () -> reservationService.cancelReservationByUser(reservation.getId(), user));
     }
 
     @Test
-    void 예약_취소_취소_가능시간이_지났으면_예외가_발생한다() {
+    @DisplayName("사용자별 예약 취소 예약 취소 가능시간 예외 테스트")
+    void CANCEL_RESERVATION_BY_USER_RESERVATION_RESERVATION_CANCEL_TIMEOUT_EXCEPTION_TEST() {
         // given
+        User user = User.builder()
+            .id(1L)
+            .build();
+
         String hour = String.valueOf(LocalDateTime.now().getHour());
         String time = (hour.length() == 1 ? "0" + hour : hour) + ":00";
         Reservation reservation = Reservation.builder()
@@ -256,6 +361,7 @@ public class ReservationServiceTest {
             .date(LocalDate.now())
             .time(time)
             .status(ReservationStatus.RESERVED)
+            .user(user)
             .build();
 
         when(reservationRepository.findById(reservation.getId())).thenReturn(
@@ -263,12 +369,12 @@ public class ReservationServiceTest {
 
         // when & then
         assertThrows(ReservationCancelTimeoutException.class,
-            () -> reservationService.cancelReservation(reservation.getId()));
+            () -> reservationService.cancelReservationByUser(reservation.getId(), user));
     }
 
     @Test
     @DisplayName("UserId를 통해서 예약리스트를 검색후 Dto로 반환성공")
-    void getReservationListByUserTest() {
+    void FIND_RESERVATIONS_BY_USER_TEST() {
         // Given
         Long userId = 1L;
         given(reservationRepository.findReservationsByUserId(userId))
@@ -289,7 +395,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("HairshopId 통해서 예약리스트를 검색후 Dto로 반환성공")
-    void getReservationListByHairshopTest() {
+    void FIND_RESERVATIONS_BY_HAIRSHOP_TEST() {
         // Given
         Long hairshopId = 1L;
         given(reservationRepository.findReservationsByHairshopId(hairshopId))
@@ -311,7 +417,7 @@ public class ReservationServiceTest {
 
     @Test
     @DisplayName("hairshopId와 날짜로 예약 가능한 시간 조회후 반환")
-    void getReservationTimeListTest() {
+    void FIND_RESERVATION_TIMES_STATIC_TEST() {
         // Given
         Long hairshopId = 1L;
         ReservationTimeRequestDtoStatic requestDto = ReservationTimeRequestDtoStatic.builder()

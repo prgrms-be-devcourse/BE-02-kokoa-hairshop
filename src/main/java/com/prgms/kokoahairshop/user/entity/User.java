@@ -45,7 +45,8 @@ public class User implements UserDetails {
     private List<Hairshop> hairshops = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String auth) {
+    public User(Long id, String email, String password, String auth) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.auth = auth;

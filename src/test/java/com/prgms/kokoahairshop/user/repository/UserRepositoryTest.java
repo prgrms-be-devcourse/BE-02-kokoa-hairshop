@@ -20,7 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class UserRepositoryTest {
 
-    private final User user = new User("example1@naver.com", "$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa","USER");
+    private final User user = User.builder()
+        .email("example1@naver.com")
+        .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
+        .auth("USER")
+        .build();
 
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryTest.class);
 
