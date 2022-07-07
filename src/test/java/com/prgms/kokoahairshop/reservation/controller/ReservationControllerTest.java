@@ -276,7 +276,7 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("create-reservation",
+            .andDo(document("create-reservation-dynamic",
                 requestFields(
                     fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
                     fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
@@ -340,7 +340,7 @@ class ReservationControllerTest {
                     .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print()) // 이미 예약된 "12:00" 제외하고 출력된 것 확인
-            .andDo(document("get-reservation-times",
+            .andDo(document("get-reservation-times-dynamic",
                 requestFields(
                     fieldWithPath("date").type(JsonFieldType.STRING).description("date"),
                     fieldWithPath("reservationStartTime").type(JsonFieldType.STRING)
@@ -374,7 +374,7 @@ class ReservationControllerTest {
                 patch("/v2/reservations/{reservationId}/user", reservation2.getId()))
             .andExpect(status().isNoContent())
             .andDo(print())
-            .andDo(document("cancel-reservation"));
+            .andDo(document("cancel-reservation-dynamic"));
     }
 
     @Test
@@ -386,7 +386,7 @@ class ReservationControllerTest {
                 patch("/v2/reservations/{reservationId}/hairshop", reservation3.getId()))
             .andExpect(status().isNoContent())
             .andDo(print())
-            .andDo(document("cancel-reservation"));
+            .andDo(document("cancel-reservation-dynamic"));
     }
 
     @Test
@@ -422,7 +422,7 @@ class ReservationControllerTest {
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("create-reservation",
+            .andDo(document("create-reservation-static",
                 requestFields(
                     fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
                     fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
@@ -483,7 +483,7 @@ class ReservationControllerTest {
                     .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("get-reservationTimes-v1",
+            .andDo(document("get-reservation-times-static",
                 requestFields(
                     fieldWithPath("date").type(JsonFieldType.STRING).description("date")
                 ),
@@ -558,7 +558,7 @@ class ReservationControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("get-reservations-by-user",
+            .andDo(document("get-reservations-by-hairshop",
                 responseFields(
                     fieldWithPath("[].id").type(JsonFieldType.NUMBER)
                         .description("[].id"),
