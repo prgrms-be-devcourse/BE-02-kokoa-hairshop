@@ -8,7 +8,6 @@ import com.prgms.kokoahairshop.reservation.dto.ReservationTimeRequestDtoStatic;
 import com.prgms.kokoahairshop.reservation.dto.ReservationTimeResponseDto;
 import com.prgms.kokoahairshop.reservation.service.ReservationService;
 import com.prgms.kokoahairshop.user.entity.User;
-import com.prgms.kokoahairshop.user.service.UserDetailService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/v1/reservations")
-    public ResponseEntity<CreateReservationResponseDto> reserveStatic(@AuthenticationPrincipal User user,
+    public ResponseEntity<CreateReservationResponseDto> createReservationStatic(@AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
         // 본인확인
         if (!user.getId().equals(requestDto.getUserId())){
@@ -44,7 +43,7 @@ public class ReservationController {
     }
 
     @PostMapping("/v2/reservations")
-    public ResponseEntity<CreateReservationResponseDto> reserveDynamic(@AuthenticationPrincipal User user,
+    public ResponseEntity<CreateReservationResponseDto> createReservationDynamic(@AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
         // 본인확인
         if (!user.getId().equals(requestDto.getUserId())){
@@ -75,7 +74,7 @@ public class ReservationController {
     }
 
     @GetMapping("/v1/reservations/reservation-time/hairshops/{hairshopId}")
-    public ResponseEntity<List<ReservationTimeResponseDto>> reservationTimeList(
+    public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTimeStatic(
         @PathVariable Long hairshopId,
         @Validated @RequestBody ReservationTimeRequestDtoStatic requestDto) {
         List<ReservationTimeResponseDto> responseDtos = reservationService.findReservationTimesStatic(
@@ -85,7 +84,7 @@ public class ReservationController {
     }
 
     @GetMapping("/v2/reservations/reservation-times/hairshops/{hairshopId}")
-    public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTimes(
+    public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTimeDynamic(
         @PathVariable Long hairshopId,
         @Validated @RequestBody ReservationTimeRequestDtoDynamic requestDto) {
         List<ReservationTimeResponseDto> responseDtos = reservationService.findReservationTimesDynamic(
@@ -112,7 +111,7 @@ public class ReservationController {
     }
 
     @GetMapping("/v1/reservations/reservationTimes")
-    public ResponseEntity<Void> createFirstReservationTime() {
+    public ResponseEntity<Void> createFirstReservationTimes() {
         reservationService.createReservationTimes();
         return ResponseEntity.ok().build();
     }

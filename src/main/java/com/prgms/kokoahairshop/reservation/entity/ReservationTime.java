@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,13 +18,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reservation_time")
+@Table(name = "reservation_time", indexes = @Index(name = "i_reservationTime", columnList = "date, reserved"))
 @Getter
 @NoArgsConstructor
 public class ReservationTime {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "date", nullable = false)
@@ -44,8 +44,7 @@ public class ReservationTime {
     Hairshop hairshop;
 
     @Builder
-    public ReservationTime(Long id, LocalDate date, String time, boolean reserved,
-        Designer designer, Hairshop hairshop) {
+    public ReservationTime(Long id, LocalDate date, String time, boolean reserved, Designer designer, Hairshop hairshop) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -55,7 +54,7 @@ public class ReservationTime {
     }
 
     public void setDesigner(Designer designer) {
-        if (this.designer != null) {
+        if(this.designer != null) {
             this.designer.getReservationTimes().remove(this);
         }
         this.designer = designer;
@@ -69,4 +68,6 @@ public class ReservationTime {
     public void changeReserved() {
         this.reserved = true;
     }
+
+
 }

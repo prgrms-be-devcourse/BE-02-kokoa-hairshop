@@ -124,7 +124,8 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 예약을_생성할_수_있다() {
+    @DisplayName("예약을 생성할 수 있다")
+    void SAVE_RESERVATIOM_TEST() {
         // when
         List<Reservation> reservations = reservationRepository.findAll();
 
@@ -133,7 +134,8 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 예약을_조회할_수_있다() {
+    @DisplayName("예약을 조회할 수 있다")
+    void FIND_RESERVATIONS_TEST() {
         // when
         Reservation receivedReservation = reservationRepository.findById(reservation.getId()).get();
 
@@ -142,7 +144,8 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 예약을_수정할_수_있다() {
+    @DisplayName("예약을_수정할_수_있다")
+    void UPDATE_RESERVATION_TEST() {
         // when
         reservation.changeStatus(ReservationStatus.CANCELED);
         reservationRepository.save(reservation);
@@ -153,7 +156,8 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 예약을_삭제할_수_있다() {
+    @DisplayName("예약을_삭제할_수_있다")
+    void DELETE_RESERVATION_TEST() {
         // when
         reservationRepository.deleteById(reservation.getId());
         List<Reservation> reservations = reservationRepository.findAll();
@@ -163,7 +167,8 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 날짜_시간_디자이너_아이디로_예약이_존재하는지_확인할_수_있다() {
+    @DisplayName("날짜_시간_디자이너_아이디로_예약이_존재하는지_확인할_수_있다")
+    void EXIST_RESERVATION_BY_DATE_AND_DESIGNERID_TEST() {
         // when
         boolean exists = reservationRepository.existsByDateAndTimeAndDesignerId(LocalDate.now(),
             "12:00",
@@ -175,7 +180,7 @@ public class ReservationRepositoryTest {
 
     @Test
     @DisplayName("사용자의 예약 리스트를 검색할 수 있다.")
-    void findReservationsByUserIdTest() {
+    void FIND_RESERVATIONS_BY_USERID_TEST() {
         // When
         List<Reservation> reservations = reservationRepository.findReservationsByUserId(
             user.getId());
@@ -186,7 +191,7 @@ public class ReservationRepositoryTest {
 
     @Test
     @DisplayName("헤어샵의 예약 리스트를 검색할 수 있다.")
-    void findReservationsByHairshopIdTest() {
+    void FIND_RESERVATIONS_BY_HAIRSHOPID_TEST() {
         // When
         List<Reservation> reservations = reservationRepository.findReservationsByHairshopId(
             hairshop.getId());
