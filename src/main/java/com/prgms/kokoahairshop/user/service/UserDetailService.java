@@ -81,11 +81,6 @@ public class UserDetailService implements UserDetailsService {
         return converter.entityToUserInfoDto(user);
     }
 
-    // 토큰에서 user객체조회
-    // 토큰포함 된 요청후에 호출
-    public User getUserFromSecurityContextHolder() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
 
 
 }
