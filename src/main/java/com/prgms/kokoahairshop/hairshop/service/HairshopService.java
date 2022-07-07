@@ -1,12 +1,12 @@
 package com.prgms.kokoahairshop.hairshop.service;
 
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
 import com.prgms.kokoahairshop.hairshop.dto.CreateHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopConverter;
 import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +50,6 @@ public class HairshopService {
 
     @Transactional
     public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest) throws NotFoundException {
-        // Todo : referenceById 톭아보기
         hairshopRepository.findById(modifyHairshopRequest.getId())
                 .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
         Hairshop hairshop = hairshopConverter.convertToHairshop(modifyHairshopRequest);

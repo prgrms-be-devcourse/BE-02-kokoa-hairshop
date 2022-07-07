@@ -1,15 +1,16 @@
-package com.prgms.kokoahairshop.menu.controller;
+package com.prgms.kokoahairshop.designer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prgms.kokoahairshop.common.exception.NotFoundException;
+import com.prgms.kokoahairshop.designer.dto.CreateDesignerRequest;
+import com.prgms.kokoahairshop.designer.dto.DesignerConverter;
+import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
+import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
+import com.prgms.kokoahairshop.designer.entity.Position;
+import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
+import com.prgms.kokoahairshop.designer.service.DesignerService;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
-import com.prgms.kokoahairshop.menu.dto.CreateMenuRequest;
-import com.prgms.kokoahairshop.menu.dto.MenuResponse;
-import com.prgms.kokoahairshop.menu.dto.ModifyMenuRequest;
-import com.prgms.kokoahairshop.menu.entity.Gender;
-import com.prgms.kokoahairshop.menu.entity.Type;
-import com.prgms.kokoahairshop.menu.repository.MenuRepository;
-import com.prgms.kokoahairshop.menu.service.MenuService;
 import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.repository.UserRepository;
 import org.junit.jupiter.api.*;
@@ -19,9 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
@@ -34,12 +33,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@Transactional
 @AutoConfigureRestDocs
+@DisplayName("헤어샵 CRUD API 테스트")
 @AutoConfigureMockMvc(addFilters = false)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@WithMockUser(username = "example@gmail.com", roles = "USER")
-class MenuControllerTest {
+class DesignerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -47,10 +45,10 @@ class MenuControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private MenuService menuService;
+    private DesignerService designerService;
 
     @Autowired
-    private MenuRepository menuRepository;
+    private DesignerRepository designerRepository;
 
     @Autowired
     private HairshopRepository hairshopRepository;
@@ -58,11 +56,14 @@ class MenuControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DesignerConverter designerConverter;
+
     private Hairshop hairshop;
-    private MenuResponse menuResponse;
+    private DesignerResponse designerResponse;
 
     @BeforeEach
-    void setup() {
+    void setup() throws NotFoundException {
         User user = User.builder()
                 .email("example2@naver.com")
                 .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
@@ -86,80 +87,70 @@ class MenuControllerTest {
                 .user(user)
                 .build();
         hairshopRepository.save(hairshop);
-        CreateMenuRequest createMenuRequest = CreateMenuRequest.builder()
-                .name("커트")
-                .price(8000)
-                .discount(0)
-                .gender(Gender.unisex.getGender())
-                .type(Type.haircut.getType())
+
+        CreateDesignerRequest createDesignerRequest = CreateDesignerRequest.builder()
+                .name("나그맨")
                 .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
-                .exposedTime(30)
+                .introduction("안녕하세요.")
+                .position(Position.DESIGNER)
                 .hairshopId(hairshop.getId())
                 .build();
-        menuResponse = menuService.insert(createMenuRequest);
+        designerResponse = designerService.insert(createDesignerRequest);
     }
 
     @AfterEach
     void tearDown() {
-        menuRepository.deleteAll();
+        designerRepository.deleteAll();
         hairshopRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("메뉴 등록 테스트")
-    void MENU_INSERT_TEST() throws Exception {
-        CreateMenuRequest request = CreateMenuRequest.builder()
-                .name("펌")
-                .price(30000)
-                .discount(0)
-                .gender(Gender.unisex.getGender())
-                .type(Type.perm.getType())
+    @DisplayName("디자이너 등록 테스트")
+    void DESIGNER_INSERT_TEST() throws Exception {
+        CreateDesignerRequest request = CreateDesignerRequest.builder()
+                .name("데브")
                 .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
-                .exposedTime(30)
+                .introduction("안녕하세요.")
+                .position(Position.MANAGER)
                 .hairshopId(hairshop.getId())
                 .build();
-        this.mockMvc.perform(post("/menu")
+        this.mockMvc.perform(post("/designers")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.valueOf("application/json")))
                 .andDo(
-                        document("register-menu",
+                        document("register-designer",
                                 requestFields(
                                         fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
-                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("price"),
-                                        fieldWithPath("discount").type(JsonFieldType.NUMBER).description("discount"),
-                                        fieldWithPath("gender").type(JsonFieldType.STRING).description("gender"),
-                                        fieldWithPath("type").type(JsonFieldType.STRING).description("type"),
-                                        fieldWithPath("image").type(JsonFieldType.STRING).description("image"),
-                                        fieldWithPath("exposedTime").type(JsonFieldType.NUMBER).description("exposedTime"),
-                                        fieldWithPath("hairshopId").type(JsonFieldType.NUMBER).description("hairshopId")
+                                        fieldWithPath("image").type(JsonFieldType.STRING).description("phoneNumber"),
+                                        fieldWithPath("introduction").type(JsonFieldType.STRING).description("startTime"),
+                                        fieldWithPath("position").type(JsonFieldType.STRING).description("endTime"),
+                                        fieldWithPath("hairshopId").type(JsonFieldType.NUMBER).description("closedDay")
                                 )
                         ));
     }
 
     @Test
-    @DisplayName("전체 메뉴 조회 테스트")
-    void GET_MENU_LIST_TEST() throws Exception {
-        this.mockMvc.perform(get("/menu")
+    @DisplayName("전체 디자이너 조회 테스트")
+    void GET_DESIGNER_LIST_TEST() throws Exception {
+        this.mockMvc.perform(get("/designers")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", String.valueOf(0))
                         .param("size", String.valueOf(10)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("application/json")))
-                .andDo(document("getAll-menu",
+                .andDo(document("getAll-designer",
                         responseFields(
                                 fieldWithPath("content[]").type(JsonFieldType.ARRAY).description("content[]"),
                                 fieldWithPath("content[].id").type(JsonFieldType.NUMBER).description("content[].id"),
                                 fieldWithPath("content[].name").type(JsonFieldType.STRING).description("content[].name"),
-                                fieldWithPath("content[].price").type(JsonFieldType.NUMBER).description("content[].price"),
-                                fieldWithPath("content[].discount").type(JsonFieldType.NUMBER).description("content[].discount"),
-                                fieldWithPath("content[].gender").type(JsonFieldType.STRING).description("content[].gender"),
-                                fieldWithPath("content[].type").type(JsonFieldType.STRING).description("content[].type"),
                                 fieldWithPath("content[].image").type(JsonFieldType.STRING).description("content[].image"),
-                                fieldWithPath("content[].exposedTime").type(JsonFieldType.NUMBER).description("content[].exposedTime"),
+                                fieldWithPath("content[].introduction").type(JsonFieldType.STRING).description("content[].introduction"),
+                                fieldWithPath("content[].position").type(JsonFieldType.STRING).description("content[].position"),
                                 fieldWithPath("content[].hairshopId").type(JsonFieldType.NUMBER).description("content[].hairshopId"),
                                 fieldWithPath("content[].createdAt").type(JsonFieldType.STRING).description("content[].createdAt"),
                                 fieldWithPath("content[].updatedAt").type(JsonFieldType.STRING).description("content[].updatedAt"),
@@ -190,26 +181,23 @@ class MenuControllerTest {
     }
 
     @Test
-    @DisplayName("헤어샵 아이디로 메뉴 조회 테스트")
-    void GET_MENU_BY_HAIRSHOP_ID_TEST() throws Exception {
-        this.mockMvc.perform(get("/menu/hairshops/{id}", menuResponse.getId())
+    @DisplayName("헤어샵 아이디로 디자이너 조회 테스트")
+    void GET_DESIGNER_BY_HAIRSHOP_ID_TEST() throws Exception {
+        this.mockMvc.perform(get("/designers/hairshop/{id}", designerResponse.getId())
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", String.valueOf(0))
                         .param("size", String.valueOf(10)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("application/json")))
-                .andDo(document("getByHairshopId-menu",
+                .andDo(document("getByHairshopId-designer",
                         responseFields(
                                 fieldWithPath("content[]").type(JsonFieldType.ARRAY).description("content[]"),
                                 fieldWithPath("content[].id").type(JsonFieldType.NUMBER).description("content[].id"),
                                 fieldWithPath("content[].name").type(JsonFieldType.STRING).description("content[].name"),
-                                fieldWithPath("content[].price").type(JsonFieldType.NUMBER).description("content[].price"),
-                                fieldWithPath("content[].discount").type(JsonFieldType.NUMBER).description("content[].discount"),
-                                fieldWithPath("content[].gender").type(JsonFieldType.STRING).description("content[].gender"),
-                                fieldWithPath("content[].type").type(JsonFieldType.STRING).description("content[].type"),
                                 fieldWithPath("content[].image").type(JsonFieldType.STRING).description("content[].image"),
-                                fieldWithPath("content[].exposedTime").type(JsonFieldType.NUMBER).description("content[].exposedTime"),
+                                fieldWithPath("content[].introduction").type(JsonFieldType.STRING).description("content[].introduction"),
+                                fieldWithPath("content[].position").type(JsonFieldType.STRING).description("content[].position"),
                                 fieldWithPath("content[].hairshopId").type(JsonFieldType.NUMBER).description("content[].hairshopId"),
                                 fieldWithPath("content[].createdAt").type(JsonFieldType.STRING).description("content[].createdAt"),
                                 fieldWithPath("content[].updatedAt").type(JsonFieldType.STRING).description("content[].updatedAt"),
@@ -240,32 +228,26 @@ class MenuControllerTest {
     }
 
     @Test
-    @DisplayName("메뉴 아이디로 메뉴 조회 테스트")
-    void GET_MENU_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(get("/menu/{id}", menuResponse.getId())
+    @DisplayName("디자이너 아이디로 디자이너 조회 테스트")
+    void GET_DESIGNER_BY_ID_TEST() throws Exception {
+        this.mockMvc.perform(get("/designers/{id}", designerResponse.getId())
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("application/json")))
-                .andExpect(jsonPath("$.id").value(menuResponse.getId()))
-                .andExpect(jsonPath("$.name").value(menuResponse.getName()))
-                .andExpect(jsonPath("$.price").value(menuResponse.getPrice()))
-                .andExpect(jsonPath("$.discount").value(menuResponse.getDiscount()))
-                .andExpect(jsonPath("$.gender").value(menuResponse.getGender()))
-                .andExpect(jsonPath("$.type").value(menuResponse.getType()))
-                .andExpect(jsonPath("$.image").value(menuResponse.getImage()))
-                .andExpect(jsonPath("$.exposedTime").value(menuResponse.getExposedTime()))
-                .andExpect(jsonPath("$.hairshopId").value(menuResponse.getHairshopId()))
-                .andDo(document("getById-menu",
+                .andExpect(jsonPath("$.id").value(designerResponse.getId()))
+                .andExpect(jsonPath("$.name").value(designerResponse.getName()))
+                .andExpect(jsonPath("$.image").value(designerResponse.getImage()))
+                .andExpect(jsonPath("$.introduction").value(designerResponse.getIntroduction()))
+                .andExpect(jsonPath("$.position").value(designerResponse.getPosition().toString()))
+                .andExpect(jsonPath("$.hairshopId").value(designerResponse.getHairshopId()))
+                .andDo(document("getById-designer",
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("id"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("price"),
-                                fieldWithPath("discount").type(JsonFieldType.NUMBER).description("discount"),
-                                fieldWithPath("gender").type(JsonFieldType.STRING).description("gender"),
-                                fieldWithPath("type").type(JsonFieldType.STRING).description("type"),
                                 fieldWithPath("image").type(JsonFieldType.STRING).description("image"),
-                                fieldWithPath("exposedTime").type(JsonFieldType.NUMBER).description("exposedTime"),
+                                fieldWithPath("introduction").type(JsonFieldType.STRING).description("introduction"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("position"),
                                 fieldWithPath("hairshopId").type(JsonFieldType.NUMBER).description("hairshopId"),
                                 fieldWithPath("createdAt").type(JsonFieldType.STRING).description("createdAt"),
                                 fieldWithPath("updatedAt").type(JsonFieldType.STRING).description("updatedAt")
@@ -274,76 +256,67 @@ class MenuControllerTest {
     }
 
     @Test
-    @DisplayName("해당 아이디의 메뉴가 없을 경우 테스트")
+    @DisplayName("해당 아이디의 디자이너가 없을 경우 테스트")
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
-        this.mockMvc.perform(get("/menu/{id}", 999L)
+        this.mockMvc.perform(get("/designers/{id}", 999L)
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andDo(document("getById-notFound-menu"));
+                .andDo(document("getById-notFound-designer"));
     }
 
     @Test
-    @DisplayName("메뉴 정보를 수정 할 수 있다.")
-    void MODIFY_MENU_TEST() throws Exception {
-        ModifyMenuRequest modifyMenuRequest = ModifyMenuRequest.builder()
-                .id(menuResponse.getId())
-                .name("커트")
-                .price(10000)
-                .discount(0)
-                .gender(Gender.unisex.getGender())
-                .type(Type.haircut.getType())
-                .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
-                .exposedTime(30)
-                .hairshopId(hairshop.getId())
+    @DisplayName("디자이너 정보를 수정 할 수 있다.")
+    void MODIFY_DESIGNER_TEST() throws Exception {
+        ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
+                .id(designerResponse.getId())
+                .name(designerResponse.getName())
+                .image(designerResponse.getImage())
+                .introduction(designerResponse.getIntroduction())
+                .position(Position.DIRECTOR)
+                .hairshopId(designerResponse.getHairshopId())
                 .build();
-        this.mockMvc.perform(patch("/menu")
+        this.mockMvc.perform(patch("/designers")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(modifyMenuRequest)))
+                        .content(objectMapper.writeValueAsString(modifyDesignerRequest)))
                 .andExpect(status().isNoContent())
-                .andDo(document("modify-menu",
+                .andDo(document("modify-designer",
                         requestFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("id"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
-                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("price"),
-                                fieldWithPath("discount").type(JsonFieldType.NUMBER).description("discount"),
-                                fieldWithPath("gender").type(JsonFieldType.STRING).description("gender"),
-                                fieldWithPath("type").type(JsonFieldType.STRING).description("type"),
                                 fieldWithPath("image").type(JsonFieldType.STRING).description("image"),
-                                fieldWithPath("exposedTime").type(JsonFieldType.NUMBER).description("exposedTime"),
+                                fieldWithPath("introduction").type(JsonFieldType.STRING).description("introduction"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("position"),
                                 fieldWithPath("hairshopId").type(JsonFieldType.NUMBER).description("hairshopId")
                         )
                 ));
     }
 
     @Test
-    @DisplayName("수정하려는 메뉴가 없을 경우 테스트")
-    void MODIFY_MENU_NOT_FOUND_TEST() throws Exception {
-        ModifyMenuRequest modifyMenuRequest = ModifyMenuRequest.builder()
+    @DisplayName("수정하려는 디자이너가 없을 경우 테스트")
+    void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
+        ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
                 .id(999L)
-                .name("커트")
-                .price(10000)
-                .discount(0)
-                .gender(Gender.unisex.getGender())
-                .type(Type.haircut.getType())
+                .name("나그맨")
                 .image("https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
-                .exposedTime(30)
-                .hairshopId(menuResponse.getHairshopId())
+                .introduction("안녕하세요.")
+                .position(Position.DESIGNER)
+                .hairshopId(hairshop.getId())
                 .build();
-        this.mockMvc.perform(patch("/menu")
+        this.mockMvc.perform(patch("/designers")
                         .characterEncoding("UTF-8")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(modifyMenuRequest)))
+                        .content(objectMapper.writeValueAsString(modifyDesignerRequest)))
                 .andExpect(status().isNotFound())
-                .andDo(document("modify-notFound-menu"));
+                .andDo(document("modify-notFound-designer"));
     }
 
     @Test
-    @DisplayName("해당 아이디의 메뉴를 삭제 할 수 있다.")
-    void REMOVE_MENU_TEST() throws Exception {
-        this.mockMvc.perform(delete("/menu/{id}", menuResponse.getId()))
+    @DisplayName("해당 아이디의 디자이너를 삭제 할 수 있다.")
+    void REMOVE_USER_TEST() throws Exception {
+        this.mockMvc.perform(delete("/designers/{id}", designerResponse.getId()))
                 .andExpect(status().isNoContent())
-                .andDo(document("remove-menu"));
+                .andDo(document("remove-designer"));
     }
 }

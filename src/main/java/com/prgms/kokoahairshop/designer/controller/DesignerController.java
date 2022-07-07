@@ -4,13 +4,12 @@ import com.prgms.kokoahairshop.designer.dto.CreateDesignerRequest;
 import com.prgms.kokoahairshop.designer.dto.DesignerResponse;
 import com.prgms.kokoahairshop.designer.dto.ModifyDesignerRequest;
 import com.prgms.kokoahairshop.designer.service.DesignerService;
-import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -18,22 +17,12 @@ import java.net.URI;
 public class DesignerController {
     private final DesignerService designerService;
 
-    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
-    public ResponseEntity<Object> notFoundHandler() {
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> internalServerErrorHandler(Exception e) {
-        return ResponseEntity.internalServerError().body(e.getMessage());
-    }
-
     public DesignerController(DesignerService designerService) {
         this.designerService = designerService;
     }
 
     @PostMapping
-    public ResponseEntity<Long> insert(@RequestBody CreateDesignerRequest createDesignerRequest) {
+    public ResponseEntity<Long> insert(@Valid @RequestBody CreateDesignerRequest createDesignerRequest) {
         DesignerResponse insert = designerService.insert(createDesignerRequest);
         return ResponseEntity.created(URI.create("/api/v1/designers/" + insert.getId())).body(insert.getId());
     }
@@ -44,13 +33,18 @@ public class DesignerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DesignerResponse> getById(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<DesignerResponse> getById(@PathVariable Long id) {
         DesignerResponse byId = designerService.findById(id);
         return ResponseEntity.ok(byId);
     }
 
+    @GetMapping("/hairshop/{id}")
+    public ResponseEntity<Page<DesignerResponse>> getByHairshopId(Pageable pageable, @PathVariable Long id) {
+        return ResponseEntity.ok(designerService.findByHairshopId(pageable, id));
+    }
+
     @PatchMapping
-    public ResponseEntity<Object> modify(@RequestBody ModifyDesignerRequest modifyDesignerRequest) throws NotFoundException {
+    public ResponseEntity<Object> modify(@Valid @RequestBody ModifyDesignerRequest modifyDesignerRequest) {
         designerService.update(modifyDesignerRequest);
         return ResponseEntity.noContent().build();
     }
