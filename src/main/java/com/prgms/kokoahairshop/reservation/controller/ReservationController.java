@@ -98,7 +98,7 @@ public class ReservationController {
     public ResponseEntity<Object> cancelReservationByUserDynamic(@AuthenticationPrincipal User user,
         @PathVariable Long reservationId) {
 
-        reservationService.cancelReservation(reservationId, user);
+        reservationService.cancelReservationByUser(reservationId, user);
 
         return ResponseEntity.noContent().build();
     }
@@ -106,7 +106,7 @@ public class ReservationController {
     @PatchMapping("/v2/reservations/{reservationId}/hairshop")
     public ResponseEntity<Object> cancelReservationByHairshopDynamic(@AuthenticationPrincipal User user,
         @PathVariable Long reservationId) {
-        reservationService.cancelReservation(reservationId, user);
+        reservationService.cancelReservationByHairShop(reservationId, user);
 
         return ResponseEntity.noContent().build();
     }
