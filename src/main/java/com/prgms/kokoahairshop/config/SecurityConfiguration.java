@@ -24,8 +24,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     public SecurityConfiguration(
-        UserDetailService userDetailService,
-        JwtAuthenticationProvider jwtAuthenticationProvider) {
+            UserDetailService userDetailService,
+            JwtAuthenticationProvider jwtAuthenticationProvider) {
         this.userDetailService = userDetailService;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
     }
@@ -43,23 +43,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/docs/api.html");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .cors().disable()
-            .csrf().disable()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .formLogin().disable()
-            .authorizeRequests()
-            .antMatchers("/login", "/signup").permitAll() // 로그인, 회원가입은 모두 접근가능
-            .anyRequest().authenticated()
-            .and()// 나머지 요청들은 권한 필요 : 없으면 403
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .cors().disable()
+                .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .formLogin().disable()
+                .authorizeRequests()
+                .antMatchers("/login", "/signup").permitAll() // 로그인, 회원가입은 모두 접근가능
+                .anyRequest().authenticated()
+                .and()// 나머지 요청들은 권한 필요 : 없으면 403
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 
     }
@@ -68,6 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailService)
-            .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder());
     }
 }
