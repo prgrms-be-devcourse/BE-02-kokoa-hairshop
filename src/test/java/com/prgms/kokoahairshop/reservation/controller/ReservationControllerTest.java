@@ -374,7 +374,7 @@ class ReservationControllerTest {
                 patch("/v2/reservations/{reservationId}/user", reservation2.getId()))
             .andExpect(status().isNoContent())
             .andDo(print())
-            .andDo(document("cancel-reservation-dynamic"));
+            .andDo(document("cancel-reservation-by-user-dynamic"));
     }
 
     @Test
@@ -386,7 +386,7 @@ class ReservationControllerTest {
                 patch("/v2/reservations/{reservationId}/hairshop", reservation3.getId()))
             .andExpect(status().isNoContent())
             .andDo(print())
-            .andDo(document("cancel-reservation-dynamic"));
+            .andDo(document("cancel-reservation-by-hairshop-dynamic"));
     }
 
     @Test
