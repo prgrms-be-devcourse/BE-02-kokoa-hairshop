@@ -159,7 +159,7 @@
 
 ## 📝STRESS TEST
 
-<a href="https://iced-river-d01.notion.site/1edec0b99ceb44c4b7b625341eae4a97">✨예약가능날짜계산 성능테스트 ✨</a>
+<a href="https://iced-river-d01.notion.site/1edec0b99ceb44c4b7b625341eae4a97">✨예약가능날짜계산 성능분석 보고서✨</a>
 
 *결과요약*
 
