@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/hairshops")
+@RequestMapping("/hairshops")
 public class HairshopController {
 
     private final HairshopService hairshopService;
