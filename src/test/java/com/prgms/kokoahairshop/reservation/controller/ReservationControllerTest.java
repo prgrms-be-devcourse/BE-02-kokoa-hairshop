@@ -177,7 +177,7 @@ class ReservationControllerTest {
         reservation2 = Reservation.builder()
             .name("예약자")
             .date(LocalDate.now().plusDays(1))
-            .time("12:00")
+            .time("12:30")
             .paymentAmount(20000)
             .status(ReservationStatus.RESERVED)
             .phoneNumber("010-1234-5678")
@@ -192,7 +192,7 @@ class ReservationControllerTest {
         reservation3 = Reservation.builder()
             .name("예약자")
             .date(LocalDate.now().plusDays(1))
-            .time("12:00")
+            .time("13:00")
             .paymentAmount(20000)
             .status(ReservationStatus.RESERVED)
             .phoneNumber("010-1234-5678")
@@ -367,7 +367,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(4)
-    @DisplayName("사용자는_예약을_취소할_수_있다")
+    @DisplayName("사용자는 예약을 취소할 수 있다")
     @WithUserDetails(value = "example2@naver.com")
     void CANCEL_RESERVATION_BY_USER_DYNAMIC_TEST() throws Exception {
         mockMvc.perform(
@@ -379,7 +379,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(5)
-    @DisplayName("헤어샵은_예약을_취소할_수_있다")
+    @DisplayName("헤어샵은 예약을 취소할 수 있다")
     @WithUserDetails(value = "example1@naver.com")
     void CANCEL_RESERVATION_BY_HAIRSHOP_DYNAMIC_TEST() throws Exception {
         mockMvc.perform(
@@ -391,7 +391,7 @@ class ReservationControllerTest {
 
     @Test
     @Order(6)
-    @DisplayName("예약_취소가눙_시간이_지나면_400에러를_반환한다")
+    @DisplayName("예약 취소가능 시간이 지나면 400에러를 반환한다")
     @WithUserDetails(value = "example2@naver.com")
     void RETURN_400_ERROR_IF_EXPIRE_TIME_TEST() throws Exception {
         mockMvc.perform(
@@ -408,7 +408,7 @@ class ReservationControllerTest {
             .name("예약자")
             .phoneNumber("010-1234-5678")
             .date(LocalDate.now())
-            .time("11:00")
+            .time("14:00")
             .request("예쁘게 잘라주세요.")
             .paymentAmount(20000)
             .userId(user.getId())
