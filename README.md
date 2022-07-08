@@ -158,6 +158,11 @@
 ![https://user-images.githubusercontent.com/103566826/177925410-25f1a093-da2a-4c85-9523-0afe858d8b79.png](https://user-images.githubusercontent.com/103566826/177925410-25f1a093-da2a-4c85-9523-0afe858d8b79.png)
 
 ## 📝STRESS TEST
+
+<a href="https://iced-river-d01.notion.site/1edec0b99ceb44c4b7b625341eae4a97">✨예약가능날짜계산 성능테스트 ✨</a>
+
+*결과요약*
+
 |  | 예약 0% | 예약 25% | 예약 50% | 예약 75% | 예약 100% |
 | --- | --- | --- | --- | --- | --- |
 | 동적예약계산 | 1464 | 576 | 356 | 258 | 201 |
