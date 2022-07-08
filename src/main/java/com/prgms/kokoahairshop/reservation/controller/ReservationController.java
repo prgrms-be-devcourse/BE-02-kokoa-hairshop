@@ -29,7 +29,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping("/v1/reservations")
-    public ResponseEntity<CreateReservationResponseDto> createStatic(
+    public ResponseEntity<CreateReservationResponseDto> createReservationStatic(
         @AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
         // 본인확인
@@ -44,7 +44,7 @@ public class ReservationController {
     }
 
     @PostMapping("/v2/reservations")
-    public ResponseEntity<CreateReservationResponseDto> createDynamic(
+    public ResponseEntity<CreateReservationResponseDto> createReservationDynamic(
         @AuthenticationPrincipal User user,
         @Validated @RequestBody CreateReservationRequestDto requestDto) {
         // 본인확인
