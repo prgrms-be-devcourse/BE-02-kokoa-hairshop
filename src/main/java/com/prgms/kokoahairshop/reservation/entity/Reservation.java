@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -34,7 +35,8 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(name="UniqueReservation",
             columnNames = {"date", "designer_id", "time"}
         )
-    }
+    },
+    indexes = @Index(name = "i_reservation", columnList = "date")
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
