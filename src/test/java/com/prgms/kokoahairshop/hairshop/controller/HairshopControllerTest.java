@@ -122,7 +122,7 @@ class HairshopControllerTest {
             .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
             .userId(user.getId())
             .build();
-        this.mockMvc.perform(post("/api/v1/hairshops")
+        this.mockMvc.perform(post("/hairshops")
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createHairshopRequest)))
@@ -162,7 +162,7 @@ class HairshopControllerTest {
     @Order(2)
     @DisplayName("전체 헤어샵 조회 테스트")
     void GET_HAIRSHOP_LIST_TEST() throws Exception {
-        this.mockMvc.perform(get("/api/v1/hairshops")
+        this.mockMvc.perform(get("/hairshops")
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("page", String.valueOf(0))
@@ -245,7 +245,7 @@ class HairshopControllerTest {
     @Order(3)
     @DisplayName("헤어샵 아이디로 헤어샵 조회 테스트")
     void GET_HAIRSHOP_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(get("/api/v1/hairshops/{id}", hairshop.getId())
+        this.mockMvc.perform(get("/hairshops/{id}", hairshop.getId())
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -296,7 +296,7 @@ class HairshopControllerTest {
     @Order(4)
     @DisplayName("해당 아이디의 헤어샵이 없을 경우 테스트")
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
-        this.mockMvc.perform(get("/api/v1/hairshops/{id}", 999L)
+        this.mockMvc.perform(get("/hairshops/{id}", 999L)
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
@@ -323,7 +323,7 @@ class HairshopControllerTest {
             .introduction(hairshop.getIntroduction())
             .userId(createHairshopRequest.getUserId())
             .build();
-        this.mockMvc.perform(patch("/api/v1/hairshops")
+        this.mockMvc.perform(patch("/hairshops")
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(modifyHairshopRequest)))
@@ -377,7 +377,7 @@ class HairshopControllerTest {
             .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
             .userId(user.getId())
             .build();
-        this.mockMvc.perform(patch("/api/v1/hairshops")
+        this.mockMvc.perform(patch("/hairshops")
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(modifyHairshopRequest)))
@@ -389,7 +389,7 @@ class HairshopControllerTest {
     @Order(7)
     @DisplayName("헤어샵을 삭제 할 수 있다.")
     void REMOVE_USER_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/v1/hairshops/{id}", hairshop.getId()))
+        this.mockMvc.perform(delete("/hairshops/{id}", hairshop.getId()))
             .andExpect(status().isNoContent())
             .andDo(document("remove-hairshop"));
     }
