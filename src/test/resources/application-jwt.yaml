@@ -1,0 +1,4 @@
+jwt:
+  header: Authorization
+  client-secret: EENY5W0eegTf1naQB2eDeyCLl5kRS2b8xa5c4qLdS0hmVjtbvo8tOyhPMcAmtPuQ
+  expire-seconds: 7200
