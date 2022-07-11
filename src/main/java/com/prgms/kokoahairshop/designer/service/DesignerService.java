@@ -10,6 +10,7 @@ import com.prgms.kokoahairshop.designer.repository.DesignerRepository;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,8 +31,7 @@ public class DesignerService {
 
     @Transactional(readOnly = true)
     public DesignerResponse insert(CreateDesignerRequest createDesignerRequest) {
-        Hairshop hairshop = hairshopRepository.findById(createDesignerRequest.getHairshopId())
-            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
+        Hairshop hairshop = findHairshopById(createDesignerRequest.getHairshopId());
         Designer designer = designerConverter.convertToDesigner(createDesignerRequest, hairshop);
         Designer entity = designerRepository.save(designer);
         return designerConverter.convertToDesignerResponse(entity);
@@ -64,10 +64,8 @@ public class DesignerService {
     @Transactional
     public DesignerResponse update(ModifyDesignerRequest modifyDesignerRequest)
         throws NotFoundException {
-        Hairshop hairshop = hairshopRepository.findById(modifyDesignerRequest.getHairshopId())
-            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
-        designerRepository.findById(modifyDesignerRequest.getId())
-            .orElseThrow(() -> new NotFoundException(DESIGNER_NOT_FOUND));
+        Hairshop hairshop = findHairshopById(modifyDesignerRequest.getId());
+        findDesignerById(modifyDesignerRequest.getId());
         Designer designer = designerConverter.convertToDesigner(modifyDesignerRequest, hairshop);
         Designer update = designerRepository.save(designer);
         return designerConverter.convertToDesignerResponse(update);
@@ -77,5 +75,17 @@ public class DesignerService {
     public Long deleteById(Long id) {
         designerRepository.deleteById(id);
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public Hairshop findHairshopById(Long id){
+        return hairshopRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public Designer findDesignerById(Long id){
+        return designerRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(DESIGNER_NOT_FOUND));
     }
 }

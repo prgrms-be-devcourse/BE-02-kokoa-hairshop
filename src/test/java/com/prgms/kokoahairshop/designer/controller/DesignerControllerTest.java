@@ -31,19 +31,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureRestDocs
-@DisplayName("헤어샵 CRUD API 테스트")
-@AutoConfigureMockMvc(addFilters = false)
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@DisplayName("디자이너 CRUD API 테스트")
+@AutoConfigureMockMvc
+@TestInstance(Lifecycle.PER_METHOD)
 class DesignerControllerTest {
 
     @Autowired
@@ -117,6 +119,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("디자이너 등록 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void DESIGNER_INSERT_TEST() throws Exception {
         CreateDesignerRequest request = CreateDesignerRequest.builder()
             .name("데브")
@@ -149,6 +152,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("전체 디자이너 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_DESIGNER_LIST_TEST() throws Exception {
         this.mockMvc.perform(get("/designers")
                 .characterEncoding("UTF-8")
@@ -219,6 +223,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("헤어샵 아이디로 디자이너 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_DESIGNER_BY_HAIRSHOP_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/designers/hairshop/{id}", designerResponse.getId())
                 .characterEncoding("UTF-8")
@@ -289,6 +294,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("디자이너 아이디로 디자이너 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_DESIGNER_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/designers/{id}", designerResponse.getId())
                 .characterEncoding("UTF-8")
@@ -319,6 +325,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("해당 아이디의 디자이너가 없을 경우 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
         this.mockMvc.perform(get("/designers/{id}", 999L)
                 .characterEncoding("UTF-8")
@@ -329,6 +336,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("디자이너 정보를 수정 할 수 있다.")
+    @WithUserDetails(value = "example2@naver.com")
     void MODIFY_DESIGNER_TEST() throws Exception {
         ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
             .id(designerResponse.getId())
@@ -358,6 +366,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("수정하려는 디자이너가 없을 경우 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
         ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
             .id(999L)
@@ -378,6 +387,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("해당 아이디의 디자이너를 삭제 할 수 있다.")
+    @WithUserDetails(value = "example2@naver.com")
     void REMOVE_USER_TEST() throws Exception {
         this.mockMvc.perform(delete("/designers/{id}", designerResponse.getId()))
             .andExpect(status().isNoContent())
