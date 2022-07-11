@@ -38,8 +38,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureRestDocs
@@ -119,7 +121,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("디자이너 등록 테스트")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void DESIGNER_INSERT_TEST() throws Exception {
         CreateDesignerRequest request = CreateDesignerRequest.builder()
             .name("데브")
@@ -152,7 +154,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("전체 디자이너 조회 테스트")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_DESIGNER_LIST_TEST() throws Exception {
         this.mockMvc.perform(get("/designers")
                 .characterEncoding("UTF-8")
@@ -223,7 +225,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("헤어샵 아이디로 디자이너 조회 테스트")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_DESIGNER_BY_HAIRSHOP_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/designers/hairshop/{id}", designerResponse.getId())
                 .characterEncoding("UTF-8")
@@ -294,7 +296,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("디자이너 아이디로 디자이너 조회 테스트")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_DESIGNER_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/designers/{id}", designerResponse.getId())
                 .characterEncoding("UTF-8")
@@ -325,7 +327,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("해당 아이디의 디자이너가 없을 경우 테스트")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
         this.mockMvc.perform(get("/designers/{id}", 999L)
                 .characterEncoding("UTF-8")
@@ -336,7 +338,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("디자이너 정보를 수정 할 수 있다.")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void MODIFY_DESIGNER_TEST() throws Exception {
         ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
             .id(designerResponse.getId())
@@ -366,7 +368,7 @@ class DesignerControllerTest {
 
     @Test
     @DisplayName("수정하려는 디자이너가 없을 경우 테스트")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
         ModifyDesignerRequest modifyDesignerRequest = ModifyDesignerRequest.builder()
             .id(999L)
@@ -386,8 +388,9 @@ class DesignerControllerTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("해당 아이디의 디자이너를 삭제 할 수 있다.")
-    @WithUserDetails(value = "example2@naver.com")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void REMOVE_USER_TEST() throws Exception {
         this.mockMvc.perform(delete("/designers/{id}", designerResponse.getId()))
             .andExpect(status().isNoContent())

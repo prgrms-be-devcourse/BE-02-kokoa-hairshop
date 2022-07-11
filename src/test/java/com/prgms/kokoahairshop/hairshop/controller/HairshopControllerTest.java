@@ -41,7 +41,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 @AutoConfigureRestDocs
 @DisplayName("헤어샵 CRUD API 테스트")
 @AutoConfigureMockMvc
@@ -457,6 +456,7 @@ class HairshopControllerTest {
 
     @Test
     @Order(9)
+    @Transactional
     @DisplayName("헤어샵을 삭제 할 수 있다.")
     @WithUserDetails(value = "example2@naver.com")
     void REMOVE_USER_TEST() throws Exception {
