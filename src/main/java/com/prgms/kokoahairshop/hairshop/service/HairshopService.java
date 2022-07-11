@@ -7,7 +7,10 @@ import com.prgms.kokoahairshop.hairshop.dto.HairshopResponse;
 import com.prgms.kokoahairshop.hairshop.dto.ModifyHairshopRequest;
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.hairshop.repository.HairshopRepository;
+import com.prgms.kokoahairshop.user.repository.UserRepository;
+import com.prgms.kokoahairshop.user.service.UserDetailService;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,10 +53,8 @@ public class HairshopService {
     }
 
     @Transactional
-    public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest)
-        throws NotFoundException {
-        hairshopRepository.findById(modifyHairshopRequest.getId())
-            .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
+    public HairshopResponse update(ModifyHairshopRequest modifyHairshopRequest) throws NotFoundException{
+        findHairshopById(modifyHairshopRequest.getId());
         Hairshop hairshop = hairshopConverter.convertToHairshop(modifyHairshopRequest);
         Hairshop update = hairshopRepository.save(hairshop);
         return hairshopConverter.convertToHairshopResponse(update);
@@ -63,5 +64,11 @@ public class HairshopService {
     public Long deleteById(Long id) {
         hairshopRepository.deleteById(id);
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public Hairshop findHairshopById(Long id){
+        return hairshopRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("헤어샵을 찾을 수 없습니다."));
     }
 }
