@@ -60,7 +60,7 @@ class UserControllerTest {
     @Test
     @Order(1)
     @DisplayName("회원가입테스트")
-    void signup_test() throws Exception {
+    void SINGUP_TEST() throws Exception {
         RegisterRequestDto registerRequestDto = RegisterRequestDto.builder()
             .email("test@gmail.com")
             .password("test1234")
@@ -88,7 +88,7 @@ class UserControllerTest {
     @Test
     @Order(2)
     @DisplayName("로그인테스트")
-    void login_test() throws Exception {
+    void LOGIN_TEST() throws Exception {
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
             .email("test@gmail.com")
             .password("test1234")
@@ -123,7 +123,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("인증테스트")
-    void me_test() throws Exception {
+    void ME_TEST() throws Exception {
 
         mockMvc.perform(get("/me")
                 .header("Authorization", "Bearer " + accessToken))
@@ -142,7 +142,7 @@ class UserControllerTest {
 
     @AfterAll
     @DisplayName("테스트 데이터 모두삭제")
-    void roll_back() {
+    void ROLL_BACK() {
         userRepository.deleteAll();
         List<User> all = userRepository.findAll();
         assertThat(all.isEmpty(), is(true));

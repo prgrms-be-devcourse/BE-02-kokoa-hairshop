@@ -36,12 +36,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureRestDocs
 @DisplayName("헤어샵 CRUD API 테스트")
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class HairshopControllerTest {
@@ -103,8 +105,9 @@ class HairshopControllerTest {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     @DisplayName("헤어샵 등록 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void HAIRSHOP_INSERT_TEST() throws Exception {
         createHairshopRequest = CreateHairshopRequest.builder()
             .name("코스헤어")
@@ -159,8 +162,38 @@ class HairshopControllerTest {
     }
 
     @Test
-    @Order(2)
+    @Order(1)
+    @DisplayName("남의 헤어샵 등록 테스트")
+    @WithUserDetails(value = "example2@naver.com")
+    void OTHER_HAIRSHOP_INSERT__TEST() throws Exception {
+        createHairshopRequest = CreateHairshopRequest.builder()
+            .name("코스헤어")
+            .phoneNumber("010-1234-1234")
+            .startTime("11:00")
+            .endTime("20:00")
+            .closedDay("화")
+            .reservationRange("1")
+            .reservationStartTime("11:00")
+            .reservationEndTime("19:30")
+            .sameDayAvailable(true)
+            .roadNameNumber("대구 중구 동성로2가 143-9 2층")
+            .profileImg(
+                "https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+            .introduction("예약 전 DM으로 먼저 문의해주세요 :)")
+            .userId(user.getId()+1)
+            .build();
+        this.mockMvc.perform(post("/hairshops")
+            .characterEncoding(StandardCharsets.UTF_8)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(createHairshopRequest)))
+        .andExpect(status().isBadRequest())
+        .andDo(document("register-other-hairshop"));
+    }
+
+    @Test
+    @Order(3)
     @DisplayName("전체 헤어샵 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_HAIRSHOP_LIST_TEST() throws Exception {
         this.mockMvc.perform(get("/hairshops")
                 .characterEncoding("UTF-8")
@@ -241,13 +274,16 @@ class HairshopControllerTest {
             ));
     }
 
+
+
     @Test
-    @Order(3)
+    @Order(4)
     @DisplayName("헤어샵 아이디로 헤어샵 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_HAIRSHOP_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/hairshops/{id}", hairshop.getId())
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON))
+            .characterEncoding("UTF-8")
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.valueOf("application/json")))
             .andExpect(jsonPath("$.id").value(hairshop.getId()))
@@ -293,8 +329,9 @@ class HairshopControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @DisplayName("해당 아이디의 헤어샵이 없을 경우 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
         this.mockMvc.perform(get("/hairshops/{id}", 999L)
                 .characterEncoding("UTF-8")
@@ -304,8 +341,9 @@ class HairshopControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @DisplayName("헤어샵 정보를 수정 할 수 있다.")
+    @WithUserDetails(value = "example2@naver.com")
     void MODIFY_HAIRSHOP_TEST() throws Exception {
         ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
             .id(hairshop.getId())
@@ -357,8 +395,39 @@ class HairshopControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
+    @DisplayName("남의 헤어샵 정보를 수정 할 수 없다.")
+    @WithUserDetails(value = "example2@naver.com")
+    void MODIFY_OTHER_HAIRSHOP_TEST() throws Exception {
+        ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
+            .id(hairshop.getId())
+            .name(hairshop.getName())
+            .phoneNumber(hairshop.getPhoneNumber())
+            .startTime(hairshop.getStartTime())
+            .endTime(hairshop.getEndTime())
+            .closedDay(hairshop.getClosedDay())
+            .reservationRange(hairshop.getReservationRange())
+            .reservationStartTime(hairshop.getReservationStartTime())
+            .reservationEndTime(hairshop.getEndTime())
+            .sameDayAvailable(hairshop.getSameDayAvailable())
+            .roadNameNumber(hairshop.getRoadNameNumber())
+            .profileImg(hairshop.getProfileImg())
+            .introduction(hairshop.getIntroduction())
+            .userId(createHairshopRequest.getUserId()+1)
+            .build();
+        this.mockMvc.perform(patch("/hairshops")
+            .characterEncoding("UTF-8")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(modifyHairshopRequest)))
+        .andExpect(status().isBadRequest())
+        .andDo(document("modify-other-hairshop"));
+
+    }
+
+    @Test
+    @Order(8)
     @DisplayName("수정하려는 헤어샵이 없을 경우 테스트")
+    @WithUserDetails(value = "example2@naver.com")
     void MODIFY_HAIRSHOP_NOT_FOUND_TEST() throws Exception {
         ModifyHairshopRequest modifyHairshopRequest = ModifyHairshopRequest.builder()
             .id(999L)
@@ -386,8 +455,10 @@ class HairshopControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(9)
+    @Transactional
     @DisplayName("헤어샵을 삭제 할 수 있다.")
+    @WithUserDetails(value = "example2@naver.com")
     void REMOVE_USER_TEST() throws Exception {
         this.mockMvc.perform(delete("/hairshops/{id}", hairshop.getId()))
             .andExpect(status().isNoContent())

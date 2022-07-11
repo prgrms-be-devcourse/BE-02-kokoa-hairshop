@@ -36,7 +36,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,6 +119,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("메뉴 등록 테스트")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void MENU_INSERT_TEST() throws Exception {
         CreateMenuRequest request = CreateMenuRequest.builder()
             .name("펌")
@@ -155,6 +158,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("전체 메뉴 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_MENU_LIST_TEST() throws Exception {
         this.mockMvc.perform(get("/menu")
                 .characterEncoding("UTF-8")
@@ -231,6 +235,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("헤어샵 아이디로 메뉴 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_MENU_BY_HAIRSHOP_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/menu/hairshops/{id}", menuResponse.getId())
                 .characterEncoding("UTF-8")
@@ -307,6 +312,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("메뉴 아이디로 메뉴 조회 테스트")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_MENU_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(get("/menu/{id}", menuResponse.getId())
                 .characterEncoding("UTF-8")
@@ -343,6 +349,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("해당 아이디의 메뉴가 없을 경우 테스트")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void GET_HAIRSHOP_BY_ID_NOT_FOUND_TEST() throws Exception {
         this.mockMvc.perform(get("/menu/{id}", 999L)
                 .characterEncoding("UTF-8")
@@ -353,6 +360,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("메뉴 정보를 수정 할 수 있다.")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void MODIFY_MENU_TEST() throws Exception {
         ModifyMenuRequest modifyMenuRequest = ModifyMenuRequest.builder()
             .id(menuResponse.getId())
@@ -389,6 +397,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("수정하려는 메뉴가 없을 경우 테스트")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void MODIFY_MENU_NOT_FOUND_TEST() throws Exception {
         ModifyMenuRequest modifyMenuRequest = ModifyMenuRequest.builder()
             .id(999L)
@@ -412,6 +421,7 @@ class MenuControllerTest {
 
     @Test
     @DisplayName("해당 아이디의 메뉴를 삭제 할 수 있다.")
+    @WithUserDetails(value = "example2@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void REMOVE_MENU_TEST() throws Exception {
         this.mockMvc.perform(delete("/menu/{id}", menuResponse.getId()))
             .andExpect(status().isNoContent())
