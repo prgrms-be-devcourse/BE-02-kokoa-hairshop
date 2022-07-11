@@ -32,8 +32,7 @@ public class MenuService {
 
     @Transactional(readOnly = true)
     public MenuResponse insert(CreateMenuRequest createMenuRequest) throws NotFoundException {
-        Hairshop hairshop = hairshopRepository.findById(createMenuRequest.getHairshopId())
-            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
+        Hairshop hairshop = findHairshopById(createMenuRequest.getHairshopId());
         Menu menu = menuConverter.convertToMenu(createMenuRequest, hairshop);
         Menu entity = menuRepository.save(menu);
         return menuConverter.convertToMenuResponse(entity);
@@ -50,8 +49,7 @@ public class MenuService {
     @Transactional
     public Page<MenuResponse> findByHairshopId(Pageable pageable, Long id)
         throws NotFoundException {
-        Hairshop hairshop = hairshopRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
+        Hairshop hairshop = findHairshopById(id);
         List<MenuResponse> list = menuRepository.findByHairshop(hairshop)
             .stream().map(menuConverter::convertToMenuResponse)
             .collect(Collectors.toList());
@@ -67,10 +65,8 @@ public class MenuService {
 
     @Transactional
     public MenuResponse update(ModifyMenuRequest modifyMenuRequest) throws NotFoundException {
-        Hairshop hairshop = hairshopRepository.findById(modifyMenuRequest.getHairshopId())
-            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
-        menuRepository.findById(modifyMenuRequest.getId())
-            .orElseThrow(() -> new NotFoundException(MENU_NOT_FOUND));
+        Hairshop hairshop = findHairshopById(modifyMenuRequest.getHairshopId());
+        findMenuById(modifyMenuRequest.getId());
         Menu menu = menuConverter.convertToMenu(modifyMenuRequest, hairshop);
         Menu update = menuRepository.save(menu);
         return menuConverter.convertToMenuResponse(update);
@@ -80,5 +76,17 @@ public class MenuService {
     public Long deleteById(Long id) {
         menuRepository.deleteById(id);
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public Hairshop findHairshopById(Long id){
+        return hairshopRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public Menu findMenuById(Long id){
+        return menuRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(MENU_NOT_FOUND));
     }
 }
