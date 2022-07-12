@@ -1,11 +1,12 @@
 package com.prgms.kokoahairshop.designer.dto;
 
 import com.prgms.kokoahairshop.designer.entity.Position;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder

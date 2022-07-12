@@ -17,6 +17,12 @@ public class HairshopControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.info("IllegalArgumentException", e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
     @ExceptionHandler(NotFoundException.class)
     ResponseEntity<Object> handleNotFoundException(NotFoundException e) {
         log.info("notFoundException", e);
