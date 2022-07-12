@@ -9,8 +9,6 @@ import com.prgms.kokoahairshop.menu.dto.MenuResponse;
 import com.prgms.kokoahairshop.menu.dto.ModifyMenuRequest;
 import com.prgms.kokoahairshop.menu.entity.Menu;
 import com.prgms.kokoahairshop.menu.repository.MenuRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,6 +16,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,26 +42,26 @@ public class MenuService {
     @Transactional
     public Page<MenuResponse> findAll(Pageable pageable) {
         List<MenuResponse> list = menuRepository.findAll()
-            .stream().map(menuConverter::convertToMenuResponse)
-            .collect(Collectors.toList());
+                .stream().map(menuConverter::convertToMenuResponse)
+                .collect(Collectors.toList());
         return new PageImpl<>(list, pageable, list.size());
     }
 
     @Transactional
     public Page<MenuResponse> findByHairshopId(Pageable pageable, Long id)
-        throws NotFoundException {
+            throws NotFoundException {
         Hairshop hairshop = findHairshopById(id);
         List<MenuResponse> list = menuRepository.findByHairshop(hairshop)
-            .stream().map(menuConverter::convertToMenuResponse)
-            .collect(Collectors.toList());
+                .stream().map(menuConverter::convertToMenuResponse)
+                .collect(Collectors.toList());
         return new PageImpl<>(list, pageable, list.size());
     }
 
     @Transactional
     public MenuResponse findById(Long id) throws NotFoundException {
         return menuRepository.findById(id)
-            .map(menuConverter::convertToMenuResponse)
-            .orElseThrow(() -> new NotFoundException(MENU_NOT_FOUND));
+                .map(menuConverter::convertToMenuResponse)
+                .orElseThrow(() -> new NotFoundException(MENU_NOT_FOUND));
     }
 
     @Transactional
@@ -79,14 +80,14 @@ public class MenuService {
     }
 
     @Transactional(readOnly = true)
-    public Hairshop findHairshopById(Long id){
+    public Hairshop findHairshopById(Long id) {
         return hairshopRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(HAIRSHOP_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
-    public Menu findMenuById(Long id){
+    public Menu findMenuById(Long id) {
         return menuRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(MENU_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(MENU_NOT_FOUND));
     }
 }

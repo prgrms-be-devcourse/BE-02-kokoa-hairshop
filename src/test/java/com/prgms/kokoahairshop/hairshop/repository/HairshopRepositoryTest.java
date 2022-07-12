@@ -1,11 +1,8 @@
 package com.prgms.kokoahairshop.hairshop.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.prgms.kokoahairshop.hairshop.entity.Hairshop;
 import com.prgms.kokoahairshop.user.entity.User;
 import com.prgms.kokoahairshop.user.repository.UserRepository;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +10,10 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -32,29 +33,29 @@ class HairshopRepositoryTest {
         hairshopRepository.deleteAll();
 
         User user = User.builder()
-            .email("example2@naver.com")
-            .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
-            .auth("USER")
-            .build();
+                .email("example2@naver.com")
+                .password("$2a$12$8zS0i9eXSnKN.jXY1cqOhOxrAQvhsh5WMtJmOsfnQIaHMZudKmmKa")
+                .auth("USER")
+                .build();
         userRepository.save(user);
 
         hairshop = Hairshop.builder()
-            .id(1L)
-            .name("데브헤어")
-            .phoneNumber("010-1234-1234")
-            .startTime("11:00")
-            .endTime("20:00")
-            .closedDay("화")
-            .reservationRange("1")
-            .reservationStartTime("11:00")
-            .reservationEndTime("19:30")
-            .sameDayAvailable(true)
-            .roadNameNumber("대구 중구 동성로2가 141-9 2층3층")
-            .profileImg(
-                "https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
-            .introduction("시간 여유 충분히 가지고 여유롭게 와주시면 감사하겠습니다 :)")
-            .user(user)
-            .build();
+                .id(1L)
+                .name("데브헤어")
+                .phoneNumber("010-1234-1234")
+                .startTime("11:00")
+                .endTime("20:00")
+                .closedDay("화")
+                .reservationRange("1")
+                .reservationStartTime("11:00")
+                .reservationEndTime("19:30")
+                .sameDayAvailable(true)
+                .roadNameNumber("대구 중구 동성로2가 141-9 2층3층")
+                .profileImg(
+                        "https://mud-kage.kakao.com/dn/fFVWf/btqFiGBCOe6/LBpRsfUQtqrPHAWMk5DDw0/img_1080x720.jpg")
+                .introduction("시간 여유 충분히 가지고 여유롭게 와주시면 감사하겠습니다 :)")
+                .user(user)
+                .build();
         hairshop = hairshopRepository.save(hairshop);
     }
 
@@ -76,9 +77,9 @@ class HairshopRepositoryTest {
     void UPDATE_HAIRSHOP_TEST() {
         // given
         hairshop = hairshop.toBuilder()
-            .phoneNumber("010-4321-1234")
-            .closedDay("수")
-            .build();
+                .phoneNumber("010-4321-1234")
+                .closedDay("수")
+                .build();
 
         // when
         Hairshop updated = hairshopRepository.save(hairshop);
