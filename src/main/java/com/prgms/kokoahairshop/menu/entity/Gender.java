@@ -10,7 +10,7 @@ public enum Gender {
     unisex("공용");
 
     private static final Map<String, Gender> ENUM_MAP =
-        Stream.of(values()).collect(Collectors.toMap(Gender::getGender, o -> o));
+            Stream.of(values()).collect(Collectors.toMap(Gender::getGender, o -> o));
 
     private final String gender;
 
