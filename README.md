@@ -155,7 +155,8 @@
 
 
 ## 🖼 ERD
-![https://user-images.githubusercontent.com/103566826/177925410-25f1a093-da2a-4c85-9523-0afe858d8b79.png](https://user-images.githubusercontent.com/103566826/177925410-25f1a093-da2a-4c85-9523-0afe858d8b79.png)
+<img width="1090" alt="스크린샷 2022-10-24 오후 11 08 05" src="https://user-images.githubusercontent.com/62363580/197546025-7064d2fc-d0b2-4f4d-b35d-e610e30a3de3.png">
+
 
 ## 📝STRESS TEST
 
